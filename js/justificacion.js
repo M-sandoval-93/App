@@ -204,6 +204,8 @@ function comprobarFormJustificacion() { // Terminado y revisado !!
 
 function setModalJustificacion(tabla_justificacion) { // Terminado y revisado !!
     $('#btn_registrar_justificacion').click(() => {
+
+        if (LibreriaFunciones.comprobarLongitud($('#justificacion_rut_estudiante').val(), 7, 9, 'RUT', 'Apoderado') == false) { return false; }
         if (!comprobarFormJustificacion()) {
             LibreriaFunciones.alertPopUp('warning', 'Faltan campos obligatorios !!');
             return false;
@@ -387,26 +389,6 @@ function exportarJustificaciones(btn, ext) { // Terminado y revisado !!
     });
 }
 
-function exportarJustificacionespdf(btn, ext) { // En revición y proceso
-    let datos = 'exportarJustificaciones';
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', './controller/controller_justificacion.php',  true);
-    xhr.responseType = 'blob';
-
-    xhr.onload = function (e) {
-        if (this.status == 200) {
-            let blob = new Blob([this.response], {type: 'application/pdf'});
-            let link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = "report.pdf";
-            link.click();   
-        }
-    };
-
-    xhr.send(datos, 'pdf');
-
-}
-
 
 // ==================== FUNCIONES INTERNAS ===============================//
 
@@ -476,16 +458,11 @@ $(document).ready(function() {
     // Función para generar documento con las justificaciones del año
     exportarJustificaciones('#btn_excel_justificacion', 'xlsx');
     exportarJustificaciones('#btn_csv_justificacion', 'csv');
-    // exportarJustificacionespdf('#btn_pdf_justificacion', 'pdf');
-
-    // $('#btn_pdf_justificacion').click( () => {
-    //     window.location.href = './model/prueba/prueba.php';
-    // });
 
 
 
-    // Eliminar registro
-    // enviar id del registro con el que se elimina de la tabla justificación y de las asignaturas pendientes en caso de que exista alguna
+
+
 
     // Generar PDF con información o DOC
     // Ver como generar un pdf o generar u word

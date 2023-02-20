@@ -1,584 +1,382 @@
+import {LibreriaFunciones, generar_dv, spanish } from './librerias/librerias.js';
+let datos = 'getApoderados';
 
-// Librería de funciones básicas para validar RUT ==========
-let LibreriaFunciones = {
-    // Valida el rut con su cadena completa "XXXXXXXX-X"
-    validarRut: function(rutCompleto) {
-        if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test( rutCompleto )) {
-            return false;
-        }
-        
-        let tmp = rutCompleto.split('-');
-        let rut = tmp[0];
-        let dvRut = tmp[1];
-
-        if (dvRut == 'K') {
-            dvRut = 'K';
-        }
-        return (LibreriaFunciones.dv(rut) == dvRut);
-    },
-
-
-    // Calcula el dígito verificador
-    dv: function(T) {
-        let M = 0, S = 1;
-
-        for (;T;T = Math.floor(T/10)) {
-            S = (S + T % 10 * (9 - M ++ % 6)) % 11;
-        }
-        return S?S - 1: 'K';
-    },
-
-
-    // Valida que el número sea un entero
-    validarEntero: function(value) {
-        let regExPattern = /[0-9]+$/;
-        return regExPattern.test(value);
-    },
-
-
-    // Formatea un número con puntos de miles
-    formatearNumero: function(val) {
-        if (LibreriaFunciones.validarEntero(val)) {
-            let retorno = '';
-            let value = val.toString().split('').reverse().join('');
-            let i = value.length;
-
-            while (i > 0) {
-                retorno += ((i%3==0&&i!=value.length)?'':'')+value.substring(i--,i);
-                // retorno += ((i%3==0&&i!=value.length)?'.':'')+value.substring(i--,i);  //Para ir agregando el punto
-            }
-            return retorno;
-        }
-        return val;
-    }
-}
-// Librería de funciones básicas para validar RUT ==========
-
-
-// FUNCIONES ===============================================
-function generar_dv() {
-    // Traspasar valor a número entero
-    let numero = $('#apoderado_rut').val();
-    numero = numero.split('.').join('');
-
-    // Valida que sea realmente entero
-    if (LibreriaFunciones.validarEntero(numero)) {
-        $('#apoderado_dv_rut').val(LibreriaFunciones.dv(numero));
-
-    } else {
-        $('#apoderado_dv_rut').val('');
-    }
-
-    // Formatear el valor del rut con sus puntos
-    $('#apoderado_rut').val(LibreriaFunciones.formatearNumero(numero));
+// ==================== FUNCIONES INTERNAS ===============================//
+// Función para maquetar datos adicionales del estudiante
+function getInfoSecundaria(data) {
+    return (
+        '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+            '<tr>' +
+                '<td>Dirección:</td>' +
+                '<td>' + data.direccion + '</td>' +
+            '</tr>' +
+        '</table>'
+    )
 }
 
-function camposVacios() {
-    const form = document.getElementById('modal_form_apoderados');
-    const inputs = form.querySelectorAll('input[type="text"]');
-    let contador = 0;
+// Función para mostrar los datos adicionales del estudiante
+function expandInfoApoderado(tabla) {
+    $('#tabla_apoderado tbody').on('click', 'td.dt-control', function () {
+        let tr = $(this).closest('tr');
+        let row = tabla.row(tr);
 
-    inputs.forEach(elemento => {
-        if (elemento.value === '') {
-            contador = contador + 1;
-        }
-    });
-    return contador;
-}
-// FUNCIONES ===============================================
-
-
-
-$(document).ready(function() {
-
-    // VARIABLES GLOBALES
-    let modal = $('#modal_form_apoderados');
-    let registrar;
-    let id_apoderado;
-
-
-    // BOTÓN NUEVO APODERADO /==================================
-    $('#btn_nuevo_apoderado').click(function(e) {
-        e.preventDefault();
-        $('#form_apoderados').trigger('reset');
-        $('#titulo-modal').text('Registrar nuevo apoderado');
-        $('#apoderado_codigo_fono').val('569');
-        
-        modal.addClass('modal-show');
-        $('#apoderado_rut').removeAttr('disabled', 'disable');
-        $('#apoderado_dv_rut').attr('disabled', 'disabled');
-        $('#apoderado_rut').focus();
-        $('#apoderado_rut').keyup(generar_dv);
-        $('#apoderado_rut').blur(generar_dv);
-
-        registrar = 'nuevo_apoderado';
-    });
-
-
-    // BOTÓN MODAL REGISTRAR /==================================
-    $('#btn_modal_registrar_apoderado').click(function(e) {
-        e.preventDefault();
-
-        // SE CREAN LAS VARIABLES
-        rut = $('#apoderado_rut').val();
-        dv_rut = $('#apoderado_dv_rut').val().toUpperCase();
-        nombres = $('#apoderado_nombres').val().toUpperCase();
-        a_paterno = $('#apoderado_ap_paterno').val().toUpperCase();
-        a_materno = $('#apoderado_ap_materno').val().toUpperCase();
-        fono = $('#apoderado_fono').val();
-
-        // VALIDAR QUE TODOS LOS CAMPOS CONTENGAN INFORMACION
-        if (camposVacios() >= 1) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Hay campos vacios !!',
-                showConfirmButton: false,
-                timer: 1500
-            });
-            return false;
-        }
-
-        if (registrar == 'nuevo_apoderado') {
-            datos = "nuevo_apoderado";
-            $.ajax({
-                url: "./controller/controller_apoderado.php",
-                method: "post",
-                dataType: "json",
-                data: {rut: rut, dv_rut: dv_rut, nombres: nombres, a_paterno: a_paterno,
-                        a_materno: a_materno, fono: fono, datos: datos},
-                success: function(data) {
-                    if (data == 'existe') {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'El apoderado ya existe !!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                    } else {
-                        if (data === false) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error al registrar !!',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Apoderado registrado !!',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                            modal.removeClass('modal-show');
-                            tabla_apoderados.ajax.reload(null, false);
-                        }
-                    }
-                }
-            });
-
-        } else if(registrar == 'editar_apoderado') {
-            datos = "editar_apoderado";
-            $.ajax({
-                url:"./controller/controller_apoderado.php",
-                method: "post",
-                dataType: "json",
-                data: {rut: rut, nombres: nombres, a_paterno: a_paterno, a_materno: a_materno, fono: fono, datos: datos},
-                success: function(data) {
-                    if (data === false) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error al actualizar !!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Datos actualizados !!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                        modal.removeClass('modal-show');
-                        tabla_apoderados.ajax.reload(null, false);
-                    }
-                }
-            });
+        if (row.child.isShown()) {
+            row.child.hide();
+            tr.removeClass('shown');
         } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Formulario inválido !!',
-                showConfirmButton: false,
-                timer: 1500
-            });
+            row.child(getInfoSecundaria(row.data())).show();
+            tr.addClass('shown');
         }
-    });
+    });    
+}
 
+// Función para obtener la cantidad de apoderados registrados
+function cantidadApoderado(contexto = false) {
+    let datos = 'getCantidadApoderado';
+    let valor = 0;
 
-    // BOTÓN MODAL CANCELAR /===================================
-    $('#btn_modal_cancelar_apoderado').click(function(e) {
-        e.preventDefault();
-        modal.removeClass('modal-show');
-    });
-
-
-    // DATATABLE /==============================================
-    datos = 'mostrar_apoderados';
-    let tabla_apoderados = $('#apoderados').DataTable({
-        "ajax": {
-            "url": "./controller/controller_apoderado.php",
-            "method": "post",
-            "data": {datos: datos}
-         },
-         "columns": [ // INFORMACIÓN DE COLUMNAS
-            {"data": "id_apoderado", "visible": false},
-            {"data": "rut_apoderado"}, // CELDA CONVINADA POR CONSULTA SQL
-            {"data": "apellido_paterno_apoderado"},
-            {"data": "apellido_materno_apoderado"},
-            {"data": "nombres_apoderado"},
-            {"data": "telefono_apoderado"},
-            {
-                "data": 'estado_apoderado',
-                "bSortable": false,
-                "mRender": function(data) {
-                    let btn_estado;
-                    if (data === true) {
-                        btn_estado = `<button class="btn btn-s btn-success" id="btn_editar_estado" type="button"><i class="fas fa-lock-open"></i></button>`;
-                    } else {
-                        btn_estado = `<button class="btn btn-s btn-lock" id="btn_editar_estado" type="button"><i class="fas fa-lock"></i></button>`;
-                    }
-                    return btn_estado;
-                }
-            },
-            {"data": null,
-                "bSortable": false,
-                "defaultContent": // BOTONES
-                                `<button class="btn btn-s btn-data" id="btn_editar_apoderado" type="button"><i class="fas fa-pencil-alt"></i></i></button>
-                                <button class="btn btn-s btn-delete" id="btn_eliminar_apoderado" type="button"><i class="fas fa-trash-alt"></i></button>`
+    $.ajax({
+        url: "./controller/controller_apoderado.php",
+        type: "post",
+        dataType: "json",
+        data: {datos: datos},
+        success: function(data) {
+            if (data != false) {
+                valor = data;
             }
-        ],
-        order: [[2, 'asc']],
-        "language": spanish
-    });
-
-
-    // EDITAR UN APODERADO /====================================
-    $('#apoderados tbody').on('click', '#btn_editar_apoderado', function() {
-        let data = tabla_apoderados.row($(this).parents()).data();
-        $('#form_apoderados').trigger('reset');
-        $('#titulo-modal').text('Editar apoderado');
-        $('#apoderado_rut').val(data.rut_apoderado.split('-')[0]);
-        $('#apoderado_dv_rut').val(data.rut_apoderado.split('-')[1]);
-        $('#apoderado_nombres').val(data.nombres_apoderado);
-        $('#apoderado_ap_paterno').val(data.apellido_paterno_apoderado);
-        $('#apoderado_ap_materno').val(data.apellido_materno_apoderado);
-        $('#apoderado_codigo_fono').val(data.telefono_apoderado.split('-')[0]);
-        $('#apoderado_fono').val(data.telefono_apoderado.split('-')[1]);
-        
-
-        modal.addClass('modal-show');
-        $('#apoderado_rut').attr('disabled', 'disabled');
-        $('#apoderado_dv_rut').attr('disabled', 'disabled');
-        $('#apoderado_nombres').focus();
-        registrar  = 'editar_apoderado';
-        id_apoderado = data.id_apoderado;
-    });
-
-
-    // ACTIVAR O DESACTIVAR UN APODERADO /======================
-    $('#apoderados tbody').on('click', '#btn_editar_estado', function() {
-        let data = tabla_apoderados.row($(this).parents()).data();
-        id_apoderado = data.id_apoderado;
-        estado = data.estado_apoderado;
-        datos = "editar_estado";
-
-        $.ajax({
-            url: "./controller/controller_apoderado.php",
-            method: "post",
-            dataType: "json",
-            data: {id_apoderado: id_apoderado, estado: estado, datos: datos},
-            success: function(data) {
-                if (data === false) {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'error',
-                        title: 'No se pudo desactivar al apoderado',
-                        toast: true,
-                        showConfirmButton: false,
-                        timer: 2000,
-                        timerProgressBar: true
-                    });
-                } else {
-                    if (estado === true) {
-                        Swal.fire({
-                            position: 'top-end',
-                            icon: 'warning',
-                            title: 'Apoderado bloqueado !!',
-                            toast: true,
-                            showConfirmButton: false,
-                            timer: 2000,
-                            timerProgressBar: true
-                        });
-                    } else {
-                        Swal.fire({
-                            position: 'top-end',
-                            icon: 'success',
-                            title: 'Apoderado desbloqueado',
-                            toast: true,
-                            showConfirmButton: false,
-                            timer: 2000,
-                            timerProgressBar: true
-                        });
-                    }
-                    tabla_apoderados.ajax.reload(null, false);
-                }
+            if (contexto == true) {
+                $('#cantidad_nuevo_registro').text(valor + 1);
+                return false;
             }
-        });
+            $('#cantidad_apoderado').text(valor);
+        }
+    }).fail(() => {
+        if (contexto == true) {
+            $('#cantidad_nuevo_registro').text('Error !!');
+            return false;
+        }
+        $('#cantidad_apoderado').text('Error !!');
     });
+}
 
+// Función para eliminar el registro de un estudiante
+function deleteRegistroApoderado(tabla) {
+    $('#tabla_apoderado tbody').on('click', '#btn_eliminar_apoderado', function() {
+        let data = tabla.row($(this).parents()).data();
+        let id_apoderado = data.id_apoderado;
 
-    // ELIMINAR UN APODERADO /==================================
-    $('#apoderados tbody').on('click', '#btn_eliminar_apoderado', function() {
-        let data  = tabla_apoderados.row($(this).parents()).data();
-        id_apoderado = data.id_apoderado;
-        nombres = data.nombres_apoderado + " " + data.apellido_paterno_apoderado + " " + data.apellido_materno_apoderado;
         Swal.fire({
             icon: 'question',
-            title: 'Se eliminará al apoderado \n "' + nombres + '"',
+            title: 'Eliminar registro de "' + data.nombres_apoderado + ' ' + data.ap_apoderado + '"',
             showCancelButton: true,
             confirmButtonText: 'Confirmar',
             cancelButtonText: 'Cancelar',
             confirmButtonColor: '#2691d9',
             cancelButtonColor: '#adadad'
-        }).then(resultado => {
+        }). then(resultado => {
             if (resultado.isConfirmed) {
-                datos = "eliminar_apoderado";
+                datos = "deleteApoderado";
 
                 $.ajax({
-                    url: './controller/controller_apoderado.php',
-                    type: 'post',
-                    dataType: 'json',
-                    data: {id_apoderado: id_apoderado, datos: datos},
+                    url: "./controller/controller_apoderado.php",
+                    type: "post",
+                    dataType: "json",
+                    data: {datos: datos, id_apoderado: id_apoderado},
                     success: function(data) {
-                        if (data === false) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error al eliminar el apoderado !!',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Apoderado eliminado !!',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                            tabla_apoderados.ajax.reload(null, false);
+                        if (data == false) {
+                            LibreriaFunciones.alertPopUpButton('error', 'No se puede eliminar el registro, por la integridad de los datos !!');
+                            return false;
                         }
+
+                        LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
+                        beforeRecord(tabla);
                     }
+                }).fail(() => {
+                    LibreriaFunciones.alertPopUp('error', 'Error en la operación  !!');
                 });
-            } 
+            }
         });
     });
-});
-
-
-
-let spanish = {
-    "aria": {
-        "sortAscending": ": orden ascendente",
-        "sortDescending": ": orden descendente"
-    },
-    "autoFill": {
-        "cancel": "Cancelar",
-        "fill": "Llenar todas las celdas con <i>%d&lt;\\\/i&gt;<\/i>",
-        "fillHorizontal": "Llenar celdas horizontalmente",
-        "fillVertical": "Llenar celdas verticalmente"
-    },
-    "buttons": {
-        "collection": "Colección <span class=\"ui-button-icon-primary ui-icon ui-icon-triangle-1-s\"><\/span>",
-        "colvis": "Visibilidad de la columna",
-        "colvisRestore": "Restaurar visibilidad",
-        "copy": "Copiar",
-        "copyKeys": "Presiona ctrl or u2318 + C para copiar los datos de la tabla al portapapeles.<br \/><br \/>Para cancelar, haz click en este mensaje o presiona esc.",
-        "copySuccess": {
-            "_": "Copió %ds registros al portapapeles",
-            "1": "Copió un registro al portapapeles"
-        },
-        "copyTitle": "Copiado al portapapeles",
-        "csv": "CSV",
-        "excel": "Excel",
-        "pageLength": {
-            "_": "Mostrar %ds registros",
-            "-1": "Mostrar todos los registros"
-        },
-        "pdf": "PDF",
-        "print": "Imprimir"
-    },
-    "datetime": {
-        "amPm": [
-            "AM",
-            "PM"
-        ],
-        "hours": "Horas",
-        "minutes": "Minutos",
-        "months": {
-            "0": "Enero",
-            "1": "Febrero",
-            "10": "Noviembre",
-            "11": "Diciembre",
-            "2": "Marzo",
-            "3": "Abril",
-            "4": "Mayo",
-            "5": "Junio",
-            "6": "Julio",
-            "7": "Agosto",
-            "8": "Septiembre",
-            "9": "Octubre"
-        },
-        "next": "Siguiente",
-        "previous": "Anterior",
-        "seconds": "Segundos",
-        "weekdays": [
-            "Dom",
-            "Lun",
-            "Mar",
-            "Mie",
-            "Jue",
-            "Vie",
-            "Sab"
-        ]
-    },
-    "decimal": ",",
-    "editor": {
-        "close": "Cerrar",
-        "create": {
-            "button": "Nuevo",
-            "submit": "Crear",
-            "title": "Crear nuevo registro"
-        },
-        "edit": {
-            "button": "Editar",
-            "submit": "Actualizar",
-            "title": "Editar registro"
-        },
-        "error": {
-            "system": "Ocurrió un error de sistema (&lt;a target=\"\\\" rel=\"nofollow\" href=\"\\\"&gt;Más información)."
-        },
-        "multi": {
-            "info": "Los elementos seleccionados contienen diferentes valores para esta entrada. Para editar y configurar todos los elementos de esta entrada con el mismo valor, haga clic o toque aquí, de lo contrario, conservarán sus valores individuales.",
-            "noMulti": "Esta entrada se puede editar individualmente, pero no como parte de un grupo.",
-            "restore": "Deshacer cambios",
-            "title": "Múltiples valores"
-        },
-        "remove": {
-            "button": "Eliminar",
-            "confirm": {
-                "_": "¿Está seguro de que desea eliminar %d registros?",
-                "1": "¿Está seguro de que desea eliminar 1 registro?"
-            },
-            "submit": "Eliminar",
-            "title": "Eliminar registro"
-        }
-    },
-    "emptyTable": "Sin registros",
-    "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
-    "infoEmpty": "Mostrando 0 a 0 de 0 registros",
-    "infoFiltered": "(filtrado de _MAX_ registros)",
-    "infoThousands": ".",
-    "lengthMenu": "Mostrar _MENU_ registros",
-    "loadingRecords": "Cargando...",
-    "paginate": {
-        "first": "Primero",
-        "last": "Último",
-        "next": "Siguiente",
-        "previous": "Anterior"
-    },
-    "processing": "Procesando...",
-    "search": "Buscar:",
-    "searchBuilder": {
-        "add": "Agregar Condición",
-        "button": {
-            "_": "Filtros (%d)",
-            "0": "Filtrar"
-        },
-        "clearAll": "Limpiar Todo",
-        "condition": "Condición",
-        "conditions": {
-            "array": {
-                "contains": "Contiene",
-                "empty": "Vacío",
-                "equals": "Igual",
-                "not": "Distinto",
-                "notEmpty": "No vacío",
-                "without": "Sin"
-            },
-            "date": {
-                "after": "Mayor",
-                "before": "Menor",
-                "between": "Entre",
-                "empty": "Vacío",
-                "equals": "Igual",
-                "not": "Distinto",
-                "notBetween": "No entre",
-                "notEmpty": "No vacío"
-            },
-            "number": {
-                "between": "Entre",
-                "empty": "Vacío",
-                "equals": "Igual",
-                "gt": "Mayor",
-                "gte": "Mayor o igual",
-                "lt": "Menor",
-                "lte": "Menor o igual",
-                "not": "Distinto",
-                "notBetween": "No entre",
-                "notEmpty": "No vacío"
-            },
-            "string": {
-                "contains": "Contiene",
-                "empty": "Vacío",
-                "endsWith": "Termina con",
-                "equals": "Igual",
-                "not": "Distinto",
-                "notEmpty": "No vacío",
-                "startsWith": "Comienza con"
-            }
-        },
-        "data": "Datos",
-        "deleteTitle": "Eliminar regla de filtrado",
-        "leftTitle": "Filtros anulados",
-        "logicAnd": "Y",
-        "logicOr": "O",
-        "rightTitle": "Filtro",
-        "title": {
-            "_": "Filtros (%d)",
-            "0": "Filtrar"
-        },
-        "value": "Valor"
-    },
-    "searchPanes": {
-        "clearMessage": "Limpiar todo",
-        "collapse": {
-            "_": "Paneles de búsqueda (%d)",
-            "0": "Paneles de búsqueda"
-        },
-        "count": "{total}",
-        "countFiltered": "{shown} ({total})",
-        "emptyPanes": "Sin paneles de búsqueda",
-        "loadMessage": "Cargando paneles de búsqueda...",
-        "title": "Filtros activos - %d"
-    },
-    "select": {
-        "cells": {
-            "_": "%d celdas seleccionadas",
-            "1": "Una celda seleccionada"
-        },
-        "columns": {
-            "_": "%d columnas seleccionadas",
-            "1": "Una columna seleccionada"
-        }
-    },
-    "thousands": ".",
-    "zeroRecords": "No se encontraron registros"
 }
+ 
+// Función para generar acción al terminar algún proceso de edición de datos
+function beforeRecord(tabla) {
+    tabla.ajax.reload(null, false);
+    cantidadApoderado();
+}
+
+// Función para generar documento
+function exportarApoderados(btn, ext) { // Terminado y revisado !!
+    let datos = 'exportarApoderados';
+
+    $(btn).click((e) => {
+        e.preventDefault();
+
+        $.ajax({
+            url: "./controller/controller_apoderado.php",
+            type: "post",
+            dataType: "html",
+            cache: false,
+            data: {datos: datos, ext: ext},
+            success: (data) => {
+                let opResult = JSON.parse(data);
+                let $a = $("<a>");
+    
+                $a.attr("href", opResult.data);
+                $("body").append($a);
+                $a.attr("download", "Registro apoderado." + ext);
+                $a[0].click();
+                $a.remove();
+            }
+        }). fail(() => {
+            LibreriaFunciones.alertPopUp('error', 'Error al generar documento');
+        });
+    });
+}
+
+// Función generica para restablecer el formato del modal
+function prepararModal() { // revisar y verificar los campos !!!!! (Agregar al tener listo un modal y lanzarlo)
+    $('#form_registro_apoderado').trigger('reset');
+    $('#rut_apoderado').removeClass('is-invalid');
+    $('#informacion_rut').removeClass('text-danger');
+    $('#informacion_rut').text('Rut sin puntos, sin guión y sin dígito verificador');
+    $('#informacion_rut').addClass('form-text');
+    LibreriaFunciones.autoFocus($('#modal_apoderado'), $('#rut_apoderado'));
+}
+
+// Función para lanzar modal nuevo apoderado
+function lanzarModalNuevoApoderado() {
+    $('#btn_nuevo_apoderado').click(() => {
+        prepararModal();
+        $('#modal_estudiante_tittle').text('REGISTRAR APODERADO');
+        $('#btn_registrar_apoderado').text('Registrar');
+        $('#texto_secundario').text('Nuevo registro N°');
+        cantidadApoderado(true);
+    });
+}
+
+// Función para validar el rut
+function validarRutApoderado() {
+    $('#rut_apoderado').keyup(function(e) {
+        e.preventDefault();
+        generar_dv('#rut_apoderado', '#dv_rut_apoderado');
+        comprobarApoderado($('#rut_apoderado').val());
+        LibreriaFunciones.validarNumberRut($('#rut_apoderado'), $('#informacion_rut'));
+    });
+}
+
+// Función para comprobar si el registro exisate en la base de datos
+function comprobarApoderado(rut) {
+    datos = "getApoderado";
+
+    if (rut != '' && rut.length > 7 && rut.length < 9) {
+        $.ajax({
+            url: "./controller/controller_apoderado.php",
+            type: "post",
+            dataType: "json",
+            cache: false,
+            data: {datos: datos, rut: rut, tipo: 'comprobar'},
+            success: function(data) {
+                if (data == true) {
+                    LibreriaFunciones.alertPopUp('warning', 'El rut ingresado ya existe en la base de datos de los apoderados'); 
+                }
+            }
+
+        }).fail(() => {
+            LibreriaFunciones.alertPopUp('error', 'Error en la consulta !!');
+        });
+    }
+}
+
+// Función para comprobar los campos vacios del formulario
+function comprobarCamposVacios(objeto) {
+    let count = 0;
+    for (const [key, value] of Object.entries(objeto)) {
+        if (value == '') {
+            count += 1;
+        }
+    }
+    return count;
+}
+
+// Función que obtiene los datos del formulario modal de estudiante
+function getDataFormulario() {
+    const apoderado = {
+        rut: $.trim($('#rut_apoderado').val()),
+        dv_rut: $.trim($('#dv_rut_apoderado').val().toUpperCase()),
+        nombres: $.trim($('#nombre_apoderado').val().toUpperCase()),
+        ap: $.trim($('#ap_apoderado').val().toUpperCase()),
+        am: $.trim($('#am_apoderado').val().toUpperCase()),
+        telefono: $.trim($('#telefono').val().toUpperCase()), 
+        direccion: $.trim($('#direccion').val())
+    }
+
+    return apoderado;
+}
+
+// Función para registrar un nuevo apoderado
+function setApoderado(tabla) {
+    $('#btn_registrar_apoderado').click((e) => {
+        e.preventDefault();
+        if ($('#modal_apoderado_tittle').text() != 'REGISTRAR APODERADO') { return false; }
+        if (LibreriaFunciones.comprobarLongitud($('#rut_apoderado').val(), 7, 9, 'RUT', 'Apoderado') == false) { return false; }
+        if (LibreriaFunciones.comprobarLongitud($('#telefono').val(), 8, 8, 'Teléfono', 'Apoderado') == false) { return false; }
+            
+        datos = 'setApoderado';
+        const apoderado = getDataFormulario();
+        if (comprobarCamposVacios(apoderado) >= 1) {
+            LibreriaFunciones.alertPopUp('info', 'Faltan datos importantes !!');
+            return false;
+        }
+
+        $.ajax({
+            url: "./controller/controller_apoderado.php",
+            type: "post",
+            dataType: "json",
+            data: {datos: datos, apoderado: apoderado},
+            success: function(data) {
+                if (data == 'existe') {
+                    LibreriaFunciones.alertPopUp('warning', 'El rut ingresado ya existe en la base de datos de los estudiantes');
+                    return false;
+                }
+                if (data == true) {
+                    LibreriaFunciones.alertPopUp('success', 'Apoderadio registrado !!');
+                    $('#modal_apoderado').modal('hide');
+                    beforeRecord(tabla);
+                } else {
+                    LibreriaFunciones.alertPopUp('warning', 'No se registro el apoderado !!');
+                }
+            }
+        }).fail(() => {
+            LibreriaFunciones.alertPopUp('error', 'Error en la consulta !!');
+        });
+    });
+}
+
+// Función para lanzar el modal empleado para actualizar un estudiante
+function lanzarModalupdateApoderado(tabla) {
+    $('#tabla_apoderado tbody').on('click', '#btn_editar_apoderado', function() {
+        let data = tabla.row($(this).parents()).data();
+        prepararModal();
+
+        // Trabajar datos principales para asignar al formulario
+        let rut = data.rut_apoderado.slice(0, data.rut_apoderado.length - 2);
+
+        // Asignación del contenido
+        $('#modal_apoderado_tittle').text('UPDATE APODERADO');
+        $('#btn_registrar_apoderado').text('Actualizar');
+        $('#texto_secundario').text('ID del apoderado N°');
+        $('#cantidad_nuevo_registro').text(data.id_apoderado);
+
+        // Asignación de valores
+        $('#rut_apoderado').val(rut);
+        generar_dv('#rut_apoderado', '#dv_rut_apoderado');
+        $('#nombre_apoderado').val(data.nombres_apoderado.toUpperCase());
+        $('#ap_apoderado').val(data.ap_apoderado.toUpperCase());
+        $('#am_apoderado').val(data.am_apoderado.toUpperCase());
+        $('#telefono').val(data.telefono);
+        $('#direccion').val(data.direccion.toUpperCase());
+
+    });
+}
+
+function updateApoderado(tabla) {  // Ver si agrega funcionalidad en una sola función registro y modularidzar los ajax
+    $('#btn_registrar_apoderado').click((e) => {
+        e.preventDefault();
+        if ($('#modal_apoderado_tittle').text() != 'UPDATE APODERADO') { return false; }
+        if (LibreriaFunciones.comprobarLongitud($('#rut_apoderado').val(), 7, 9, 'RUT', 'Apoderado') == false) { return false; }
+        if (LibreriaFunciones.comprobarLongitud($('#telefono').val(), 8, 8, 'Teléfono', 'Apoderado') == false) { return false; }
+
+        datos = 'updateApoderado';
+        const apoderado = getDataFormulario();
+        if (comprobarCamposVacios(apoderado) >= 1) {
+            LibreriaFunciones.alertPopUp('info', 'Faltan datos importantes !!');
+            return false;
+        }
+        apoderado.id_apoderado = $('#cantidad_nuevo_registro').text(); // Se agrega una nueva propiedad al objeto con el id de estudiante
+
+        $.ajax({
+            url: "./controller/controller_apoderado.php",
+            type: "post",
+            dataType: "json",
+            data: {datos: datos, apoderado: apoderado},
+            success: function(data) {
+                if (data == true) {
+                    LibreriaFunciones.alertPopUp('success', 'Apoderado actualizado !!');
+                    $('#modal_apoderado').modal('hide');
+                    beforeRecord(tabla);
+                } else {
+                    LibreriaFunciones.alertPopUp('warning', 'No se actualizó el apoderado !!');
+                }
+            }
+        }).fail(() => {
+            LibreriaFunciones.alertPopUp('error', 'Error en la consulta !!');
+        });
+    });
+}
+
+// ==================== FUNCIONES INTERNAS ===============================//
+
+$(document).ready(function() {
+
+    cantidadApoderado();
+
+    let tabla_apoderado = $('#tabla_apoderado').DataTable({
+        ajax: {
+            url: "./controller/controller_apoderado.php",
+            type: "post",
+            dataType: "json",
+            data: {datos: datos}
+        },
+        columns: [
+            {
+                visible: false,
+                data: "id_apoderado"
+            },
+            {
+                bSortable: false,
+                data: null,
+                className: "dt-control",
+                defaultContent: ""
+            },
+            {data: "rut_apoderado"},
+            {data: "ap_apoderado"},
+            {data: "am_apoderado"},
+            {data: "nombres_apoderado"},
+            {data: "telefono"},
+            {
+                data: "asignacion",
+                mRender: function(data) {
+                    let estilo;
+                    if (data == 'ASIGNADO') { estilo = 'bg-success'; }
+                    if (data == 'NO ASIGNADO') { estilo = 'bg-danger'; }
+                    return '<p class="text-center text-white rounded-3 mb-0 py-1 ' + estilo + '">' + data + '</p>';
+                }
+            },
+            {
+                data: null,
+                bSortable: false,
+                defaultContent: `<button class="btn btn-primary btn-data" id="btn_editar_apoderado" type="button" data-bs-toggle="modal" data-bs-target="#modal_apoderado"><i class="fas fa-pencil-alt"></i></button>
+                                <button class="btn btn-danger btn-delete" id="btn_eliminar_apoderado" type="button"><i class="fas fa-trash-alt"></i></button>`,
+                className: 'text-center'
+            }
+        ],
+        language: spanish
+    });
+
+    expandInfoApoderado(tabla_apoderado);
+
+    lanzarModalNuevoApoderado();
+    lanzarModalupdateApoderado(tabla_apoderado);
+
+    setApoderado(tabla_apoderado);
+    updateApoderado(tabla_apoderado);
+
+    deleteRegistroApoderado(tabla_apoderado);
+
+    exportarApoderados('#btn_excel', 'xlsx');
+    exportarApoderados('#btn_csv', 'csv');
+
+    validarRutApoderado();
+
+});

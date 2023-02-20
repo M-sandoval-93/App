@@ -187,7 +187,6 @@
             $sheetActive->mergeCells('A1:D1');
             $sheetActive->setCellValue('A1', 'REGISTRO ATRASO ESTUDIANTES');
             
-            $sheetActive->getColumnDimension('A')->setWidth(13);
             $sheetActive->getColumnDimension('A')->setWidth(15);
             $sheetActive->getColumnDimension('B')->setWidth(15);
             $sheetActive->getColumnDimension('C')->setWidth(15);
@@ -244,11 +243,8 @@
 
             $this->closeConnection();
             return json_encode($file);
-
         }
-
     }
-
 
 
 ?>

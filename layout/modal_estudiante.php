@@ -1,118 +1,103 @@
 
-<div id="modal_form_estudiantes" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <form action="#" class="modal-content animate estudiantes" method="POST" id="form_estudiantes">
-        <div class="modal-header">
-            <h2 id="titulo-modal_estudiante"></h2>
+<div class="modal fade" id="modal_estudiante" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="modal_estudiante_tittle">REGISTRAR ESTUDIANTE</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <form id="form_registro_estudiante">
+        <div class="modal-body">
+
+          <div class="row g-3">
+            <div class="col-sm-7 col-md-8">
+                <div class="col-sm-12 col-md-10 text-center">
+                  <div class="text-secondary h3" id="texto_secundario">Nuevo registro N°</div>
+                  <div class="text-primary h3" id="cantidad_nuevo_registro"></div>
+                </div>
+            </div>
+            <div class="col-sm-5 col-md-3">
+              <label for="fecha_ingreso_estudiante" class="form-label">Fecha ingreso <span class="text-danger fs-5">*</span></label>
+              <input type="date" id="fecha_ingreso_estudiante" class="form-control">
+            </div>
+          </div>
+
+          <div class="row align-items-center mt-3">
+            <label for="rut_estudiante" class="form-label">Rut <span class="text-danger fs-5">*</span></label>
+            <div class="col-sm-6 col-lg-5">
+              <div class="row align-items-center">
+                <div class="col-7 rut">
+                  <input type="text" class="form-control text-center" id="rut_estudiante" required>
+                </div>
+                <div class="col-1 not_padding text-center">
+                  <span>-</span>
+                </div>
+                <div class="col-4 dv_rut">
+                  <input type="text" class="form-control text-center" id="dv_rut_estudiante" disabled>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6 col-lg-7">
+              <span class="form-text" id="informacion_rut">Rut sin puntos, sin guión y sin dígito verificador</span>
+            </div>
+          </div>
+
+          <div class="row g-3 mt-4">
+            <div class="col-md-4">
+              <label for="nombre_estudiante">Nombres estudiante <span class="text-danger fs-5">*</span></label>
+              <input type="text" class="form-control" id="nombre_estudiante">
+            </div>
+            <div class="col-md-4">
+              <label for="ap_estudiante">Apellido paterno <span class="text-danger fs-5">*</span></label>
+              <input type="text" class="form-control" id="ap_estudiante">
+            </div>
+            <div class="col-md-4">
+              <label for="am_estudiante">Apellido materno <span class="text-danger fs-5">*</span></label>
+              <input type="text" class="form-control" id="am_estudiante">
+            </div>
+          </div>
+
+          <div class="row g-3 mt-4">
+            <div class="col-md-4">
+              <label for="n_social_estudiante">Nombre social</label>
+              <input type="text" class="form-control" id="n_social_estudiante">
+            </div>
+            <div class="col-md-3">
+              <label for="sexo_estudiante">Sexo <span class="text-danger fs-5">*</span></label>
+              <select class="form-select" id="sexo_estudiante">
+                <option selected disabled> ------- </option>
+                <option value="M">Masculino</option>
+                <option value="F">Femenina</option>
+              </select>
+            </div>
+            <div class="col-sm-6 col-md-3">
+              <label for="fecha_nacimiento">Fecha nacimiento <span class="text-danger fs-5">*</span></label>
+              <input type="date" class="form-control" id="fecha_nacimiento">
+            </div>
+            <div class="col-sm-6 col-md-2">
+              <label for="beneficio_junaeb">Junaeb <span class="text-danger fs-5">*</span></label>
+              <select class="form-select" id="beneficio_junaeb">
+                <option selected disabled> --- </option>
+                <option value="1">SI</option>
+                <option value="2">NO</option>
+              </select>
+            </div>
+          </div>
         </div>
-        <hr>
-        <div class="modal-inputs">
-            <div class="section section_1">
-                <div>
-                    <label for="estudiante_fecha_ingreso">Fecha ingreso</label>
-                    <input type="date" id="estudiante_fecha_ingreso" name="fecha_ingreso">
-                </div>
-                <div>
-                    <label for="estudiante_matricula">Matricula</label>
-                    <input type="text" id="estudiante_matricula" name="matricula">
-                </div>
-                <div>
-                    <label for="estudiante_rut">Rut</label>
-                    <input class="input-rut" type="text" id="estudiante_rut" name="rut" maxlength="8">
-                    <span></span>
-                    <input class="input-rut-dv" type="text" id="estudiante_dv_rut" maxlength="1">
-                </div>
-            </div>
 
-            <div class="section section_2">
-                <div>
-                    <label for="estudiante_nombres">Nombres</label>
-                    <input type="text" id="estudiante_nombres" name="nombres">
-                </div>
-                <div>
-                    <label for="estudiante_ap_paterno">Apellido Paterno</label>
-                    <input type="text" id="estudiante_ap_paterno" name="ap_paterno">
-                </div>
-                <div>
-                    <label for="estudiante_ap_materno">Apellido Materno</label>
-                    <input type="text" id="estudiante_ap_materno" name="ap_materno">
-                </div>
-            </div>
-            
-            <div class="section section_3">
-                <div>
-                    <label for="estudiante_nombre_social">Nombre Social</label>
-                    <input type="text" id="estudiante_nombre_social" name="nombre_social">
-                </div>
-                
-                <div>
-                    <label for="estudiante_grado">Curso</label>
-                    <select name="grado" id="estudiante_grado">
-                        <option disable selected>Grado</option>
-                        <option value="7">Septimo</option>
-                        <option value="8">Octavo</option>
-                        <option value="1">Primero</option>
-                        <option value="2">Segundo</option>
-                        <option value="3">Tercero</option>
-                        <option value="4">Cuarto</option>
-                    </select>
-                    <select name="grado" id="estudiante_letra"></select>
-                </div>
-                
-            </div>
-           
-            <div class="section section_4">
-                <div>
-                    <label for="estudiante_fecha_nacimiento">Fecha Nacimiento</label>
-                    <input type="date" id="estudiante_fecha_nacimiento" name="fecha_nacimiento">
-                </div>
-                
-                <div>
-                    <label>Sexo Estudiante</label>
-                    <select name="sexo" id="estudiante_sexo">
-                        <option value="M" selected>Masculino</option>
-                        <option value="F">Femenina</option>
-                    </select>
-                </div>
-                
-                <div>
-                    <label>Beneficio junaeb</label>
-                    <select name="junaeb" id="estudiante_junaeb">
-                        <option value="1" selected>SI</option>
-                        <option value="2">NO</option>
-                    </select>
-                </div>
-            </div>
-            
 
-            <div class="section section_5">
-                <div>
-                    <label for="apoderado_titula_rut">Apoderado titular</label>
-                    <input class="input-rut" type="text" id="apoderado_titular_rut" name="rut_titular" maxlength="8">
-                    <span></span>
-                    <input class="input-rut-dv" type="text" id="apoderado_titular_dv_rut" maxlength="1">
-                    <button class="btn" id="btn_me_agregar_titular"><i class="fas fa-plus-circle"></i></button>
-                </div>
-
-                <label id="estudiante_ap_titular"></label>
-            </div>
-
-            <div class="section section_6">
-                <div>
-                    <label for="apoderado_suplente_rut">Apoderado titular</label>
-                    <input class="input-rut" type="text" id="apoderado_suplente_rut" name="rut_suplente" maxlength="8">
-                    <span></span>
-                    <input class="input-rut-dv" type="text" id="apoderado_suplente_dv_rut" maxlength="1">
-                    <button class="btn" id="btn_me_agregar_suplente"><i class="fas fa-plus-circle"></i></button>
-                </div>
-                
-                <label id="estudiante_ap_suplente"></label>
-            </div>
-            
-        </div>
-        <hr>
         <div class="modal-footer">
-            <button class="btn btn-l btn-data" type="submit" id="btn_modal_registrar_estudiante">Registrar</button>
-            <button class="btn btn-l btn-delete" type="reset" id="btn_modal_cancelar_estudiante">Cancelar</button>
+          <button type="button" class="btn btn-danger btn-lg" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-success btn-lg" id="btn_registrar_estudiante">Registrar</button>
         </div>
-    </form>
+      </form>
+
+    </div>
+  </div>
 </div>
+
+
+
+

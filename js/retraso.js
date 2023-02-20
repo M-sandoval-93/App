@@ -280,10 +280,14 @@ function setRetraso(tabla_retraso) { // En progreso ... implementar impresión d
         datos = 'setRetraso';
         let rut;
 
+        
         if ($('#rut_estudiante_retraso').val() == '' || $('#nombre_estudiante_retraso').val() == 'Sin datos' || $('#nombre_estudiante_retraso').val() == '') {
-            LibreriaFunciones.alertPopUp('info', 'Ingresar rut válido');
+            LibreriaFunciones.alertPopUp('info', 'Faltan datos importantes');
             return false;
-        }
+        } // Arreglar comprobación el datos del formulario
+        if (LibreriaFunciones.comprobarLongitud($('#rut_estudiante_retraso').val(), 7, 9, 'RUT', 'Apoderado') == false) { return false; }
+
+        
 
         rut = $.trim($('#rut_estudiante_retraso').val());
 

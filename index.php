@@ -2,6 +2,7 @@
 
     // SETEO DE ZONA HORARIA
     date_default_timezone_set('America/Santiago');
+    // Comienzo de las sesiones 
     session_start();
 
     // COMPROBACIÓN DE INICIO DE SESIÓN Y CONTROL DE VISTAS
@@ -9,7 +10,6 @@
         if (isset($_GET['ruta'])) {
             include_once "./controller/controller_ruta.php";
         } else {
-            // header("location: home");
             header("location: home");
         }
     } else {

@@ -346,6 +346,29 @@ export let LibreriaFunciones = {
             return true;
         }
         return false;
+    },
+
+    getFecha: () => {
+        let fecha = new Date();
+        let y = fecha.getFullYear();
+        let m = fecha.getMonth() + 1;
+        let d = fecha.getDate();
+
+        let numero = (data) => {
+            if (data <= 9) {
+                data = '0' + data;
+            }
+            return data;
+        }
+
+        return numero(y) + '-' + numero(m) + '-' + numero(d);
+    },
+
+    comprobarLongitud: (elemento, longitudMenor, longitudMayor, campo, persona) => {
+        if (elemento.length < longitudMenor || elemento.length > longitudMayor) {
+            LibreriaFunciones.alertPopUp('info', 'revisar el ' + campo + ' del ' + persona);
+            return false;
+        }
     }
 
 }

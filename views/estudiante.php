@@ -14,7 +14,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-7 "> <!-- revisar como colocar al final derecho !!!! -->
+                <div class="col-md-7 ">
                     <!-- card -->
                     <div class="caja_tarjeta_2 d-flex justify-content-center">
                         <div class="tarjeta">
@@ -30,10 +30,9 @@
                 </div>
             </div>
 
-
             <!-- main content table -->
             <div class="d-flex justify-content-between mb-4">
-                <button type="button" class="btn-lg btn-primary" id="btn_nuevo_estudiante" title="Nuevo estudiante" data-bs-toggle="modal" data-bs-target="#">
+                <button type="button" class="btn-lg btn-primary" id="btn_nuevo_estudiante" title="Nuevo estudiante" data-bs-toggle="modal" data-bs-target="#modal_estudiante">
                     <i class="fas fa-user-plus icon"></i>
                 </button>
                 <div class="row g-2">
@@ -67,16 +66,13 @@
             </div>
 
 <!-- modal -->
-<?php   //include_once "./layout/modal_atraso.php";   ?>
-
+<?php   include_once "./layout/modal_estudiante.php";   ?>
 
 <!-- script generales del proyecto -->
 <?php   include_once "./layout/footer.php"; ?>
 
-
-    <!-- script layout atrasos -->
+    <!-- script layout estudiante -->
     <script src="./js/estudiante.js" type="module"></script>
-
 
 </body>
 </html>

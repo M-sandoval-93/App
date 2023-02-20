@@ -1,56 +1,46 @@
 <?php
 
-    // // SE INCLUYE EL MODELO PARA SER USADO POR EL CONTROLADOR
-    // if (file_exists('./model/model_datosTablas.php')) {
-    //     include_once './model/model_datosTablas.php';
-
-    // } else if (file_exists(include_once '../model/model_datosTablas.php')) {
-    //     include_once '../model/model_datosTablas.php';
-    // }
-
     // SE INCLUYE EL MODELO PARA SER USADO POR EL CONTROLADOR
     require_once '../model/model_apoderado.php';
 
-    $type = $_POST['datos']; // SE RECIBE EL TIPO DE ACCIÓN
-    $datosApoderados = new Apoderado(); // SE CREA EL OBJETO PARA TRABAJAR CON DATATABLE
-
+    $type = $_POST['datos']; // Recepción de la acción del controlador
+    $datosApoderado = new Apoderado(); // Instancia del objeto estudiante
 
     switch ($type) {
-        case "mostrar_apoderados":
-            print $datosApoderados->consultaApoderados();
+        case "getApoderados":
+            print $datosApoderado->getApoderados();
             break;
 
-        case "buscar_apoderado":
-            $rut = $_POST['rut'];
-            print $datosApoderados->consultaApoderado($rut);
+        case "getApoderado":
+            print $datosApoderado->getApoderado($_POST['rut'], $_POST['tipo']);
             break;
 
-        case "nuevo_apoderado":
-            $apoderado = array($_POST['rut'], $_POST['dv_rut'], $_POST['nombres'], $_POST['a_paterno'], $_POST['a_materno'], $_POST['fono']);
-            print $datosApoderados->newApoderado($apoderado);
+        case "getCantidadApoderado":
+            print $datosApoderado->getCantidadApoderado();
             break;
 
-        case "editar_apoderado":
-            $apoderado = array($_POST['rut'], $_POST['nombres'], $_POST['a_paterno'], $_POST['a_materno'], $_POST['fono']);
-            print $datosApoderados->updateApoderado($apoderado);
+        case "setApoderado":
+            $apoderado = json_decode(json_encode($_POST['apoderado'])); // Convertir un objeto js a un objeto PHP
+            print $datosApoderado->setApoderado($apoderado);
             break;
 
-        case "editar_estado":
-            $id = $_POST['id_apoderado'];
-            $estado = $_POST['estado'];
-            print $datosApoderados->updateEstadoApoderado($id, $estado); 
+        case "updateApoderado":
+            $apoderado = json_decode(json_encode($_POST['apoderado'])); // Convertir un objeto js a un objeto PHP
+            print $datosApoderado->updateApoderado($apoderado);
             break;
 
-        case "eliminar_apoderado":
-            $id = $_POST['id_apoderado'];
-            print $datosApoderados->deleteApoderado($id);
+        case "deleteApoderado":
+            print $datosApoderado->deleteApoderado($_POST['id_apoderado']);
             break;
 
-        case "getApoderado": // Terminado...
-            print $datosApoderados->getApoderado($_POST['rut']);
+        case "exportarApoderados":
+            print $datosApoderado->exportarApoderados($_POST['ext']);
             break;
 
 
+
+
+            
     }
 
 

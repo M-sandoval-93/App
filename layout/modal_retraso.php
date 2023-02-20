@@ -26,7 +26,7 @@
             </div>
           </fieldset>
 
-          <did class="row align-items-center mt-4">
+          <div class="row align-items-center mt-4">
             <label for="rut_estudiante_retraso" class="form-label">Rut</label>
             <div class="col-sm-6 col-lg-5">
               <div class="row align-items-center">
@@ -44,7 +44,7 @@
             <div class="col-sm-6 col-lg-7">
               <span class="form-text" id="informacion_rut">Rut sin puntos, sin guión y sin dígito verificador</span>
             </div>
-          </did>
+          </div>
 
           <fieldset disabled>
             <div class="row mt-2 g-3 align-items-center" disabled>
@@ -73,6 +73,7 @@
         </div>
 
       </form>
+
     </div>
   </div>
 </div>

@@ -46,26 +46,26 @@
 
           <div class="row g-3 mt-4">
             <div class="col-md-4">
-              <label for="nombre_estudiante">Nombres estudiante <span class="text-danger fs-5">*</span></label>
+              <label for="nombre_estudiante" class="form-label">Nombres estudiante <span class="text-danger fs-5">*</span></label>
               <input type="text" class="form-control" id="nombre_estudiante">
             </div>
             <div class="col-md-4">
-              <label for="ap_estudiante">Apellido paterno <span class="text-danger fs-5">*</span></label>
+              <label for="ap_estudiante" class="form-label">Apellido paterno <span class="text-danger fs-5">*</span></label>
               <input type="text" class="form-control" id="ap_estudiante">
             </div>
             <div class="col-md-4">
-              <label for="am_estudiante">Apellido materno <span class="text-danger fs-5">*</span></label>
+              <label for="am_estudiante" class="form-label">Apellido materno <span class="text-danger fs-5">*</span></label>
               <input type="text" class="form-control" id="am_estudiante">
             </div>
           </div>
 
           <div class="row g-3 mt-4">
             <div class="col-md-4">
-              <label for="n_social_estudiante">Nombre social</label>
+              <label for="n_social_estudiante" class="form-label">Nombre social</label>
               <input type="text" class="form-control" id="n_social_estudiante">
             </div>
             <div class="col-md-3">
-              <label for="sexo_estudiante">Sexo <span class="text-danger fs-5">*</span></label>
+              <label for="sexo_estudiante" class="form-label">Sexo <span class="text-danger fs-5">*</span></label>
               <select class="form-select" id="sexo_estudiante">
                 <option selected disabled> ------- </option>
                 <option value="M">Masculino</option>
@@ -73,11 +73,11 @@
               </select>
             </div>
             <div class="col-sm-6 col-md-3">
-              <label for="fecha_nacimiento">Fecha nacimiento <span class="text-danger fs-5">*</span></label>
+              <label for="fecha_nacimiento" class="form-label">Fecha nacimiento <span class="text-danger fs-5">*</span></label>
               <input type="date" class="form-control" id="fecha_nacimiento">
             </div>
             <div class="col-sm-6 col-md-2">
-              <label for="beneficio_junaeb">Junaeb <span class="text-danger fs-5">*</span></label>
+              <label for="beneficio_junaeb" class="form-label">Junaeb <span class="text-danger fs-5">*</span></label>
               <select class="form-select" id="beneficio_junaeb">
                 <option selected disabled> --- </option>
                 <option value="1">SI</option>

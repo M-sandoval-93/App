@@ -10,6 +10,10 @@
         case "getMatricula":
             print $datosMatricula->gerMatricula();
             break;
+
+        case "getCantidadMatricula":
+            print json_encode(true);
+            break;
         
         case "deleteMatricula":
             print $datosMatricula->deleteMatricula($_POST['id_matricula']);

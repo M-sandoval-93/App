@@ -2,6 +2,7 @@ import {LibreriaFunciones, generar_dv, spanish } from './librerias/librerias.js'
 let datos = 'getMatricula';
 
 // ==================== FUNCIONES INTERNAS ===============================//
+// Función para generar tabla expansiba con datos secundarios
 function getData(data) {
     let sexo = 'Masculino';
 
@@ -50,9 +51,9 @@ function getData(data) {
             '</tr>' +
         '</table>'
     );
-
 }
 
+// Función para expandir información secundaria
 function expadirData(tabla) {
     $('#tabla_matricula_estudiante tbody').on('click', 'td.dt-control', function () {
         let tr = $(this).closest('tr');
@@ -67,6 +68,47 @@ function expadirData(tabla) {
         }
     });
 }
+
+// Función para obtener cantidad de registros en diferentes contextos
+function getCantidadMatricula(contexto = false) {
+    let datos = 'getCantidadMatricula';
+    let valor = 0;
+
+    $.ajax({
+        url: "./controller/controller_matricula.php",
+        type: "post",
+        dataType: "json",
+        data: {datos: datos},
+        success: function(data) {
+            if (data != false) {
+                valor = data;
+            }
+            if (contexto == true) {
+                $('#cantidad_nuevo_registro').text(valor + 1);
+                return false;
+            }
+            $('#cantidad_apoderado').text(valor);
+        }
+    }).fail(() => {
+        if (contexto == true) {
+            $('#cantidad_nuevo_registro').text('Error !!');
+            return false;
+        }
+        $('#cantidad_apoderado').text('Error !!');
+    });
+}
+
+
+// SEGUIR DESDE AQUI !!!!!!
+
+
+
+
+
+
+
+
+
 
 function deleteRegistroMatricula(tabla) { // trabajando .....
     $('#tabla_matricula_estudiante tbody').on('click', '#btn_delete_matricula', function() {
@@ -107,16 +149,46 @@ function deleteRegistroMatricula(tabla) { // trabajando .....
     });
 }
 
-function beforeregistroMatricula(tabla) {
+function beforeRegistroMatricula(tabla) {
     tabla.ajax.reload(null, false);
     // agregar función cantidad matricula y cantidad retiros
+}
+
+
+// Sección de suspención
+function prepararModalEstado(tabla) {
+    $('#tabla_matricula_estudiante tbody').on('click', '#btn_estado_matricula', function() {
+        let data = tabla.row($(this).parents()).data();
+
+        if ($(this).text() == 'Activo(a)') {
+            $('#btn_activar_matricula').prop('disabled', true);
+            $('#btn_suspender_matricula').prop('disabled', false);
+        } else {
+            $('#btn_suspender_matricula').prop('disabled', true);
+            $('#btn_activar_matricula').prop('disabled', false);
+        }
+
+        prepararModalSuspencion();
+
+    });
+}
+
+function prepararModalSuspencion() {
+    $('#btn_suspender_matricula').click(() => {
+        $('#modal_suspender_matricula').modal('show');
+        $('#modal_matricula_estado').modal('hide');
+    });
 }
 
 
 // ==================== FUNCIONES INTERNAS ===============================//
 
 $(document).ready(function() {
-    // considerar la funciones para la cantidad de matriculas activas 
+
+    // Función de cantidad por parámetro
+    // Función para matrículas
+    // Función para retiros
+    getCantidadMatricula();
 
     let tabla_matricula = $('#tabla_matricula_estudiante').DataTable({
         ajax: {
@@ -133,7 +205,6 @@ $(document).ready(function() {
             {
                 className: "dt-control",
                 bSortable: false,
-                // orderable: false,
                 data: null,
                 defaultContent: ""
             },
@@ -147,22 +218,21 @@ $(document).ready(function() {
                 // bSortable: false,
                 mRender: function(data) {
                     let estilo;
-                    if (data == 'activo') {
-                        estilo = 'text-white bg-success';
-                    } else if (data == 'suspención') {
-                        estilo = 'text-dark bg-warning';
-                    } else if (data == 'retiro') {
-                        estilo = 'text-white bg-danger';
-                    }
+                    let modal = 'data-bs-toggle="modal" data-bs-target="#modal_matricula_estado"';
+                    if (data == 'Activo(a)') { estilo = 'btn-primary'; }
+                    if (data == 'Suspendido(a)') { estilo = 'btn-warning'; }
+                    if (data == 'Retirado(a)') { estilo = 'btn-danger'; modal = ""; }
 
-                    return '<p class="text-center rounded-3 mb-0 p-1 ' + estilo + '">' + data + '</p>';
+                    return `<div class="d-grid col-10 mx-auto">
+                                <button class="btn ` + estilo + `" title="Cambiar estado"` + modal + ` id="btn_estado_matricula">` + data + `</button>
+                            </div>`
                 }
             },
             {
                 data: null,
                 bSortable: false,
-                defaultContent:`<button class="btn btn-primary btn-justify px-3" id="btn_edit_matricula" title="Editar matricula" type="button"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-warning btn-justify px-3" id="btn_retiro_matricula" title="Retirar estudiante" type="button"><i class="fas fa-sign-out-alt"></i></button>
+                defaultContent:`<button class="btn btn-primary btn-justify px-3" id="btn_edit_matricula" title="Editar matricula" type="button" data-bs-toggle="modal" data-bs-target="#modal_matricula"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-warning btn-justify px-3" id="btn_retiro_matricula" title="Retirar estudiante" type="button" data-bs-toggle="modal" data-bs-target="#modal_retiro_matricula"><i class="fas fa-sign-out-alt"></i></button>
                                 <button class="btn btn-danger btn-delete px-3" id="btn_delete_matricula" title="Eliminar matricula" type="button"><i class="fas fa-trash-alt"></i></button>`,
                 className: "text-center"
             }
@@ -172,12 +242,17 @@ $(document).ready(function() {
 
     expadirData(tabla_matricula);
 
+    prepararModalEstado(tabla_matricula);
+
     deleteRegistroMatricula(tabla_matricula);
 
-    // prueba de modal
-    $('#btn_nueva_matricula').click(function () {
-        console.log('prueba');
-    });
+    // desabilitar boton interior dependiendo del estado de la matricula, al presionarlo
+    // Trabajar en boton para el retiro de un estudiante, considerando un modal con la fecha y posible motivo
+    // Trabajar en modal para editar nua matrícula
+
+
+
+
 
 
 

@@ -41,22 +41,22 @@
 
           <div class="row g-3 mt-4">
             <div class="col-md-4">
-              <label for="nombre_apoderado">Nombres apoderado <span class="text-danger fs-5">*</span></label>
+              <label for="nombre_apoderado" class="form-label">Nombres apoderado <span class="text-danger fs-5">*</span></label>
               <input type="text" class="form-control" id="nombre_apoderado" required>
             </div>
             <div class="col-md-4">
-              <label for="ap_apoderado">Apellido paterno <span class="text-danger fs-5">*</span></label>
+              <label for="ap_apoderado" class="form-label">Apellido paterno <span class="text-danger fs-5">*</span></label>
               <input type="text" class="form-control" id="ap_apoderado" required>
             </div>
             <div class="col-md-4">
-              <label for="am_apoderado">Apellido materno <span class="text-danger fs-5">*</span></label>
+              <label for="am_apoderado" class="form-label">Apellido materno <span class="text-danger fs-5">*</span></label>
               <input type="text" class="form-control" id="am_apoderado" required>
             </div>
           </div>
 
           <div class="row g-3 mt-4">
             <div class="col-md-4">
-              <label for="telefono">Teléfono <span class="text-danger fs-5">*</span></label>
+              <label for="telefono" class="form-label">Teléfono <span class="text-danger fs-5">*</span></label>
               <div class="col-12">
                 <div class="row align-items-center">
                   <div class="col-4 rut">
@@ -73,7 +73,7 @@
             </div>
             
             <div class="col-md-8">
-              <label for="direccion">Dirección <span class="text-danger fs-5">*</span></label>
+              <label for="direccion" class="form-label">Dirección <span class="text-danger fs-5">*</span></label>
               <input type="text" class="form-control" id="direccion" required>
             </div>
           </div>

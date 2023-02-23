@@ -620,6 +620,12 @@ table button#btn_justificar_atraso {
 }
 
 
+/* MODAL JUSTIFICACION */
+div#check {
+    line-height: 1.75rem !important;
+}
+
+
 
 
 

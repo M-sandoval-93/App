@@ -14,6 +14,7 @@
             parent::__construct(); 
         }
 
+        // Método para obtener datos de las matrículas
         public function gerMatricula() {
             $query = "SELECT matricula.id_matricula, matricula.matricula,
                 (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut,
@@ -31,7 +32,7 @@
                 LEFT JOIN apoderado AS apt ON apt.id_apoderado = matricula.id_ap_titular
                 LEFT JOIN apoderado AS aps ON aps.id_apoderado = matricula.id_ap_suplente
                 WHERE matricula.anio_lectivo = EXTRACT (YEAR FROM now())
-                ORDER BY matricula.matricula DESC";
+                ORDER BY matricula.matricula DESC;";
 
             $sentencia = $this->preConsult($query);
             $sentencia->execute();
@@ -50,6 +51,7 @@
             return json_encode($this->json);
         }
 
+        // Método para eliminar el registro de una matrícula
         public function deleteMatricula($id_matricula) { // trabajando.......
             $query = "DELETE FROM matricula WHERE id_matricula = ?;";
             $sentencia = $this->preConsult($query);

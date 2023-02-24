@@ -12,11 +12,15 @@
             break;
 
         case "getCantidadMatricula":
-            print json_encode(true);
+            print $datosMatricula->getCantidadMatricula();
             break;
         
         case "deleteMatricula":
             print $datosMatricula->deleteMatricula($_POST['id_matricula']);
+            break;
+
+        case "exportarMatriculas":
+            print $datosMatricula->exportarMatriculas($_POST['ext']);
             break;
     }
 

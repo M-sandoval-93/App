@@ -150,7 +150,7 @@ function lanzarModalNuevoApoderado() {
         prepararModal();
         $('#modal_estudiante_tittle').text('REGISTRAR APODERADO');
         $('#btn_registrar_apoderado').text('Registrar');
-        $('#texto_secundario').text('Nuevo registro N°');
+        $('#texto_secundario').text('Nuevo registro de apoderado N°');
         cantidadApoderado(true);
     });
 }

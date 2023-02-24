@@ -11,12 +11,12 @@
         <div class="modal-body">
 
           <div class="row g-3">
-            <div class="col-sm-7 col-md-8">
-                <div class="col-sm-12 col-md-10 text-center">
-                  <div class="text-secondary h3" id="texto_secundario">Nuevo registro N°</div>
+            <!-- <div class="col-sm-12 col-md-12"> -->
+                <div class="col-sm-12 col-md-12 text-center">
+                  <div class="text-secondary h3" id="texto_secundario">Nuevo registro de apoderado N°</div>
                   <div class="text-primary h3" id="cantidad_nuevo_registro"></div>
                 </div>
-            </div>
+            <!-- </div> -->
           </div>
 
           <div class="row align-items-center mt-3">

@@ -325,7 +325,6 @@ export let LibreriaFunciones = {
 
         if (rut.val().length > 9 && rut.val() != '') {
             rut.addClass('is-invalid');
-            $('#rut_estudiante_atraso').addClass('is-invalid');
             if (informacion != true) {
                 informacion.removeClass('form-text');
                 informacion.text('Rut inválido, revisar !!');

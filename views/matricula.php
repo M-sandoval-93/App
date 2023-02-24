@@ -19,7 +19,7 @@
                     <div class="caja_tarjeta_2">
                         <div class="tarjeta">
                             <div>
-                                <div class="numero" id="cantidad_matriculados"></div>
+                                <div class="numero" id="cantidad_matricula"></div>
                                 <div class="detalle">Matriculados</div>
                             </div>
                             <div class="icono_tarjeta">
@@ -28,7 +28,7 @@
                         </div>
                         <div class="tarjeta">
                             <div>
-                                <div class="numero" id="cantidad_retirados"></div>
+                                <div class="numero" id="cantidad_retiro"></div>
                                 <div class="detalle">Retirados</div>
                             </div>
                             <div class="icono_tarjeta">
@@ -47,10 +47,10 @@
                 </button>
                 <div class="row g-2">
                     <div class="col-6">
-                        <button class="btn-lg btn-success" id="btn_excel_matricula" title="Exportar Excel"><i class="fas fa-file-excel icon"></i></button>
+                        <button class="btn-lg btn-success" id="btn_excel" title="Exportar Excel"><i class="fas fa-file-excel icon"></i></button>
                     </div>
                     <div class="col-6">
-                        <button class="btn-lg btn-secondary" id="btn_csv_matricula" title="Exportar CSV"><i class="fas fa-file-csv icon"></i></button>
+                        <button class="btn-lg btn-secondary" id="btn_csv" title="Exportar CSV"><i class="fas fa-file-csv icon"></i></button>
                     </div>
                 </div>
             </div>

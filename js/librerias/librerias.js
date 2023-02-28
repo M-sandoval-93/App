@@ -320,7 +320,7 @@ export let LibreriaFunciones = {
         });
     },
 
-    validarNumberRut: (rut, informacion = true) => {
+    validarNumberRut: (rut, informacion = true, texto) => {
         rut.val(rut.val().replace(/[^0-9]/g, ''));
 
         if (rut.val().length > 9 && rut.val() != '') {
@@ -334,7 +334,7 @@ export let LibreriaFunciones = {
             rut.removeClass('is-invalid');
             if (informacion != true) {
                 informacion.removeClass('text-danger');
-                informacion.text('Rut sin puntos, sin guión y sin dígito verificador');
+                informacion.text(texto);
                 informacion.addClass('form-text')
             }
         }
@@ -364,10 +364,18 @@ export let LibreriaFunciones = {
     },
 
     comprobarLongitud: (elemento, longitudMenor, longitudMayor, campo, persona) => {
+        if (elemento.length == 0) { return true; }
+        
         if (elemento.length < longitudMenor || elemento.length > longitudMayor) {
             LibreriaFunciones.alertPopUp('info', 'revisar el ' + campo + ' del ' + persona);
             return false;
         }
+    },
+
+    textFecha: (f) => {
+        let texto = (f == null) ? '' : f.split(' / ');
+        let fecha = (texto == '') ? texto : texto[2] + '-' + texto[1] + '-' + texto[0];
+        return fecha;
     }
 
 }

@@ -64,9 +64,41 @@
 
          // Método para obtener los datos de un estudiante o saber si existe en la bbdd
         public function getEstudiante($rut, $tipo) { // Revisado y terminado !!
-            if ($tipo == 'existe') {
+            if ($tipo == 'existe') { // Condición para saber si el estudiante existe
                 $this->res = $this->comprobarEstudiante($rut);
                 return json_encode($this->res);
+            }
+
+            if ($tipo == 'existeMatricula') {
+                $query = "SELECT estudiante.id_estudiante
+                    FROM matricula
+                    LEFT JOIN estudiante ON estudiante.id_estudiante = matricula.id_estudiante
+                    WHERE estudiante.rut_estudiante = ? AND matricula.anio_lectivo = EXTRACT(YEAR FROM now())";
+                $sentencia = $this->preConsult($query);
+                $sentencia->execute([$rut]);
+
+                if ($sentencia->fetchColumn() > 0) {
+                    $this->res = true;
+                }
+
+                $this->closeConnection();
+                return json_encode($this->res);
+            }
+
+            if ($tipo == 'matricula') { // Condicion para obtener los datos del estudiante para ser matriculado
+                $query = "SELECT (nombres_estudiante || ' ' || ap_estudiante || ' ' || am_estudiante) AS nombre_estudiante,
+                    nombre_social FROM estudiante WHERE rut_estudiante = ?;";
+
+                $sentencia = $this->preConsult($query);
+                $sentencia->execute([$rut]);
+                $estudiante = $sentencia->fetch();
+
+                if ($estudiante['nombre_social'] != '') {
+                    $estudiante['nombre_estudiante'] = '('. $estudiante['nombre_social']. ') '. $estudiante['nombre_estudiante'];
+                }
+
+                $this->closeConnection();
+                return json_encode($estudiante['nombre_estudiante']);
             }
 
             $query = "SELECT (estudiante.nombres_estudiante || ' ' || estudiante.ap_estudiante

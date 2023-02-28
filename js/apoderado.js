@@ -161,7 +161,7 @@ function validarRutApoderado() {
         e.preventDefault();
         generar_dv('#rut_apoderado', '#dv_rut_apoderado');
         comprobarApoderado($('#rut_apoderado').val());
-        LibreriaFunciones.validarNumberRut($('#rut_apoderado'), $('#informacion_rut'));
+        LibreriaFunciones.validarNumberRut($('#rut_apoderado'), $('#informacion_rut'), 'Rut sin puntos, sin guión y sin dígito verificador');
     });
 }
 

@@ -52,6 +52,23 @@
                 return json_encode($this->res);
             }
 
+            if ($tipo == 'matricula') {
+                $query = "SELECT id_apoderado,
+                    (nombres_apoderado || ' ' || ap_apoderado || ' ' || am_apoderado) AS nombre_apoderado
+                    FROM apoderado
+                    WHERE rut_apoderado = ?";
+                $sentencia = $this->preConsult($query);
+                $sentencia->execute([$rut]);
+                $apoderado = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+
+                foreach ($apoderado as $ap) {
+                    $this->json[] = $ap;
+                }
+
+                $this->closeConnection();
+                return json_encode($this->json);
+            }
+
 
             // obtener los datos de una solo apoderado para algun evento de completar o asignar apoderado
 

@@ -14,6 +14,28 @@
         case "getCantidadMatricula":
             print $datosMatricula->getCantidadMatricula();
             break;
+
+        case "getNumeroMatricula":
+            print $datosMatricula->getNumeroMatricula($_POST['inicial'], $_POST['final']);
+            break;
+
+        case "getApoderadoTS":
+            print $datosMatricula->getApoderadoTS($_POST['id_matricula']);
+            break;
+
+        case "setMatricula":
+            $matricula = json_decode(json_encode($_POST['matricula'])); // Convertir un objeto js a un objeto php
+            print($datosMatricula->setMatricula($matricula));
+            break;
+
+        case "setRetiroMatricula":
+            print($datosMatricula->setRetiroMatricula($_POST['rut'], $_POST['id_matricula'], $_POST['fecha']));
+            break;
+
+        case "updateMatricula":
+            $matricula = json_decode(json_encode($_POST['matricula'])); // Convertir un objeto js a un objeto php
+            print($datosMatricula->updateMatricula($matricula));
+            break;
         
         case "deleteMatricula":
             print $datosMatricula->deleteMatricula($_POST['id_matricula']);

@@ -140,7 +140,7 @@ function validarRut() { // Terminado y revisado !!
         generar_dv('#rut_estudiante_retraso', '#dv_rut_estudiante_retraso');
         getEstudiante($('#rut_estudiante_retraso').val(), $('#nombre_estudiante_retraso'), $('#curso_estudiante_retraso'));
 
-        LibreriaFunciones.validarNumberRut($('#rut_estudiante_retraso'), $('#informacion_rut'));  
+        LibreriaFunciones.validarNumberRut($('#rut_estudiante_retraso'), $('#informacion_rut'), 'Rut sin puntos, sin guión y sin dígito verificador');  
     });
 }
 

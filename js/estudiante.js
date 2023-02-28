@@ -195,7 +195,7 @@ function validarRutEstudiante() {
         generar_dv('#rut_estudiante', '#dv_rut_estudiante');
         comprobarEstudiante($('#rut_estudiante').val());
 
-        LibreriaFunciones.validarNumberRut($('#rut_estudiante'), $('#informacion_rut'));  
+        LibreriaFunciones.validarNumberRut($('#rut_estudiante'), $('#informacion_rut'), 'Rut sin puntos, sin guión y sin dígito verificador');  
     });
 }
 
@@ -304,12 +304,6 @@ function lanzarModalupdateEstudiante(tabla) {
             nombres = nombres.replace(/\s*\(.*?\)\s*/g, '');   
         }
 
-        let fecha = (f) => {
-            f = f.split(' / ');
-            let fecha = f[2] + '-' + f[1] + '-' + f[0];
-            return fecha;
-        } 
-
         // Asignación del contenido
         $('#modal_estudiante_tittle').text('UPDATE ESTUDIANTE');
         $('#btn_registrar_estudiante').text('Actualizar');
@@ -324,8 +318,8 @@ function lanzarModalupdateEstudiante(tabla) {
         $('#am_estudiante').val(data.am_estudiante.toUpperCase());
         $('#n_social_estudiante').val(n_social.toUpperCase()); // Valor que puede ser nulo !!
         $('#sexo_estudiante').val(data.sexo);
-        $('#fecha_nacimiento').val(fecha(data.fecha_nacimiento));
-        $('#fecha_ingreso_estudiante').val(fecha(data.fecha_ingreso));
+        $('#fecha_nacimiento').val(LibreriaFunciones.textFecha(data.fecha_nacimiento));
+        $('#fecha_ingreso_estudiante').val(LibreriaFunciones.textFecha(data.fecha_ingreso));
         $('#beneficio_junaeb').val(data.junaeb);
 
     });

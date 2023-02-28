@@ -1,0 +1,15 @@
+** POR HACER, IDEAS, PENDIENTES
+
+
+1.- Ver como maquetar el modulo de home de la app
+    a.- agregar cuantas matriculas activa hay
+    b.- agregar cuantos estudiantes suspendidos
+    c.- agregar la cantidad de retiros que van del año
+
+2.- Ver la posibilidad de agregar información relacionada con los cursos
+    a.- agregar lista con los grados
+    b.- cada grado con la cantidad de estudiantes
+    c.- Cada grado permita desplegar la cantidad de cursos y sus respectivos estudiantes
+
+3.- Posibilidad de generar certificados de alumno regular
+4.- Trabajar en módulo de funcionarios

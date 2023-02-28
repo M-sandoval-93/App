@@ -23,6 +23,7 @@
                 estudiante.nombres_estudiante AS nombre, estudiante.nombre_social AS n_social, curso.curso,
                 to_char(estudiante.fecha_nacimiento, 'DD / MM / YYYY') AS fecha_nacimiento,
                 to_char(estudiante.fecha_ingreso, 'DD / MM / YYYY') AS fecha_ingreso,
+                to_char(matricula.fecha_matricula, 'DD / MM / YYYY') AS fecha_matricula,
                 estudiante.sexo, estado.nombre_estado,
                 (apt.nombres_apoderado || ' ' || apt.ap_apoderado || ' ' || apt.am_apoderado) AS apoderado_titular,
                 (aps.nombres_apoderado || ' ' || aps.ap_apoderado || ' ' || aps.am_apoderado) AS apoderado_suplente
@@ -52,6 +53,20 @@
             return json_encode($this->json);
         }
 
+        // Método para obtener el numero correlativo de la matricula según el grado
+        public function getNumeroMatricula($inicial, $final) {
+            $query = "SELECT MAX(matricula.matricula) + 1 AS matricula
+                FROM matricula
+                INNER JOIN curso ON curso.id_curso = matricula.id_curso
+                WHERE substr(curso.curso, 1,1)::integer >= ? AND substr(curso.curso, 1,1)::integer <= ?;";
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute([intval($inicial), intval($final)]);
+            $matricula = $sentencia->fetch();
+
+            $this->closeConnection();
+            return json_encode($matricula['matricula']);
+        }
+
         // Método para obtener cantidad
         public function getCantidadMatricula() {
             $query = "SELECT SUM(CASE WHEN id_estado != 4 THEN 1 ELSE 0 END) AS cantidad_matricula,
@@ -70,12 +85,127 @@
             return json_encode($this->json);
         }
 
+        // Método para obtener los apoderados de un estudiante
+        public function getApoderadoTS($id_matricula) {
+            $query = "SELECT titular.rut_apoderado AS rut_titular, suplente.rut_apoderado AS rut_suplente
+                FROM matricula
+                LEFT JOIN apoderado AS titular ON titular.id_apoderado = matricula.id_ap_titular
+                LEFT JOIN apoderado AS suplente ON suplente.id_apoderado = matricula.id_ap_suplente
+                WHERE matricula.id_matricula = ?;";
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute([intval($id_matricula)]);
+            $apoderados = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+
+            $this->closeConnection();
+            return json_encode($apoderados);
+        }
+
+        // Método para registrar nueva matrícula
+        public function setMatricula($m) {
+            // Sentencia para verificar si el rut ya cuenta con una matricula registrada
+            $query = "SELECT estudiante.id_estudiante
+                FROM matricula
+                LEFT JOIN estudiante ON estudiante.id_estudiante = matricula.id_estudiante
+                WHERE estudiante.rut_estudiante = ? AND matricula.anio_lectivo = EXTRACT (YEAR FROM now());";
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute([$m->rut]);
+
+            if ($sentencia->fetchColumn() > 0) {
+                $this->closeConnection();
+                return json_encode('existe');
+            }
+
+
+
+            // función para saber si el numero de matricula para el grado, ya se encuentra en uso
+            $query = "SELECT matricula.matricula, substr(curso.curso, 1,1) AS grado
+                FROM matricula
+                LEFT JOIN curso ON curso.id_curso = matricula.id_curso
+                WHERE matricula.matricula = ? AND 
+                CASE WHEN (? >= 7 AND ? <= 8) 
+                THEN substr(curso.curso, 1,1)::integer  >= 7 AND substr(curso.curso, 1,1)::integer <= 8
+                ELSE substr(curso.curso, 1,1)::integer  >= 1 AND substr(curso.curso, 1,1)::integer <= 4
+                END;";
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute([intval($m->matricula), intval($m->grado), intval($m->grado)]);
+
+            if ($sentencia->rowCount() > 0) {
+                $this->closeConnection();
+                return json_encode('matriculaExiste');
+            }
+
+
+
+            // Sentencia para obtener el id del estudiante
+            $query = "SELECT id_estudiante FROM estudiante WHERE rut_estudiante = ?;";
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute([$m->rut]);
+            $estudiante = $sentencia->fetch();
+
+            $titular = ($m->id_titular == '0') ? null : intval($m->id_titular);
+            $suplente = ($m->id_suplente == '0') ? null : intval($m->id_suplente);
+
+
+
+            // Sentencia para el registro de una matricula
+            $query = "INSERT INTO matricula (matricula, id_estudiante, id_ap_titular, id_ap_suplente, id_curso, anio_lectivo, fecha_matricula)
+                VALUES (?, ?, ?, ?, ?, ?, ?);";
+            $sentencia = $this->preConsult($query);
+            if ($sentencia->execute([intval($m->matricula), $estudiante['id_estudiante'], $titular, $suplente, 
+                intval($m->id_curso), intval(date('Y')), $m->fecha_matricula])) {
+                $this->res = true;
+            }
+
+            $this->closeConnection();
+            return json_encode($this->res);
+        } 
+
+        public function setRetiroMatricula($rut, $id_matricula, $fecha) {
+            // update fecha retiro
+            $query = "UPDATE estudiante
+                SET fecha_retiro = ?
+                WHERE rut_estudiante = ?;";
+
+            $sentencia = $this->preConsult($query);
+            if ($sentencia->execute([$fecha, $rut])) {
+                // Update estado
+                $query = "UPDATE matricula
+                    SET id_estado = 4
+                    WHERE id_matricula = ?;";
+                    
+                $sentencia = $this->preConsult($query);
+                if ($sentencia->execute([intval($id_matricula)])) {
+                    $this->res = true;
+                }
+            }
+
+            $this->closeConnection();
+            return json_encode($this->res);
+        }
+
+        // Método para actualizar una matrícula
+        public function updateMatricula($m) {
+            $titular = ($m->id_titular == '0') ? null : intval($m->id_titular);
+            $suplente = ($m->id_suplente == '0') ? null : intval($m->id_suplente);
+
+            $query = "UPDATE matricula
+                SET matricula = ?, id_ap_titular = ?, id_ap_suplente = ?, id_curso = ?, fecha_matricula = ?
+                WHERE id_matricula = ?;";
+            $sentencia = $this->preConsult($query);
+            if ($sentencia->execute([intval($m->matricula), $titular, $suplente, intval($m->id_curso), $m->fecha_matricula, intval($m->id_matricula)])) {
+                $this->res = true;
+            }
+
+            $this->closeConnection();
+            return json_encode($this->res);
+        }
+
         // Método para eliminar el registro de una matrícula
         public function deleteMatricula($id_matricula) {
             $query = "DELETE FROM matricula WHERE id_matricula = ?;";
             $sentencia = $this->preConsult($query);
 
-            if ($sentencia->execute([$id_matricula])) {
+            if ($sentencia->execute([intval($id_matricula)])) {
                 $this->res = true;
             }
 

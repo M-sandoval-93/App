@@ -48,21 +48,33 @@
             </div>
           </div>
 
-          <div class="row g-3 mt-3">
-            <div class="col-md-10">
-              <label for="nombres_estudiante" class="form-label">Nombre completo estudiante <span class="text-danger fs-5">*</span></label>
-              <input type="text" class="form-control" id="nombre_estudiante_matricula">
+          <div class="row g-3 mt-3 align-items-end">
+            <div class="col-md-8">
+              <label for="nombres_estudiante" class="form-label">Nombre completo estudiante</label>
+              <input type="text" class="form-control" id="nombre_estudiante_matricula" disabled>
             </div>
             <div class="col-md-2">
-              <label for="curso_estudiante" class="form-label">Curso <span class="text-danger fs-5">*</span></label>
-              <select class="form-select" id="curso_estudiante">
-                <option selected disabled> ------- </option>
+              <label for="grado_curso" class="form-label">Grado <span class="text-danger fs-5">*</span></label>
+              <select class="form-select" id="grado_curso">
+                <option selected> ------- </option>
+                <option value=7> 7° </option>
+                <option value=8> 8° </option>
+                <option value=1> 1° </option>
+                <option value=2> 2° </option>
+                <option value=3> 3° </option>
+                <option value=4> 4° </option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <label for="letra_curso" class="form-label">Letra <span class="text-danger fs-5">*</span></label>
+              <select class="form-select" id="letra_curso">
+                <option selected> ------- </option>
               </select>
             </div>
           </div>
 
           <!-- Apoderado titula -->
-          <div class="row align-items-center mt-3">
+          <div class="row align-items-center mt-4">
             <label for="rut_ap_titular" class="form-label">Rut titular <span class="text-danger fs-5">*</span></label>
             <div class="col-sm-6 col-lg-5">
               <div class="row align-items-center">

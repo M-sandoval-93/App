@@ -94,7 +94,7 @@
                     <span class="titulo">Junaeb</span>
                 </a>
             </li> -->
-            <li>
+            <!-- <li>
                 <a href="#">
                     <span class="icono"><i class="fas fa-user-friends"></i></span>
                     <span class="titulo">Personal</span>
@@ -102,9 +102,8 @@
                 </a>
                 <ul class="sub_grupo">
                     <li><a href=""><span class="titulo">Funcionarios</span></a></li>
-                    <!-- <li><a href="inasistencias"><span class="titulo">Inasistencias</span></a></li> -->
                 </ul>
-            </li>
+            </li> -->
              <li>
                 <a href="#">
                     <span class="icono"><i class="fas fa-cogs"></i></span>

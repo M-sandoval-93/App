@@ -280,7 +280,7 @@ function validarRut() { // Terminado y revisado !!
         e.preventDefault();
         generar_dv($('#justificacion_rut_estudiante'), $('#justificacion_dv_rut_estudiante'));
         getInfoEstudiante($('#justificacion_rut_estudiante').val(), $('#justificacion_nombre_estudiante'), $('#justificacion_curso_estudiante'));
-        LibreriaFunciones.validarNumberRut($('#justificacion_rut_estudiante')); // Ver si es necesaria o revisar función
+        LibreriaFunciones.validarNumberRut($('#justificacion_rut_estudiante'), 'Rut sin puntos, sin guión y sin dígito verificador');
     });
 }
 

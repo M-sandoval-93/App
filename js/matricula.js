@@ -1,5 +1,7 @@
 import {LibreriaFunciones, generar_dv, spanish } from './librerias/librerias.js';
 let datos = 'getMatricula';
+let infoRetiro;
+let infoSuspension;
 
 // ==================== FUNCIONES INTERNAS ===============================//
 // Función para generar tabla expansiba con datos secundarios
@@ -138,6 +140,7 @@ function validarRutApoderadoMatricula(campo_rut, campo_dv_rut, campo_nombre, tex
     });
 }
 
+// Función para validar el rut del apoderado, cuando este se carga para actualizar
 function preValidarRutApoderadoMatricula(campo_rut, campo_dv_rut, campo_nombre, texto) {
     generar_dv(campo_rut, campo_dv_rut);
     getApoderado($(campo_rut).val(), campo_nombre, texto);
@@ -365,39 +368,6 @@ function getApoderadosTS(id_matricula) {
 
 }
 
-// function getMatriculaGrado(matricula, callback) {
-//     datos = "getMatriculaGrado";
-
-//     $.ajax({
-//         url: "./controller/controller_matricula.php",
-//         type: "post",
-//         dataType: "json",
-//         data: {datos: datos, matricula: matricula, grado: $('#grado_curso').val()},
-//         success: function(data) {
-//             callback(data);
-//         }
-//     }).fail(() => {
-//         LibreriaFunciones.alertPopUp('error', 'Error en la consulta !!');
-//     });
-// }
-
-// function proccessMatriculaGrado(respuesta) {
-//     let valor = respuesta;
-//     console.log(valor);
-// }
-
-// async function getMatriculaGrado(matricula) {
-//     datos = "getMatriculaGrado";
-//     let respuesta = await Promise.resolve(
-//         $.ajax({
-//             url: "./controller/controller_matricula.php",
-//             type: "post",
-//             dataType: "json",
-//             data: {datos: datos, matricula: matricula, grado: $('#grado_curso').val()}
-//         }));
-//     return respuesta;
-// }
-
 
 // ================== FUNCÓN PARA TRABAJAR CON MODALES ================== //
 // Función para preparar el modal de matrícula
@@ -479,36 +449,54 @@ function lanzarModalActualizarMatricula(tabla) {
 
 }
 
+// Función para preparar y lanzar el modal de suspención
+function lanzarModalSuspencion(tabla) {
+    let calculo = (campo) => {
+        campo.change(() => {
+            $('#numero_dias_suspencion').text(LibreriaFunciones.restarFechas($('#fecha_inicio_suspencion'), $('#fecha_termino_suspencion')));
+        })
+    }
 
-
-
-
-
-
-
-function prepararModalEstado(tabla) {
     $('#tabla_matricula_estudiante tbody').on('click', '#btn_estado_matricula', function() {
         let data = tabla.row($(this).parents()).data();
+        let nombres = data.nombre + ' ' + data.ap_materno + ' ' + data.ap_paterno;
 
-        if ($(this).text() == 'Activo(a)') {
-            $('#btn_activar_matricula').prop('disabled', true);
-            $('#btn_suspender_matricula').prop('disabled', false);
-        } else {
-            $('#btn_suspender_matricula').prop('disabled', true);
-            $('#btn_activar_matricula').prop('disabled', false);
+        $('#form_suspender_matricula').trigger('reset');
+        $('#numero_dias_suspencion').text('')
+        $('#nombre_estudiante_suspencion').val(nombres);
+        calculo($('#fecha_inicio_suspencion'));
+        calculo($('#fecha_termino_suspencion'));
+
+        infoSuspension = { id_matricula: data.id_matricula }
+    });
+}
+
+// Función para preparar y lanzar el modal de retiro
+function lanzarModalRetiro(tabla) {
+    $('#tabla_matricula_estudiante tbody').on('click', '#btn_retiro_matricula', function() {
+        let data = tabla.row($(this).parents()).data();
+        if (data.nombre_estado == 'Retirado(a)') {
+            LibreriaFunciones.alertPopUp('warning', 'La matricula ya registra como retirada !!');
+            return false;
         }
+        $('#modal_retiro_matricula').modal('show');
 
-        prepararModalSuspencion();
+        let rut = data.rut.slice(0, data.rut.length - 2);
+        let nombres = data.nombre + ' ' + data.ap_paterno + ' ' + data.ap_materno;
+        $('#fecha_retiro_estudiante').val(LibreriaFunciones.getFecha());
+        $('#rut_estudiante_retirado').val(rut);
+        generar_dv('#rut_estudiante_retirado', '#dv_rut_estudiante_retirado');
+        $('#nombre_estudiante_retiro').val(nombres);
+        $('#curso_estudiante_retirado').val(data.curso);
 
+        infoRetiro = {
+            rut: rut,
+            id_matricula: data.id_matricula,
+            fecha_retiro: $('#fecha_retiro_estudiante').val()
+        }
     });
 }
 
-function prepararModalSuspencion() {
-    $('#btn_suspender_matricula').click(() => {
-        $('#modal_suspender_matricula').modal('show');
-        $('#modal_matricula_estado').modal('hide');
-    });
-}
 
 
 // ================== MANEJO DE INFORMARCIÓN ================== //
@@ -547,7 +535,9 @@ function setMatricula(tabla) {
                 if (data == true) {
                     LibreriaFunciones.alertPopUp('success', 'Matrícula registrada !!');
                     beforeRegistroMatricula(tabla, '#modal_matricula');
+                    return false;
                 }
+                LibreriaFunciones.alertPopUp('warning', 'Error de registro !!');
             }
         }).fail(() => {
             LibreriaFunciones.alertPopUp('error', 'Error en la consulta !!');
@@ -555,60 +545,76 @@ function setMatricula(tabla) {
     });
 }
 
-// Función para registrar el retiro de una matricula
-function SetRetiroMatricula(tabla) {
-    $('#tabla_matricula_estudiante tbody').on('click', '#btn_retiro_matricula', function() {
-        let data = tabla.row($(this).parents()).data();
-        if (data.nombre_estado == 'Retirado(a)') {
-            LibreriaFunciones.alertPopUp('warning', 'La matricula ya registra como retirada !!');
+// Función para registrar la suspención de una matricula
+function setSuspension(tabla) {
+    $('#btn_registrar_suspencion').click(() => {
+        datos = 'setSuspension';
+        infoSuspension.f_inicio = $('#fecha_inicio_suspencion').val();
+        infoSuspension.f_termino = $('#fecha_termino_suspencion').val();
+        infoSuspension.motivo = $('#motivo_suspencion').val();
+
+        if (infoSuspension.f_inicio == '' || infoSuspension.f_termino == '') {
+            LibreriaFunciones.alertPopUp('info', 'Ingresar las fechas de la suspensión !!');
             return false;
         }
 
-        $('#modal_retiro_matricula').modal('show');
-
-
-        let rut = data.rut.slice(0, data.rut.length - 2);
-        let nombres = data.nombre + ' ' + data.ap_paterno + ' ' + data.ap_materno;
-
-        $('#fecha_retiro_estudiante').val(LibreriaFunciones.getFecha());
-        $('#rut_estudiante_retirado').val(rut);
-        generar_dv('#rut_estudiante_retirado', '#dv_rut_estudiante_retirado');
-        $('#nombre_estudiante_retiro').val(nombres);
-        $('#curso_estudiante_retirado').val(data.curso);
-
-        // Registrar retiro
-        $('#btn_registrar_retiro').click(() => {
-            datos = "setRetiroMatricula";
-            if ($('#fecha_retiro_estudiante').val() == '') {
-                LibreriaFunciones.alertPopUp('info', 'Ingresar fecha de retiro !!');
-                return false;
-            }
-
-            $.ajax({
-                url: "./controller/controller_matricula.php",
-                type: "post",
-                dataType: "json",
-                data: {datos: datos, rut: rut, id_matricula: data.id_matricula, fecha: $('#fecha_retiro_estudiante').val() },
-                success: function(data) {
-                    if (data == true) {
-                        LibreriaFunciones.alertPopUp('success', 'Retiro efectuado con éxito !!');
-                        beforeRegistroMatricula(tabla, '#modal_retiro_matricula');
-                    }
+        $.ajax({ // TRABAJAR EN ESTE APARTADO, MODIFICAR CONTROLADOR Y MODAL
+            url: "./controller/controller_matricula.php",
+            type: "post",
+            dataType: "json",
+            data: {datos: datos, suspension: infoSuspension },
+            success: function(data) {
+                if (data == true) {
+                    LibreriaFunciones.alertPopUp('success', 'Suspensión registrada con exito !!');
+                    beforeRegistroMatricula(tabla, '#modal_suspender_matricula');
+                    return false;
                 }
-                
-            }).fail(() => {
-                LibreriaFunciones.alertPopUp('error', 'Error en la consulta')
-            });
+                LibreriaFunciones.alertPopUp('warning', 'Error de registro !!');
+            }
+        }).fail(() => {
+            LibreriaFunciones.alertPopUp('error', 'Error en la ejecución !!');
+        });
+
+    });
+}
+
+// Función para registrar el retiro de una matricula
+function setRetiroMatricula(tabla) {
+    // Registrar retiro
+    $('#btn_registrar_retiro').click(() => {
+        datos = "setRetiroMatricula";
+        if ($('#fecha_retiro_estudiante').val() == '') {
+            LibreriaFunciones.alertPopUp('info', 'Ingresar fecha de retiro !!');
+            return false;
+        }
+
+        $.ajax({
+            url: "./controller/controller_matricula.php",
+            type: "post",
+            dataType: "json",
+            data: {datos: datos, retiro: infoRetiro },
+            success: function(data) {
+                if (data == true) {
+                    LibreriaFunciones.alertPopUp('success', 'Retiro efectuado con éxito !!');
+                    beforeRegistroMatricula(tabla, '#modal_retiro_matricula');
+                    return false;
+                }
+                LibreriaFunciones.alertPopUp('warning', 'Error de registro !!');
+            }
+        }).fail(() => {
+            LibreriaFunciones.alertPopUp('error', 'Error en la consulta')
         });
     });
+
+
+
 }
 
 // Función para actualizar una matricula
 function updateMatricula(tabla) {
     $('#btn_registrar_matricula').click((e) => {
-        e.preventDefault(); // SEGUIR DESDE AQUI !!!
+        e.preventDefault(); 
         if ($('#modal_matricula_tittle').text() != 'ACTUALIZAR MATRÍCULA') { return false; }
-        // if (LibreriaFunciones.comprobarLongitud($('#rut_estudiante_matricula').val(), 7, 9, 'RUT', 'Estudiante') == false) { return false; }
         if (LibreriaFunciones.comprobarLongitud($('#rut_ap_titular').val(), 7, 9, 'RUT', 'Apoderado titular') == false) { return false; }
         if (LibreriaFunciones.comprobarLongitud($('#rut_ap_suplente').val(), 7, 9, 'RUT', 'Apoderado suplente') == false) { return false; }
 
@@ -629,7 +635,9 @@ function updateMatricula(tabla) {
                 if (data == true) {
                     LibreriaFunciones.alertPopUp('success', 'Matricula actualizada !!');
                     beforeRegistroMatricula(tabla, '#modal_matricula');
+                    return false;
                 }
+                LibreriaFunciones.alertPopUp('warning', 'Error de registro !!');
             }
         }).fail(() => {
             LibreriaFunciones.alertPopUp('error', 'Error en la consulta !!');
@@ -660,13 +668,12 @@ function deleteRegistroMatricula(tabla) {
                     dataType: "json",
                     data: {datos: datos, id_matricula: id_matricula},
                     success: (data) => {
-                        if (data == false) {
-                            LibreriaFunciones.alertPopUp('error', 'Registro no eliminado !!');
+                        if (data == true) {
+                            LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
+                            beforeRegistroMatricula(tabla);
                             return false;
                         }
-
-                        LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
-                        beforeRegistroMatricula(tabla);
+                        LibreriaFunciones.alertPopUp('warning', 'Error de registro !!');
                     }
                 }).fail(() => {
                     LibreriaFunciones.alertPopUp('error', 'Error de ejecución !!');
@@ -675,8 +682,9 @@ function deleteRegistroMatricula(tabla) {
         });
     });
 }
-
 // ==================== FUNCIONES INTERNAS ===============================//
+
+
 
 
 // ==================== SCRIPT DEL MODULO ===============================//
@@ -688,7 +696,7 @@ $(document).ready(function() {
         ajax: {
             url: "./controller/controller_matricula.php",
             type: "post",
-            dateType: "json",
+            dataType: "json",
             data: {datos: datos}
         },
         columns: [
@@ -712,13 +720,13 @@ $(document).ready(function() {
                 // bSortable: false,
                 mRender: function(data) {
                     let estilo;
-                    let modal = 'data-bs-toggle="modal" data-bs-target="#modal_matricula_estado"';
+                    let modal = 'data-bs-toggle="modal" data-bs-target="#modal_suspender_matricula"';
                     if (data == 'Activo(a)') { estilo = 'btn-primary'; }
-                    if (data == 'Suspendido(a)') { estilo = 'btn-warning'; }
-                    if (data == 'Retirado(a)') { estilo = 'btn-danger'; modal = ""; }
+                    if (data == 'Suspendido(a)') { estilo = 'btn-warning'; modal = ''; }
+                    if (data == 'Retirado(a)') { estilo = 'btn-danger'; modal = ''; }
 
                     return `<div class="d-grid col-10 mx-auto">
-                                <button class="btn ` + estilo + `" title="Cambiar estado"` + modal + ` id="btn_estado_matricula">` + data + `</button>
+                                <button class="btn ` + estilo + `" title="Cambiar estado"` + modal + `id="btn_estado_matricula">` + data + `</button>
                             </div>`
                 }
             },
@@ -738,34 +746,19 @@ $(document).ready(function() {
 
     lanzarModalNuevaMatricula();
     lanzarModalActualizarMatricula(tabla_matricula);
+    lanzarModalSuspencion(tabla_matricula);
+    lanzarModalRetiro(tabla_matricula);
 
     setMatricula(tabla_matricula);
-    SetRetiroMatricula(tabla_matricula);
     updateMatricula(tabla_matricula);
-
-
-
-
-
-    // prepararModalEstado(tabla_matricula); // para trabajar estado de la matricula
-
+    setSuspension(tabla_matricula);
+    setRetiroMatricula(tabla_matricula);
     deleteRegistroMatricula(tabla_matricula);
-
 
     exportarMatriculas('#btn_excel', 'xlsx');
     exportarMatriculas('#btn_csv', 'csv');
 
-
-
 });
-
-
-
-// POR HACER:
-
-// TRABAJAR EN MODAL DE ACTUALIZACION DE MATRICULA
-// TRABAJAR EN MODAL DE ESTADO DE MATRICULA
-// TRABAJAR EN MODAL DE RETIRO DE MATRICULA
 
 
 

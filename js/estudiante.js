@@ -119,7 +119,6 @@ function deleteRegistroEstudiante(tabla) {
                             LibreriaFunciones.alertPopUpButton('error', 'No se puede eliminar el registro, por la integridad de los datos !!');
                             return false;
                         }
-
                         LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
                         beforeRecord(tabla);
                     }
@@ -174,6 +173,7 @@ function prepararModal() {
     $('#informacion_rut').text('Rut sin puntos, sin guión y sin dígito verificador');
     $('#informacion_rut').addClass('form-text');
     LibreriaFunciones.autoFocus($('#modal_estudiante'), $('#rut_estudiante'));
+    validarRutEstudiante();
 }
 
 // Función para lanzar el modal de nuevo estudiante
@@ -278,9 +278,8 @@ function setEstudiante(tabla) {
                     LibreriaFunciones.alertPopUp('success', 'Estudiante registrado !!');
                     $('#modal_estudiante').modal('hide');
                     beforeRecord(tabla);
-                } else {
-                    LibreriaFunciones.alertPopUp('warning', 'No se registro el estudiante !!');
-                }
+                } 
+                LibreriaFunciones.alertPopUp('warning', 'No se registro el estudiante !!');
             }
         }).fail(() => {
             LibreriaFunciones.alertPopUp('error', 'Error en la consulta !!');
@@ -351,9 +350,8 @@ function updateEstudiante(tabla) {
                     LibreriaFunciones.alertPopUp('success', 'Estudiante actualizado !!');
                     $('#modal_estudiante').modal('hide');
                     beforeRecord(tabla);
-                } else {
-                    LibreriaFunciones.alertPopUp('warning', 'No se actualizó el estudiante !!');
                 }
+                LibreriaFunciones.alertPopUp('warning', 'No se actualizó el estudiante !!');
             }
         }).fail(() => {
             LibreriaFunciones.alertPopUp('error', 'Error en la consulta !!');
@@ -424,7 +422,5 @@ $(document).ready(function() {
 
     exportarEstudiantes('#btn_excel', 'xlsx');
     exportarEstudiantes('#btn_csv', 'csv');
-
-    validarRutEstudiante()
 
 });

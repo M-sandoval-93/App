@@ -114,6 +114,7 @@ function prepararModalRetraso() { // Terminado y revisado !!
     $('#informacion_rut').text('Rut sin puntos, sin guión y sin dígito verificador');
     $('#informacion_rut').addClass('form-text');
     LibreriaFunciones.autoFocus($('#modal_registro_retraso'), $('#rut_estudiante_retraso'));
+    validarRut();
 }
 
 // Función para lanzar el modal de ingreso de retraso
@@ -262,7 +263,6 @@ function deleteRegistroRetraso(tabla_retraso) { // Terminado y revisado !!
                             LibreriaFunciones.alertPopUp('error', 'Registro no eliminado !!');
                             return false;
                         }
-
                         LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
                         beforeRegistro(tabla_retraso);
                     }
@@ -322,7 +322,7 @@ $(document).ready(function() {
         ajax: {
             url: "./controller/controller_retraso.php",
             type: "post",
-            dateType: "json",
+            dataType: "json",
             data: {datos: datos}
         },
         columns: [
@@ -345,7 +345,7 @@ $(document).ready(function() {
                 className: 'text-center'
             }
         ],
-        order: [0, 'desc'],
+        order: ([]), // para quitar el orden automatico que incluye datatable
         language: spanish
     });
 
@@ -370,7 +370,7 @@ $(document).ready(function() {
 
     
     // Btn para generar PDF  --ver si realmente es necesario !!!!
-    $('#btn_pdf_atraso').click(function(e) { // En progreso...
+    $('#btn_pdf').click(function(e) { // En progreso...
         e.preventDefault();
         LibreriaFunciones.alertPopUp('warning', 'En mantenimiento !!');
 
@@ -395,6 +395,5 @@ $(document).ready(function() {
         // });
     });
 
-    validarRut();
 
 });

@@ -142,6 +142,7 @@ function prepararModal() { // revisar y verificar los campos !!!!! (Agregar al t
     $('#informacion_rut').text('Rut sin puntos, sin guión y sin dígito verificador');
     $('#informacion_rut').addClass('form-text');
     LibreriaFunciones.autoFocus($('#modal_apoderado'), $('#rut_apoderado'));
+    validarRutApoderado();
 }
 
 // Función para lanzar modal nuevo apoderado
@@ -376,7 +377,5 @@ $(document).ready(function() {
 
     exportarApoderados('#btn_excel', 'xlsx');
     exportarApoderados('#btn_csv', 'csv');
-
-    validarRutApoderado();
 
 });

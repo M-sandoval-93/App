@@ -4,6 +4,7 @@ if ($_GET['ruta'] == 'home' ||
     $_GET['ruta'] == 'matricula' ||
     $_GET['ruta'] == 'retraso' ||
     $_GET['ruta'] == 'justificacion' ||
+    $_GET['ruta'] == 'suspension' ||
     $_GET['ruta'] == 'estudiante' ||
     $_GET['ruta'] == 'apoderado' ||
     $_GET['ruta'] == 'login' ||

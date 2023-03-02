@@ -415,7 +415,7 @@ $(document).ready(function() {
             },
             {
                 className: "dt-control",
-                // orderable: false,
+                // orderable: false, para evitar el orden de una fila
                 bSortable: false,
                 data: null,
                 defaultContent: ""
@@ -434,6 +434,7 @@ $(document).ready(function() {
                 className: "text-center"
             }
         ],
+        order: ([]), // para quitar el orden automatico que incluye datatable
         language: spanish
     });
 

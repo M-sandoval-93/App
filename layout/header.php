@@ -56,13 +56,13 @@
             <li>
                 <a href="#">
                     <span class="icono"><i class="fas fa-user-graduate"></i></span>
-                    <span class="titulo">Estudiante</span>
+                    <span class="titulo">Registros</span>
                     <i class="fas fa-angle-right icon icon-right"></i>
                 </a>
                 <ul class="sub_grupo">
-                    <li><a href="matricula"><span class="titulo">Matricula</span></a></li>
                     <li><a href="retraso"><span class="titulo">Retraso</span></a></li>
                     <li><a href="justificacion"><span class="titulo">Justificacion</span></a></li>
+                    <li><a href="suspension"><span class="titulo">Suspension</span></a></li>
                 </ul>
             </li>
             <!-- <li>
@@ -78,6 +78,7 @@
                     <i class="fas fa-angle-right icon icon-right"></i>
                 </a>
                 <ul class="sub_grupo">
+                    <li><a href="matricula"><span class="titulo">Matricula</span></a></li>
                     <li><a href="estudiante"><span class="titulo">Estudiante</span></a></li>
                     <li><a href="apoderado"><span class="titulo">Apoderado</span></a></li>
                 </ul>

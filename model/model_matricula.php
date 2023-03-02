@@ -16,7 +16,7 @@
         }
 
         // Método para obtener datos de las matrículas
-        public function gerMatricula() {
+        public function getMatricula() {
             $query = "SELECT matricula.id_matricula, matricula.matricula,
                 (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut,
                 estudiante.ap_estudiante AS ap_paterno, estudiante.am_estudiante AS ap_materno,
@@ -160,21 +160,48 @@
             return json_encode($this->res);
         } 
 
-        public function setRetiroMatricula($rut, $id_matricula, $fecha) {
+        // Método para registrar la suspención de una matrícula
+        public function setSuspension($s) {
+            // insert suspención
+            $query = "INSERT INTO suspension_estudiante
+            (id_matricula, fecha_inicio, fecha_termino, motivo)
+            VALUES (?, ?, ?, ?);";
+
+            $motivo = ($s->motivo == '') ? null : $s->motivo;
+
+            $sentencia = $this->preConsult($query);
+            if ($sentencia->execute([intval($s->id_matricula), $s->f_inicio, $s->f_termino, $motivo])) {
+                // Update estado
+                $query = "UPDATE matricula
+                    SET id_estado = 5
+                    WHERE id_matricula = ?;";
+                    
+                $sentencia = $this->preConsult($query);
+                if ($sentencia->execute([intval($s->id_matricula)])) {
+                    $this->res = true;
+                }
+            }
+
+            $this->closeConnection();
+            return json_encode($this->res);
+        }
+
+        // Método para registrar el retiro de una matrícula
+        public function setRetiroMatricula($retiro) {
             // update fecha retiro
             $query = "UPDATE estudiante
                 SET fecha_retiro = ?
                 WHERE rut_estudiante = ?;";
 
             $sentencia = $this->preConsult($query);
-            if ($sentencia->execute([$fecha, $rut])) {
+            if ($sentencia->execute([$retiro->fecha_retiro, $retiro->rut])) {
                 // Update estado
                 $query = "UPDATE matricula
                     SET id_estado = 4
                     WHERE id_matricula = ?;";
                     
                 $sentencia = $this->preConsult($query);
-                if ($sentencia->execute([intval($id_matricula)])) {
+                if ($sentencia->execute([intval($retiro->id_matricula)])) {
                     $this->res = true;
                 }
             }

@@ -1,14 +1,14 @@
 <?php
     // Incluimos el modelo que utilizara el controlador
     require_once '../model/model_matricula.php';
-    require_once "../model/model_session.php";
+    // require_once "../model/model_session.php";
 
     $type = $_POST['datos']; // Recibimos la acción a realizar por el controlador
     $datosMatricula = new MatriculaEstudiantes(); // Creamos el objeto para trabajar con datatable
 
     switch ($type) {
         case "getMatricula":
-            print $datosMatricula->gerMatricula();
+            print $datosMatricula->getMatricula();
             break;
 
         case "getCantidadMatricula":
@@ -28,8 +28,14 @@
             print($datosMatricula->setMatricula($matricula));
             break;
 
+        case "setSuspension":
+            $suspension = json_decode(json_encode($_POST['suspension'])); // Convertir un objeto js a un objeto php
+            print($datosMatricula->setSuspension($suspension));
+            break;
+
         case "setRetiroMatricula":
-            print($datosMatricula->setRetiroMatricula($_POST['rut'], $_POST['id_matricula'], $_POST['fecha']));
+            $retiro = json_decode(json_encode($_POST['retiro'])); // Convertir un objeto js a un objeto php
+            print($datosMatricula->setRetiroMatricula($retiro));
             break;
 
         case "updateMatricula":

@@ -14,7 +14,7 @@
         }
 
         // Método para listar todos los estudiantes
-        public function getEstudiantes() { // Revisado y terminado !!
+        public function getEstudiantes() {
             $query = "SELECT estudiante.id_estudiante, estudiante.sexo,
                 (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) as rut_estudiante,
                 estudiante.ap_estudiante, estudiante.am_estudiante, estudiante.nombres_estudiante,
@@ -49,7 +49,7 @@
             
         }
 
-        public function comprobarEstudiante($rut) { // Revisado y terminado !!
+        public function comprobarEstudiante($rut) {
             $query = "SELECT id_estudiante FROM estudiante WHERE rut_estudiante = ?;";
             $sentencia = $this->preConsult($query);
             $sentencia->execute([$rut]);
@@ -63,7 +63,7 @@
         }
 
          // Método para obtener los datos de un estudiante o saber si existe en la bbdd
-        public function getEstudiante($rut, $tipo) { // Revisado y terminado !!
+        public function getEstudiante($rut, $tipo) { // revisar, modificar y eliminar información obsoleta
             if ($tipo == 'existe') { // Condición para saber si el estudiante existe
                 $this->res = $this->comprobarEstudiante($rut);
                 return json_encode($this->res);
@@ -144,20 +144,60 @@
             return json_encode($this->res);
         }
 
+        // Método para obtener información del estudiante para registrar retraso
+        public function getEstudianteRetraso($rut) {
+            $query = "SELECT (e.nombres_estudiante || ' ' || e.ap_estudiante || ' ' || e.am_estudiante) AS nombre_estudiante, 
+                e.nombre_social, curso.curso, matricula.id_estado, 
+                COALESCE(SUM(CASE WHEN retraso.estado_retraso = 'sin justificar' THEN 1 ELSE 0 END), 0) AS cantidad_retraso
+                FROM estudiante AS e
+                INNER JOIN matricula ON matricula.id_estudiante = e.id_estudiante
+                INNER JOIN curso ON curso.id_curso = matricula.id_curso
+                LEFT JOIN retraso ON retraso.id_estudiante = e.id_estudiante
+                WHERE e.rut_estudiante = ? AND matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
+                GROUP BY e.id_estudiante, curso.curso, matricula.id_estado;";
+
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute([$rut]);
+
+            $this->json = $sentencia->fetchAll(PDO::FETCH_ASSOC); // cambiar a fetch
+            if ($this->json[0]['nombre_social'] != null) {
+                $this->json[0]['nombre_estudiante'] = '('.$this->json[0]['nombre_social']. ') '. $this->json[0]['nombre_estudiante'];
+            }
+            unset($this->json[0]['nombre_social']);
+
+            $this->closeConnection();
+            return json_encode($this->json);
+        }
+
+        // Función para obtener los datos de un estudiante a justificar
+        public function getEstudianteJustificacion($rut) {
+            $query = "SELECT (CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante
+                ELSE '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END
+                || ' ' || estudiante.ap_estudiante
+                || ' ' || estudiante.am_estudiante) AS nombre_estudiante, curso.curso
+                FROM estudiante
+                INNER JOIN matricula ON matricula.id_estudiante = estudiante.id_estudiante
+                INNER JOIN curso ON curso.id_curso = matricula.id_curso
+                WHERE estudiante.rut_estudiante = ? AND matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE);";
+            
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute([$rut]);
+            $this->json = $sentencia->fetch(PDO::FETCH_ASSOC);
+
+            $this->closeConnection();
+            return json_encode($this->json);
+        }
+
         // Método para obtener la cantidad de registros de estudiante
-        public function getCantidadEstudiante() { // Revisado y terminado !!
-            $query = "SELECT COUNT(id_estudiante) AS cantidad FROM estudiante;";
+        public function getCantidadEstudiante() {
+            $query = "SELECT COUNT(id_estudiante) AS cantidad_estudiante FROM estudiante;";
 
             $sentencia = $this->preConsult($query);
             $sentencia->execute();
-            $resultado = $sentencia->fetch();
-
-            if ($resultado['cantidad'] >= 1) {
-                $this->res = $resultado['cantidad'];
-            }
+            $this->json = $sentencia->fetch(PDO::FETCH_ASSOC);
 
             $this->closeConnection();
-            return json_encode($this->res);
+            return json_encode($this->json);
         }
 
         // Método para registrar un nuevo estudiante
@@ -185,7 +225,7 @@
         }
 
         // Método para actualiar el registro de un estudiante
-        public function updateEstudiante($e) { // Revisado y terminado !!
+        public function updateEstudiante($e) {
             $query = "UPDATE estudiante 
                 SET rut_estudiante = ?, dv_rut_estudiante = ?, ap_estudiante = ?, am_estudiante = ?, nombres_estudiante = ?,
                 nombre_social = ?, fecha_nacimiento = ?, junaeb = ?, sexo = ?, fecha_ingreso = ?
@@ -210,8 +250,9 @@
             if (!$resultado['cantidad'] >= 1) {
                 $query = "DELETE FROM estudiante WHERE id_estudiante = ?;";
                 $sentencia = $this->preConsult($query);
-                $sentencia->execute([$id_estudiante]);
-                $this->res = true;
+                if ($sentencia->execute([$id_estudiante])) {
+                    $this->res = true;
+                }
             }
 
             $this->closeConnection();

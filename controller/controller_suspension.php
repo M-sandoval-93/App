@@ -15,8 +15,16 @@
             print $datosSuspension->getSuspension();
             break;
 
+        case "comprobarSuspension":
+            print $datosSuspension->comprobarSuspension();
+            break;
+
         case "deleteSuspension":
             print $datosSuspension->deleteSuspension($_POST['id_suspension']);
+            break;
+
+        case "exportarSuspension";
+            print $datosSuspension->exportarSuspension($_POST['ext']);
             break;
 
     }

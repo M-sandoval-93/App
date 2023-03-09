@@ -19,8 +19,6 @@
 
             $this->closeConnection();
             return json_encode($this->json);
-
-
         }
 
 

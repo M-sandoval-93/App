@@ -143,7 +143,7 @@
 
         <div class="modal-footer">
           <button type="button" class="btn btn-danger btn-lg" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-success btn-lg" id="btn_justificar_atraso">Registrar</button>
+          <button type="button" class="btn btn-success btn-lg" id="btn_justificar_retraso">Registrar</button>
         </div>
 
       </form>

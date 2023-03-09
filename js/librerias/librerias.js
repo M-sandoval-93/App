@@ -306,20 +306,6 @@ export let LibreriaFunciones = {
         });
     },
 
-    loadApoderado: (rut, campo) => {
-        let datos = 'getApoderado';
-
-        $.ajax({
-            url: "./controller/controller_apoderado.php",
-            type: "post",
-            dataType: "json",
-            data: {datos: datos, rut: rut},
-            success: (data) => {
-                $(campo).html(data);
-            }
-        });
-    },
-
     validarNumberRut: (rut, informacion = true, texto) => {
         rut.val(rut.val().replace(/[^0-9]/g, ''));
 

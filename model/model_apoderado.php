@@ -20,7 +20,7 @@
                 (apoderado.rut_apoderado || '-' || apoderado.dv_rut_apoderado) AS rut_apoderado,
                 apoderado.ap_apoderado, apoderado.am_apoderado, apoderado.nombres_apoderado,
                 apoderado.telefono, apoderado.direccion,
-                CASE WHEN mt.id_ap_titular IS NULL OR ms.id_ap_suplente IS NULL THEN 'NO ASIGNADO' ELSE 'ASIGNADO' END AS asignacion
+                CASE WHEN mt.id_ap_titular IS NULL AND ms.id_ap_suplente IS NULL THEN 'NO ASIGNADO' ELSE 'ASIGNADO' END AS asignacion
                 FROM apoderado
                 LEFT JOIN matricula AS mt ON mt.id_ap_titular = apoderado.id_apoderado
                 LEFT JOIN matricula AS ms ON ms.id_ap_suplente = apoderado.id_apoderado;";
@@ -69,27 +69,81 @@
                 return json_encode($this->json);
             }
 
+            if ($tipo == 'retraso') {
+                $query = "SELECT ap_titular.id_apoderado AS id_titular,
+                    ('(TITULAR)' || ' ' || ap_titular.nombres_apoderado || ' ' || ap_titular.ap_apoderado || ' ' || 
+                    ap_titular.am_apoderado) AS titular, ap_suplente.id_apoderado AS id_suplente,
+                    ('(SUPLENTE)' || ' ' || ap_suplente.nombres_apoderado || ' ' || ap_suplente.ap_apoderado || ' ' ||
+                    ap_suplente.am_apoderado) AS suplente
+                    FROM estudiante
+                    INNER JOIN matricula ON matricula.id_estudiante = estudiante.id_estudiante
+                    LEFT JOIN apoderado AS ap_titular ON ap_titular.id_apoderado = matricula.id_ap_titular
+                    LEFT JOIN apoderado AS ap_suplente ON ap_suplente.id_apoderado = matricula.id_ap_suplente
+                    WHERE estudiante.rut_estudiante = ? AND matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE);";
 
-            // obtener los datos de una solo apoderado para algun evento de completar o asignar apoderado
+                $sentencia = $this->preConsult($query);
+                $sentencia->execute([$rut]);
+                $apoderados = $sentencia->fetch(PDO::FETCH_ASSOC);
+                $this->json[0] = "<option disable selected>Seleccionar apoderado</option>";
 
+                if ($apoderados['id_titular'] != null && $apoderados['id_suplente'] != null) {
+                    $this->json[] = "<option value='".$apoderados['id_titular']."'>".$apoderados['titular']."</option>";
+                    $this->json[] = "<option value='".$apoderados['id_suplente']."'>".$apoderados['suplente']."</option>";
+                } else if ($apoderados['id_titular'] != null && $apoderados['id_suplente'] == null) {
+                    $this->json[] = "<option value='".$apoderados['id_titular']."'>".$apoderados['titular']."</option>";
+                } else if ($apoderados['id_titular'] == null && $apoderados['id_suplente'] != null) {
+                    $this->json[] = "<option value='".$apoderados['id_suplente']."'>".$apoderados['suplente']."</option>";
+                } else {
+                    $this->json[0] = "<option disable selected>Sin apoderados !!</option>";
+                }
 
+                $this->closeConnection();
+                return json_encode($this->json);
+            }
+        }
 
+        public function getApoderadoTS($rut) {
+            $query = "SELECT ap_titular.id_apoderado AS id_titular,
+                    ('(TITULAR)' || ' ' || ap_titular.nombres_apoderado || ' ' || ap_titular.ap_apoderado || ' ' || 
+                    ap_titular.am_apoderado) AS titular, ap_suplente.id_apoderado AS id_suplente,
+                    ('(SUPLENTE)' || ' ' || ap_suplente.nombres_apoderado || ' ' || ap_suplente.ap_apoderado || ' ' ||
+                    ap_suplente.am_apoderado) AS suplente
+                    FROM estudiante
+                    INNER JOIN matricula ON matricula.id_estudiante = estudiante.id_estudiante
+                    LEFT JOIN apoderado AS ap_titular ON ap_titular.id_apoderado = matricula.id_ap_titular
+                    LEFT JOIN apoderado AS ap_suplente ON ap_suplente.id_apoderado = matricula.id_ap_suplente
+                    WHERE estudiante.rut_estudiante = ? AND matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE);";
+
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute([$rut]);
+            $apoderados = $sentencia->fetch(PDO::FETCH_ASSOC);
+            $this->json[0] = "<option disable selected>Seleccionar apoderado</option>";
+
+            if ($apoderados['id_titular'] != null && $apoderados['id_suplente'] != null) {
+                $this->json[] = "<option value='".$apoderados['id_titular']."'>".$apoderados['titular']."</option>";
+                $this->json[] = "<option value='".$apoderados['id_suplente']."'>".$apoderados['suplente']."</option>";
+            } else if ($apoderados['id_titular'] != null && $apoderados['id_suplente'] == null) {
+                $this->json[] = "<option value='".$apoderados['id_titular']."'>".$apoderados['titular']."</option>";
+            } else if ($apoderados['id_titular'] == null && $apoderados['id_suplente'] != null) {
+                $this->json[] = "<option value='".$apoderados['id_suplente']."'>".$apoderados['suplente']."</option>";
+            } else {
+                $this->json[0] = "<option disable selected>Sin apoderados !!</option>";
+            }
+
+            $this->closeConnection();
+            return json_encode($this->json);
         }
 
         // Método para obtener la cantidad de apoderados registrados
         public function getCantidadApoderado() {
-            $query = "SELECT COUNT(id_apoderado) AS cantidad FROM apoderado;";
+            $query = "SELECT COUNT(id_apoderado) AS cantidad_apoderado FROM apoderado;";
 
             $sentencia = $this->preConsult($query);
             $sentencia->execute();
-            $resultado = $sentencia->fetch();
-
-            if ($resultado['cantidad'] >= 1) {
-                $this->res = $resultado['cantidad'];
-            }
+            $this->json = $sentencia->fetch(PDO::FETCH_ASSOC);
 
             $this->closeConnection();
-            return json_encode($this->res);
+            return json_encode($this->json);
         }
 
         // Método para agregar un nuevo apoderado

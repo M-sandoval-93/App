@@ -316,35 +316,6 @@ function beforeRegistroMatricula(tabla, modal) {
     getCantidadMatricula();
 }
 
-// Función para generar documento
-function exportarMatriculas(btn, ext) {
-    let datos = 'exportarMatriculas';
-
-    $(btn).click((e) => {
-        e.preventDefault();
-
-        $.ajax({
-            url: "./controller/controller_matricula.php",
-            type: "post",
-            dataType: "html",
-            cache: false,
-            data: {datos: datos, ext: ext},
-            success: (data) => {
-                let opResult = JSON.parse(data);
-                let $a = $("<a>");
-    
-                $a.attr("href", opResult.data);
-                $("body").append($a);
-                $a.attr("download", "Registro matricula." + ext);
-                $a[0].click();
-                $a.remove();
-            }
-        }). fail(() => {
-            LibreriaFunciones.alertPopUp('error', 'Error al generar documento');
-        });
-    });
-}
-
 // Función para obtener los apoderados de un registro de matricula
 function getApoderadosTS(id_matricula) {
     datos = "getApoderadoTS";
@@ -672,8 +643,8 @@ function deleteRegistroMatricula(tabla) {
                             LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
                             beforeRegistroMatricula(tabla);
                             return false;
-                        }
-                        LibreriaFunciones.alertPopUp('warning', 'Error de registro !!');
+                        } 
+                        LibreriaFunciones.alertPopUp('warning', 'La matrícula no puede ser eliminada !!');
                     }
                 }).fail(() => {
                     LibreriaFunciones.alertPopUp('error', 'Error de ejecución !!');
@@ -682,6 +653,36 @@ function deleteRegistroMatricula(tabla) {
         });
     });
 }
+
+// Función para generar documento
+function exportarMatriculas(btn, ext) {
+    let datos = 'exportarMatriculas';
+
+    $(btn).click((e) => {
+        e.preventDefault();
+
+        $.ajax({
+            url: "./controller/controller_matricula.php",
+            type: "post",
+            dataType: "html",
+            cache: false,
+            data: {datos: datos, ext: ext},
+            success: (data) => {
+                let opResult = JSON.parse(data);
+                let $a = $("<a>");
+    
+                $a.attr("href", opResult.data);
+                $("body").append($a);
+                $a.attr("download", "Registro matricula." + ext);
+                $a[0].click();
+                $a.remove();
+            }
+        }). fail(() => {
+            LibreriaFunciones.alertPopUp('error', 'Error al generar documento');
+        });
+    });
+}
+
 // ==================== FUNCIONES INTERNAS ===============================//
 
 
@@ -725,7 +726,7 @@ $(document).ready(function() {
                     if (data == 'Suspendido(a)') { estilo = 'btn-warning'; modal = ''; }
                     if (data == 'Retirado(a)') { estilo = 'btn-danger'; modal = ''; }
 
-                    return `<div class="d-grid col-10 mx-auto">
+                    return `<div class="d-grid col-12 mx-auto">
                                 <button class="btn ` + estilo + `" title="Cambiar estado"` + modal + `id="btn_estado_matricula">` + data + `</button>
                             </div>`
                 }

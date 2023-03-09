@@ -47,12 +47,23 @@
                     <span class="icono"><i class="fas fa-school"></i></span>
                 </a>
             </li>
+
+<?php
+if ($_SESSION['usser']['id'] == 1) {
+?>
+
             <li>
                 <a href="home">
                     <span class="icono"><i class="fas fa-home"></i></i></span>
                     <span class="titulo">home</span>
                 </a>
             </li>
+
+<?php
+}
+if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 3) {
+?>
+
             <li>
                 <a href="#">
                     <span class="icono"><i class="fas fa-user-graduate"></i></span>
@@ -65,6 +76,12 @@
                     <li><a href="suspension"><span class="titulo">Suspension</span></a></li>
                 </ul>
             </li>
+
+<?php
+}
+if ($_SESSION['usser']['id'] == 1) {
+?>
+
             <!-- <li>
                 <a href="#">
                     <span class="icono"><i class="fas fa-calendar-alt"></i></span>
@@ -83,6 +100,8 @@
                     <li><a href="apoderado"><span class="titulo">Apoderado</span></a></li>
                 </ul>
             </li>
+
+
             <!-- <li>
                 <a href="cursos">
                     <span class="icono"><i class="fas fa-graduation-cap"></i></span>
@@ -121,6 +140,11 @@
                     <span class="titulo">Mantenimiento</span>
                 </a>
             </li> -->
+
+<?php
+}
+?>
+
         </ul>
     </div>
 

@@ -11,31 +11,27 @@ $type = $_POST['datos'];
 $datosJustificacion = new JustificacionEstudiante();
 
 switch ($type) {
-    case "showJustificaciones": // Terminado y revisado !!
-        print $datosJustificacion->showJustificacion();
-        break;
-
-    case "getInfoAdicional": // Terminado y revisado !!
-        print $datosJustificacion->infoAdicional($_POST['id_justificacion']);
-        break;
-
-    case "getCantidadJustificacion": // Terminado y revisado !!
+    case "getJustificaciones":
         print $datosJustificacion->getJustificaciones();
         break;
 
-    case "setJustificacion": // Terminado y revisado !!
-        $justificacion = array(
-            $_POST['rut'], $_POST['fecha_inicio'], $_POST['fecha_termino'], $_POST['apoderado'], $_POST['motivo'],
-            $_POST['documento'], $_POST['pruebas'], (isset($_POST['asignatura'])) ? $_POST['asignatura'] : "false"
-        );
-
-        print $datosJustificacion->setJustificacion($justificacion);
+    case "getCantidadJustificacion":
+        print $datosJustificacion->getCantidadJustificacion();
         break;
-    case "deleteJustificacion": // Terminado y revisado !!
+
+    case "setJustificacion":
+        $justificacion = json_decode(json_encode($_POST['justificacion'])); // Convertir un objeto js a un objeto PHP
+        print $datosJustificacion->setJustificacion($justificacion, $_POST['asignatura']);
+        break;
+        
+    case "deleteJustificacion":
         print $datosJustificacion->deleteJustificacion($_POST['id_justificacion']);
         break;
 
-    case "exportarJustificaciones": // Trabajar !!
+    case "getCertificadoJustificacion":
+        break;
+
+    case "exportarJustificaciones":
         print $datosJustificacion->exportarJustificaciones($_POST['ext']);
         break;
 

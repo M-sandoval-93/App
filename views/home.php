@@ -1,4 +1,9 @@
-<?php   include_once "./layout/header.php"; ?>
+<?php   
+        if ($_SESSION['usser']['id'] == 3) { // Controlador de acceso
+            header("location: ./retraso");
+        }
+        include_once "./layout/header.php"; 
+?>
 
 <!-- CONTENIDO PRINCIPAL -->
 
@@ -186,3 +191,9 @@
 <!-- CONTENIDO PRINCIPAL -->
 
 <?php   include_once "./layout/footer.php"; ?>
+
+    <!-- script módulo home -->
+    <script src="./js/home.js" type="module"></script>
+
+</body>
+</html>

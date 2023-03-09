@@ -11,31 +11,32 @@
     $datosRetraso = new RetrasoEstudiante(); // Creamos el objeto para trabajar con datatable
 
     switch ($type) {
-        case "getRetraso": // Terminado y revisado !!
+        case "getRetraso":
             print $datosRetraso->getRetraso();
             break;
 
-        case "getRetrasoSinJustificar"; // Terminado y revisado !!
+        case "getRetrasoSinJustificar";
             print $datosRetraso->getRetrasoSinJustificar($_POST['rut']);
             break;
 
-        case "getCantidadRetraso": // Terminado y revisado !!
-            print $datosRetraso->getCantidadRetraso($_POST['tipo']);
+        case "getCantidadRetraso":
+            print $datosRetraso->getCantidadRetraso();
             break;
 
-        case "setRetraso": // Terminado y revisado !!
+        case "setRetraso":
             print $datosRetraso->setRetraso($_POST['rut']);
             break;
+            
+        case "setJustificarRetraso":
+            print $datosRetraso->setJustificarRetraso($_POST['id_apoderado'], $_POST['retrasos'], $id_usuario);
+            break;
 
-        case "deleteRetraso": // Terminado y revisado !!
+        case "deleteRetraso":
             print $datosRetraso->deleteRetraso($_POST['id_retraso']);
             break;
 
-        case "setJustificar": // Terminado y revisado !!
-            print $datosRetraso->setJustificar($_POST['id_apoderado'], $_POST['retrasos'], $id_usuario);
-            break;
 
-        case "exportarRetraso": // Terminado y revisado !!
+        case "exportarRetraso":
             print $datosRetraso->exportarRetraso($_POST['ext']);
             break;
 

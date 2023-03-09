@@ -33,28 +33,26 @@ function expandInfoApoderado(tabla) {
 // Función para obtener la cantidad de apoderados registrados
 function cantidadApoderado(contexto = false) {
     let datos = 'getCantidadApoderado';
-    let valor = 0;
 
     $.ajax({
         url: "./controller/controller_apoderado.php",
         type: "post",
         dataType: "json",
         data: {datos: datos},
-        success: function(data) {
-            if (data != false) {
-                valor = data;
-            }
+        success: (response) => {
             if (contexto == true) {
-                $('#cantidad_nuevo_registro').text(valor + 1);
+                $('#cantidad_nuevo_registro').text(response.cantidad_apoderado + 1);
                 return false;
             }
-            $('#cantidad_apoderado').text(valor);
+
+            $('#cantidad_apoderado').text(response.cantidad_apoderado);
         }
     }).fail(() => {
         if (contexto == true) {
             $('#cantidad_nuevo_registro').text('Error !!');
             return false;
         }
+
         $('#cantidad_apoderado').text('Error !!');
     });
 }
@@ -223,7 +221,7 @@ function setApoderado(tabla) {
         if (LibreriaFunciones.comprobarLongitud($('#rut_apoderado').val(), 7, 9, 'RUT', 'Apoderado') == false) { return false; }
         if (LibreriaFunciones.comprobarLongitud($('#telefono').val(), 8, 8, 'Teléfono', 'Apoderado') == false) { return false; }
             
-        datos = 'setApoderado';
+        let datos = 'setApoderado';
         const apoderado = getDataFormulario();
         if (comprobarCamposVacios(apoderado) >= 1) {
             LibreriaFunciones.alertPopUp('info', 'Faltan datos importantes !!');
@@ -281,7 +279,8 @@ function lanzarModalupdateApoderado(tabla) {
     });
 }
 
-function updateApoderado(tabla) {  // Ver si agrega funcionalidad en una sola función registro y modularidzar los ajax
+// Función para actualizar el registro de un apoderado
+function updateApoderado(tabla) {
     $('#btn_registrar_apoderado').click((e) => {
         e.preventDefault();
         if ($('#modal_apoderado_tittle').text() != 'UPDATE APODERADO') { return false; }

@@ -10,6 +10,14 @@
         case "getEstudiantes":
             print $datoEstudiante->getEstudiantes();
             break;
+            
+        case "getEstudianteRetraso":
+            print $datoEstudiante->getEstudianteRetraso($_POST['rut']);
+            break;
+
+        case "getEstudianteJustificacion":
+            print $datoEstudiante->getEstudianteJustificacion($_POST['rut']);
+            break;
 
         case "getEstudiante":
             print $datoEstudiante->getEstudiante($_POST['rut'], $_POST['tipo']);
@@ -36,6 +44,8 @@
         case "exportarEstudiantes":
             print $datoEstudiante->exportarEstudiantes($_POST['ext']);
             break;
+
+        
 
         
     }

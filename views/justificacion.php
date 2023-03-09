@@ -37,21 +37,21 @@
                     <i class="fas fa-user-plus icon"></i>
                 </button>
                 <div class="row g-2">
-                    <div class="col-4">
-                        <button class="btn-lg btn-success" id="btn_excel_justificacion" title="Exportar Excel"><i class="fas fa-file-excel icon"></i></button>
+                    <div class="col-6">
+                        <button class="btn-lg btn-success" id="btn_excel" title="Exportar Excel"><i class="fas fa-file-excel icon"></i></button>
                     </div>
-                    <div class="col-4">
-                        <button class="btn-lg btn-secondary" id="btn_csv_justificacion" title="Exportar CSV"><i class="fas fa-file-csv icon"></i></button>
+                    <div class="col-6">
+                        <button class="btn-lg btn-secondary" id="btn_csv" title="Exportar CSV"><i class="fas fa-file-csv icon"></i></button>
                     </div>
-                    <div class="col-4">
+                    <!-- <div class="col-4">
                         <button class="btn-lg btn-danger" id="btn_pdf_justificacion" title="Exportar PDF"><i class="fas fa-file-pdf icon"></i></button>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
 
             <div class="table-responsive">
-                <table id="justificacion_estudiante" class="table table-hover text-nowrap" style="width: 100%">
+                <table id="tabla_justificacion_estudiante" class="table table-hover text-nowrap" style="width: 100%">
                     <thead>
                         <tr>
                             <th>Id</th>

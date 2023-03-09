@@ -46,16 +46,15 @@
                     <i class="fas fa-user-plus icon"></i>
                 </button>
                 <div class="row g-2">
-                    <div class="col-4">
+                    <div class="col-6">
                         <button class="btn-lg btn-success" id="btn_excel" title="Exportar Excel"><i class="fas fa-file-excel icon"></i></button>
                     </div>
-                    <div class="col-4">
+                    <div class="col-6">
                         <button class="btn-lg btn-secondary" id="btn_csv" title="Exportar CSV"><i class="fas fa-file-csv icon"></i></button>
                     </div>
-                    <div class="col-4">
+                    <!-- <div class="col-4">
                         <button class="btn-lg btn-danger" id="btn_pdf" title="Exportar PDF"><i class="fas fa-file-pdf icon"></i></button>
-                        <!-- <button class="btn-lg btn-danger" id="btn_pdf_atraso" title="Exportar PDF"><i class="fas fa-user-check"></i></button> -->
-                    </div>
+                    </div> -->
                 </div>
             </div>
 

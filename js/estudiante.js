@@ -49,28 +49,26 @@ function getInfoSecundaria(data) {
 // Función para obtener la cantidad de registros de estudiantes (matriculados y no matriculados)
 function cantidadEstudiante(contexto = false) {
     let datos = 'getCantidadEstudiante';
-    let valor = 0;
 
     $.ajax({
         url: "./controller/controller_estudiante.php",
         type: "post",
         dataType: "json",
         data: {datos: datos},
-        success: function(data) {
-            if (data != false) {
-                valor = data;
-            }
+        success: (response) => {
             if (contexto == true) {
-                $('#cantidad_nuevo_registro').text(valor + 1);
+                $('#cantidad_nuevo_registro').text(response.cantidad_estudiante + 1);
                 return false;
             }
-            $('#cantidad_estudiante').text(valor);
+
+            $('#cantidad_estudiante').text(response.cantidad_estudiante);
         }
     }).fail(() => {
         if (contexto == true) {
             $('#cantidad_nuevo_registro').text('Error !!');
             return false;
         }
+
         $('#cantidad_estudiante').text('Error !!');
     });
 }
@@ -115,12 +113,12 @@ function deleteRegistroEstudiante(tabla) {
                     dataType: "json",
                     data: {datos: datos, id_estudiante: id_estudiante},
                     success: function(data) {
-                        if (data == false) {
-                            LibreriaFunciones.alertPopUpButton('error', 'No se puede eliminar el registro, por la integridad de los datos !!');
+                        if (data == true) {
+                            LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
+                            beforeRecord(tabla);
                             return false;
                         }
-                        LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
-                        beforeRecord(tabla);
+                        LibreriaFunciones.alertPopUpButton('error', 'No se puede eliminar el registro, por la integridad de los datos !!');
                     }
                 }).fail(() => {
                     LibreriaFunciones.alertPopUp('error', 'Error en la operación  !!');
@@ -345,11 +343,12 @@ function updateEstudiante(tabla) {
             type: "post",
             dataType: "json",
             data: {datos: datos, estudiante: estudiante},
-            success: function(data) {
-                if (data == true) {
+            success: (response) => {
+                if (response == true) {
                     LibreriaFunciones.alertPopUp('success', 'Estudiante actualizado !!');
                     $('#modal_estudiante').modal('hide');
                     beforeRecord(tabla);
+                    return false;
                 }
                 LibreriaFunciones.alertPopUp('warning', 'No se actualizó el estudiante !!');
             }

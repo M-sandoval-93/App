@@ -46,8 +46,8 @@ inputs.forEach(input => {
                 type: 'post',
                 dataType: 'json',
                 data: { usuario: usuario, clave: clave},
-                success: function(data) {
-                    if (data == false) {
+                success: (response) => {
+                    if (response.data == false) {
                         Swal.fire({
                             icon: 'error',
                             title: 'Usuario o Clave incorrectos',
@@ -61,7 +61,8 @@ inputs.forEach(input => {
                             showConfirmButton: false,
                             timer: 1500
                         }).then(result => {
-                            window.location.href = 'home';
+                            if (response.id == 3) { window.location.href = 'retraso'; }
+                            else { window.location.href = 'home'; }
                         });
                     }
                 }

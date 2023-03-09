@@ -69,9 +69,9 @@
 
         // Método para obtener cantidad
         public function getCantidadMatricula() {
-            $query = "SELECT SUM(CASE WHEN id_estado != 4 THEN 1 ELSE 0 END) AS cantidad_matricula,
-                SUM(CASE WHEN id_estado = 4 THEN 1 ELSE 0 END) AS cantidad_retiro
-                FROM matricula WHERE anio_lectivo = EXTRACT (YEAR FROM now());";
+            $query = "SELECT COALESCE(SUM(CASE WHEN id_estado != 4 THEN 1 ELSE 0 END), 0) AS cantidad_matricula,
+                COALESCE(SUM(CASE WHEN id_estado = 4 THEN 1 ELSE 0 END), 0) AS cantidad_retiro
+                FROM matricula WHERE anio_lectivo = EXTRACT (YEAR FROM CURRENT_DATE);";
 
             $sentencia = $this->preConsult($query);
             if ($sentencia->execute()) {
@@ -163,14 +163,13 @@
         // Método para registrar la suspención de una matrícula
         public function setSuspension($s) {
             // insert suspención
-            $query = "INSERT INTO suspension_estudiante
-            (id_matricula, fecha_inicio, fecha_termino, motivo)
-            VALUES (?, ?, ?, ?);";
+            $query = "INSERT INTO suspension_estudiante (id_estudiante, fecha_inicio, fecha_termino, motivo)
+                SELECT id_estudiante, ? AS fecha_inicio, ? AS fecha_termino, ? AS motivo FROM matricula where id_matricula = ?;"; 
 
             $motivo = ($s->motivo == '') ? null : $s->motivo;
 
             $sentencia = $this->preConsult($query);
-            if ($sentencia->execute([intval($s->id_matricula), $s->f_inicio, $s->f_termino, $motivo])) {
+            if ($sentencia->execute([$s->f_inicio, $s->f_termino, $motivo, intval($s->id_matricula)])) {
                 // Update estado
                 $query = "UPDATE matricula
                     SET id_estado = 5
@@ -383,8 +382,6 @@
             $this->closeConnection();
             return json_encode($file);
         }
-
-
 
     }
 

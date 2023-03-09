@@ -57,10 +57,39 @@ function beforeRegistroSuspension(tabla) {
     getCantidadSuspension();
 }
 
+// Función para generar documento
+function exportarSuspension(btn, ext) {
+    let datos = 'exportarSuspension';
+
+    $(btn).click((e) => {
+        e.preventDefault();
+
+        $.ajax({
+            url: "./controller/controller_suspension.php",
+            type: "post",
+            dataType: "html",
+            cache: false,
+            data: {datos: datos, ext: ext},
+            success: (data) => {
+                let opResult = JSON.parse(data);
+                let $a = $("<a>");
+    
+                $a.attr("href", opResult.data);
+                $("body").append($a);
+                $a.attr("download", "Registro suspensión." + ext);
+                $a[0].click();
+                $a.remove();
+            }
+        }). fail(() => {
+            LibreriaFunciones.alertPopUp('error', 'Error al generar documento');
+        });
+    });
+}
+
 
 // ================== MANEJO DE INFORMARCIÓN ================== //
-// Función para eliminar el registro de una matricula
-function deleteRegistroMatricula(tabla) {
+// Función para eliminar el registro de una suspension
+function deleteRegistroSuspension(tabla) {
     $('#tabla_suspension_matricula tbody').on('click', '#btn_delete_suspension', function() {
         let data = tabla.row($(this).parents()).data();
         let f_inicio = new Date(LibreriaFunciones.textFecha(data.fecha_inicio));
@@ -139,9 +168,16 @@ $(document).ready(function() {
             {data: "fecha_termino"},
             {data: "dias_suspension"},
             {
-                data: "estado"
-                // suspesion terminada en color plomo
-                // suspension activa en color naranjo
+                data: "estado",
+                mRender: function(data) {
+                    let estilo = 'btn-success';
+                    if (data == 'Suspensión terminada') { estilo = 'btn-secondary'; }
+                    if (data == 'Suspensión a comenzar') { estilo = 'btn-warning'; }
+
+                    return `<div class="d-grid col-12 mx-auto">
+                                <span class="btn ` + estilo + `">` + data + `</span>
+                            </div>`
+                }
             },
             {
                 data: null,
@@ -155,8 +191,10 @@ $(document).ready(function() {
     });
 
     expadirData(tabla_suspension);
+    deleteRegistroSuspension(tabla_suspension);
 
-    deleteRegistroMatricula(tabla_suspension);
+    exportarSuspension('#btn_excel', 'xlsx');
+    exportarSuspension('#btn_csv', 'csv');
 
 
 

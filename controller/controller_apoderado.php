@@ -15,6 +15,10 @@
             print $datosApoderado->getApoderado($_POST['rut'], $_POST['tipo']);
             break;
 
+        case "getApoderadoTS":
+            print $datosApoderado->getApoderadoTS($_POST['rut']);
+            break;
+
         case "getCantidadApoderado":
             print $datosApoderado->getCantidadApoderado();
             break;

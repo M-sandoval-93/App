@@ -1,12 +1,24 @@
 ** POR HACER, IDEAS, PENDIENTES
 
+
 ** trabajando en modal de suspencion de estudiante
-- revision de los modales de todos los modulos (TOMADO PARA TRABAJAR)
 revisión por soluciona:
+
+
+
+PRINCIPAL: Cargar base de datos  **** tomado para trabajar ****
+    a.- estudiante ****
+    b.- apoderados
+    c.- cursos
+    d.- matriculas
+
 1.- agregar validación de solo números a campo de telefono en modulo de apoderado
-2.- revisar la justificacion de uno o varios retrasos, ya que no valida la falta de algun dato
-3.- trabajar en la exportación de información del modulo de suspensión
-4.- trabajar en script que se ejecuta al ingresar al sistema, para actualizar el estado de una suspensión
+2.- Pasar función de exportar documento a función generica
+3.- Refactorisar consultas en donde se maneja el nombre social en la sentencia SQL
+4.- Agregar alertapopup esquina superior derecha
+5.- Generar reporte de registro de justificaciones
+6.- Generar certificado de justificación por pruebas pendientes
+7.- habilitar impresión de ticket
 
 
 
@@ -28,57 +40,11 @@ revisión por soluciona:
 
 
 
-NOTA IMPORTANTE
-
-REVISAR TODOS LOS MODALES Y LA FORMA EN ENVIAN LA INFORMACION !!!! revisar los de otros componentes, matricula listo !!!
-
-
-
-SENTENCIAS PARA GENERAR ACTUALIZADOR DE ESTADO PARA suspención
-select * from suspencion_estudiante;
-
-select * from atraso;
-
-select * from justificacion
-
-select * from estado
-
-select * from matricula where id_estado = 4
-
-INSERT INTO suspencion_estudiante
-(id_matricula, fecha_inicio, fecha_termino, motivo)
-VALUES ();
-
-select * from suspencion_estudiante
-where fecha_termino > now()::date;
-
-select matricula.id_matricula, matricula.id_estado
-from matricula
-where id_estado = 5
-
-UPDATE matricula
-SET id_estado = 1
-WHERE id_matricula IN (
-	
-)
-
-SELECT matricula.id_matricula
-FROM matricula
-LEFT JOIN suspencion_estudiante ON suspencion_estudiante.id_matricula = matricula.id_matricula
-WHERE suspencion_estudiante.fecha_termino < CURRENT_DATE
-AND matricula.anio_lectivo = EXTRACT(year FROM CURRENT_DATE)
-AND matricula.id_estado = 5
-AND suspencion_estudiante.fecha_termino > CURRENT_DATE
-
-
--- matriculas con estado 5
--- 1403, 2862, 1408
-
-delete from suspencion_estudiante
-
-
-
-
-select * from matricula where id_matricula = 1403
+para consulta de apoderados PROBAR
+SELECT a.nombre, a.apellido, a.telefono, j.fecha, j.motivo
+FROM justificación j
+JOIN matricula m ON j.id_apoderado = m.id_titular OR j.id_apoderado = m.id_suplente
+JOIN apoderado a ON j.id_apoderado = a.id
+WHERE m.id_estudiante = [ID del estudiante]
 
 

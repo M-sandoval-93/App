@@ -11,7 +11,7 @@
     $datosAsignatura = new Asignatura(); 
 
     switch ($type) {
-        case "getAsignatura": // Terminado...
+        case "getAsignatura":
             print $datosAsignatura->getAsignatura();
             break;
 

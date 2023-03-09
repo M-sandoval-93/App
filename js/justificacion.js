@@ -1,19 +1,10 @@
 import {LibreriaFunciones, generar_dv, spanish } from './librerias/librerias.js';
 let asignatura = new Array();
-let datos = 'showJustificaciones';
+let datos = 'getJustificaciones';
 
 // ==================== FUNCIONES INTERNAS ===============================//
-function getInfoSecundaria(data) { // Terminado y revisado !!
-    let documento = 'NO';
-    let pruebas = 'SIN PRUEBAS PENDIENTES';
-
-    if (data.presenta_documento == true) {
-        documento = 'SI';
-    }
-
-    if (data.prueba_pendiente == true) {
-        pruebas = data.asignatura;
-    }
+// Estructura de la tabla con información adicional
+function getDataSecundaria(data) {
 
     return(
         '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
@@ -24,7 +15,7 @@ function getInfoSecundaria(data) { // Terminado y revisado !!
         
             '<tr>' +
                 '<td>Apoderado:</td>' +
-                '<td>' + data.apoderado + '</td>' +
+                '<td>' + data.nombre_apoderado + '</td>' +
             '</tr>' +
 
             '<tr>' +
@@ -34,134 +25,100 @@ function getInfoSecundaria(data) { // Terminado y revisado !!
 
             '<tr>' +
                 '<td>Documento presentado:</td>' +
-                '<td>' + documento + '</td>' +
+                '<td>' + data.presenta_documento + '</td>' +
             '</tr>' +
 
             '<tr>' +
                 '<td>Pruebas por asignatura:</td>' +
-                '<td>' + pruebas + '</td>' +
+                '<td>' + data.prueba_pendiente + '</td>' +
             '</tr>' +
         '</table>'
     );
 }
 
-function getCantidadJustificacion(id_campo) { // Terminado y revisado !!
-    let datos = 'getCantidadJustificacion';
-    let valor = 0;
+// Función para expandir información secundaria
+function expandirData(tabla) {
+    $('#tabla_justificacion_estudiante tbody').on('click', 'td.dt-control', function () {
+        let tr = $(this).closest('tr');
+        let row = tabla.row(tr);
+
+        if (row.child.isShown()) {
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+            row.child(getDataSecundaria(row.data())).show();
+            tr.addClass('shown');
+        }
+    });
+}
+
+// Función para obtener la cantidad de justificaciones anuales
+function getCantidadJustificacion() {
+    let datos = "getCantidadJustificacion";
 
     $.ajax({
         url: "./controller/controller_justificacion.php",
         type: "POST",
         dataType: "json",
         data: {datos: datos},
-        success: function(data) {
-            if (data != false) {
-                valor = data;
-            }
-            $(id_campo).text(valor);
+        success: (response) => {
+            $('#justificacion_diaria').text(response.cantidad_justificacion);
         }
     }).fail(() => {
-        $(id_campo).text('Error !!');
+        $('#justificacion_diaria').text('Error !!');
     });
 }
 
-function expandInfoSecundaria(tabla) { // Terminado y revisado !!
-    $('#justificacion_estudiante tbody').on('click', 'td.dt-control', function() {
-        let dataRow = tabla.row($(this).parents()).data();
-        let tr = $(this).closest('tr');
-        let row = tabla.row(tr);
-        let datos = 'getInfoAdicional';
+// Función para obtener los datos del estudiante
+function getEstudianteJustificacion(rut, input_nombre, input_curso) {
+    let datos = 'getEstudianteJustificacion';
 
-        if (row.child.isShown()) {
-            row.child.hide();
-            tr.removeClass('shown');
-        } else {
-            $.ajax({
-                url: "./controller/controller_justificacion.php",
-                type: "post",
-                dataType: "json",
-                data: {datos: datos, id_justificacion: dataRow.id_justificacion},
-                success: function(data) {
-                    row.child(getInfoSecundaria(data[0])).show();
+    if (rut != '' && rut.length > 7 && rut.length <= 9) {
+        $.ajax({
+            url: "./controller/controller_estudiante.php",
+            type: "POST",
+            dataType: "json",
+            cache: false,
+            data: {datos: datos, rut: rut},
+            success: (response) => {
+                if (response != false) {
+                    input_nombre.val(response.nombre_estudiante);
+                    input_curso.val(response.curso);
+                    getApoderadoTS(rut, '#justificacion_apoderado');
+                    return false;
                 }
-            }).fail(() => {
-                LibreriaFunciones.alertPopUp('error', 'Datos dañados !!');
-            });
-            
-            tr.addClass('shown');
-        }
-    });
-}
-
-function prepararModalJustificacion() { // Terminado y revisado !!
-    let fecha_actual = new Date();
-
-    $('#btn_nueva_justificacion').click(() => {
-        $('#form_registro_justificacion_falta').trigger('reset');
-        $('#justificacion_fecha').val(fecha_actual.toLocaleDateString());
-        $('#justificacion_rut_estudiante').removeClass('is-invalid');
-        $('#justificacion_prueba_pendiente').prop('disabled', true);
-        LibreriaFunciones.autoFocus($('#modal_registro_justificacion_falta'), $('#justificacion_rut_estudiante'));
-        asignatura = [];
-    });
-
-    $('#justificacion_documento').click(function() {
-        if (LibreriaFunciones.comprobarCheck(this)) {
-            $('#justificacion_prueba_pendiente').prop('disabled', false);
-        } else {
-            $('#justificacion_prueba_pendiente').prop('disabled', true);
-            $('#justificacion_prueba_pendiente').prop('checked', false);
-            asignatura = [];
-        }
-    });
-
-    prepararModalAsignatura();
-
-}
-
-function prepararModalAsignatura() { // Terminado y revisado !!
-    let datos = "getAsignatura";
-    
-    $('#justificacion_prueba_pendiente').click(function () {
-        if (LibreriaFunciones.comprobarCheck(this)) {
-            if ($('#justificacion_asignatura_nombre').val() == '' && $('#justificacion_curso_estudiante').val() == '') {
-                LibreriaFunciones.alertPopUp('warning', 'Ingresar rut del estudiante !!');
-                return false
+                
+                input_nombre.val('sin datos');
+                input_curso.val('N/A');
+                $('#justificacion_apoderado').empty(); 
             }
+        }).fail(() => {
+            LibreriaFunciones.alertPopUp('error', 'Error en la consulta !!');
+        });
+    } else {
+        input_nombre.val('');
+        input_curso.val('');
+        $('#justificacion_apoderado').empty();
+    }
+}
 
-            $('#form_justificacion_asignatura').trigger('reset')
+// Función para obtener los apoderados del estudiante
+function getApoderadoTS(rut, campo) {
+    let datos = 'getApoderadoTS';
 
-            $('#justificacion_asignatura_nombre').val($('#justificacion_nombre_estudiante').val());
-            $('#justificacion_asignatura_curso').val($('#justificacion_curso_estudiante').val());
-
-            $.ajax({
-                url: "./controller/controller_asignatura.php",
-                type: "POST",
-                dataType: "json",
-                data: {datos: datos},
-                success: function(data) {
-                    $.each(data, (obj, datos) => {
-                        $('#group_of_the_check').append(`<div class="col-6">
-                                                            <div class="form-check">
-                                                                <input type="checkbox" id="check_` + datos['id_asignatura'] + `" class="form-check-input" value="` + datos['id_asignatura'] + `">
-                                                                <label for="check_` + datos['id_asignatura'] + `" class="form-check-label">` + datos['asignatura'] + `</label>
-                                                            </div>
-                                                        </div>`);
-                    });
-                }
-            }).fail(() => {
-                $('#group_of_the_check').append('<h2>Error al consultar datos</h2>');
-            });
-            
-            $('#modal_registro_justificacion_falta').modal('hide');
-            $('#modal_justificacion_asignatura').modal('show');
-        } else {
-            asignatura = [];
+    $.ajax({
+        url: "./controller/controller_apoderado.php",
+        type: "post",
+        dataType: "json",
+        data: {datos: datos, rut: rut},
+        success: (response) => {
+            $(campo).html(response);
         }
     });
 }
 
-function getModalAsignatura() { // Terminado y revisado !!
+// Función para obtener las asignaturas en las que se deben pruebas
+function getPruebaAsignaturas() {
     $('#close_modal_justificacion_asignatura').click(() => {
         $('#justificacion_prueba_pendiente').prop('checked', false);
         $('#group_of_the_check').empty();
@@ -187,111 +144,168 @@ function getModalAsignatura() { // Terminado y revisado !!
     });
 }
 
-function comprobarFormJustificacion() { // Terminado y revisado !!
-    let rut = $.trim($('#justificacion_rut_estudiante').val());
-    let nombre = $.trim($('#justificacion_nombre_estudiante').val());
-    let fecha_inicio = $.trim($('#justificacion_fecha_inicio').val());
-    let fecha_termino = $.trim($('#justificacion_fecha_termino').val());
-    let apoderado = $.trim($('#justificacion_apoderado').val());
-
-    if (rut == '' || nombre == '' || nombre == 'sin datos' || fecha_inicio == '' || fecha_termino == '' || apoderado == 'Seleccionar apoderado' || apoderado == 'Sin apoderado !!') {
-        return false;
+// Función para obtener los datos del modal justificación
+function getDataJustificacion() {
+    const justificacion = {
+        rut: $.trim($('#justificacion_rut_estudiante').val()),
+        fecha_inicio: $.trim($('#justificacion_fecha_inicio').val()),
+        fecha_termino: $.trim($('#justificacion_fecha_termino').val()),
+        id_apoderado: $.trim($('#justificacion_apoderado').val()),
+        motivo: $.trim($('#justificacion_motivo_causa').val().toUpperCase()),
+        documento: LibreriaFunciones.comprobarCheck('#justificacion_documento'),
+        pruebas: LibreriaFunciones.comprobarCheck('#justificacion_prueba_pendiente')   
     }
 
-    return true;
-
+    return justificacion;
 }
 
-function setModalJustificacion(tabla_justificacion) { // Terminado y revisado !!
-    $('#btn_registrar_justificacion').click(() => {
+// Función para comprobar los campos vacios del formulario
+function comprobarCamposVacios(objeto) {
+    let count = 0;
+    for (const [key, value] of Object.entries(objeto)) {
+        if ((key == 'rut' && value == '') ||
+            (key == 'fecha_inicio' && value == '') ||
+            (key == 'fecha_termino' && value == '') ||
+            (key == 'id_apoderado' && value == 'Seleccionar apoderado' || value == 'Sin apoderados !!')) {
+            count += 1;
+        }
+    }
 
+    return count;
+}
+
+// Función para validar el rut del estudiante
+function validarRutEstudiante() {
+    $('#justificacion_rut_estudiante').keyup((e) => {
+        e.preventDefault();
+        generar_dv($('#justificacion_rut_estudiante'), $('#justificacion_dv_rut_estudiante'));
+        getEstudianteJustificacion($('#justificacion_rut_estudiante').val(), $('#justificacion_nombre_estudiante'), $('#justificacion_curso_estudiante'));
+        LibreriaFunciones.validarNumberRut($('#justificacion_rut_estudiante'), true, '');
+    });
+}
+
+// Función para actualizar la tabla de justificaciones después de una modificación
+function beforeRegistroJustificacion(tabla) {
+    tabla.ajax.reload(null, false);
+    getCantidadJustificacion();
+}
+
+
+
+// ================== FUNCÓN PARA TRABAJAR CON MODALES ================== //
+// Función para preparar el modal de justificación
+function prepararModalJustificacion() {
+    let fecha_actual = new Date();
+
+    $('#btn_nueva_justificacion').click(() => {
+        $('#form_registro_justificacion_falta').trigger('reset');
+        $('#justificacion_fecha').val(fecha_actual.toLocaleDateString());
+        $('#justificacion_rut_estudiante').removeClass('is-invalid');
+        $('#justificacion_prueba_pendiente').prop('disabled', true);
+        LibreriaFunciones.autoFocus($('#modal_registro_justificacion_falta'), $('#justificacion_rut_estudiante'));
+        asignatura = [];
+    });
+
+    $('#justificacion_documento').click(function() {
+        if (LibreriaFunciones.comprobarCheck(this)) {
+            $('#justificacion_prueba_pendiente').prop('disabled', false);
+        } else {
+            $('#justificacion_prueba_pendiente').prop('disabled', true);
+            $('#justificacion_prueba_pendiente').prop('checked', false);
+            asignatura = [];
+        }
+    });
+
+    prepararModalAsignatura();
+    validarRutEstudiante()
+}
+
+// Función para prepara el modal de selección de asignaturas
+function prepararModalAsignatura() {
+    let datos = "getAsignatura";
+    
+    $('#justificacion_prueba_pendiente').click(function () {
+        if (LibreriaFunciones.comprobarCheck(this)) {
+            if ($('#justificacion_asignatura_nombre').val() == '' && $('#justificacion_curso_estudiante').val() == '') {
+                LibreriaFunciones.alertPopUp('warning', 'Ingresar rut del estudiante !!');
+                return false
+            }
+
+            $('#form_justificacion_asignatura').trigger('reset')
+            $('#justificacion_asignatura_nombre').val($('#justificacion_nombre_estudiante').val());
+            $('#justificacion_asignatura_curso').val($('#justificacion_curso_estudiante').val());
+
+            $.ajax({
+                url: "./controller/controller_asignatura.php",
+                type: "POST",
+                dataType: "json",
+                data: {datos: datos},
+                success: function(response) {
+                    $.each(response, (obj, datos) => {
+                        $('#group_of_the_check').append(`<div class="col-6">
+                                                            <div class="form-check">
+                                                                <input type="checkbox" id="check_` + datos['id_asignatura'] + `" class="form-check-input" value="` + datos['id_asignatura'] + `">
+                                                                <label for="check_` + datos['id_asignatura'] + `" class="form-check-label">` + datos['asignatura'] + `</label>
+                                                            </div>
+                                                        </div>`);
+                    });
+                }
+            }).fail(() => {
+                $('#group_of_the_check').append('<h2>Error al consultar datos</h2>');
+            });
+            
+            $('#modal_registro_justificacion_falta').modal('hide');
+            $('#modal_justificacion_asignatura').modal('show');
+        } else {
+            asignatura = [];
+        }
+    });
+}
+
+
+
+
+// ================== MANEJO DE INFORMARCIÓN ================== //
+// Función para registrar la justificación de un estudiante
+function setModalJustificacion(tabla) {
+    $('#btn_registrar_justificacion').click((e) => {
+        e.preventDefault();
         if (LibreriaFunciones.comprobarLongitud($('#justificacion_rut_estudiante').val(), 7, 9, 'RUT', 'Apoderado') == false) { return false; }
-        if (!comprobarFormJustificacion()) {
-            LibreriaFunciones.alertPopUp('warning', 'Faltan campos obligatorios !!');
+
+        let datos  = "setJustificacion";
+        const justificacion = getDataJustificacion();
+
+        if (comprobarCamposVacios(justificacion) >= 1) {
+            LibreriaFunciones.alertPopUp('info', 'Faltan datos importante !!');
             return false;
         }
-
-        let rut = $.trim($('#justificacion_rut_estudiante').val());
-        let fecha_inicio = $.trim($('#justificacion_fecha_inicio').val());
-        let fecha_termino = $.trim($('#justificacion_fecha_termino').val());
-        let apoderado = $.trim($('#justificacion_apoderado').val());
-        let motivo = $.trim($('#justificacion_motivo_causa').val());
-        let documento = LibreriaFunciones.comprobarCheck('#justificacion_documento');
-        let pruebas = LibreriaFunciones.comprobarCheck('#justificacion_prueba_pendiente');
-        let datos  = "setJustificacion";
 
         $.ajax({
             url: "./controller/controller_justificacion.php",
             type: "post",
             dataType: "json",
-            data: {datos: datos, rut: rut, fecha_inicio: fecha_inicio, fecha_termino: fecha_termino,
-                    apoderado: apoderado, motivo: motivo, documento: documento, pruebas: pruebas, asignatura: asignatura},
+            data: {datos: datos, justificacion: justificacion, asignatura: asignatura},
+            success:(response) => {
+                console.log(response);
 
-            success: function(data) {
-                if (data == false) {
-                    LibreriaFunciones.alertPopUp('error', 'Registro no almacenado !!!');
+                if (response == true) {
+                    LibreriaFunciones.alertPopUp('success', 'Justificación registrada !!');
+                    ('#modal_registro_justificacion_falta').modal('hide');
+                    beforeRegistroJustificacion(tabla);
                     return false;
                 }
-                LibreriaFunciones.alertPopUp('success', 'Registro almacenado !!');
-                $('#modal_registro_justificacion_falta').modal('hide');
-                beforeRegistroJustificacion(tabla_justificacion);
+                LibreriaFunciones.alertPopUp('error', 'Justificación no almacenada !!!');
             }
-
         }). fail (() => {
             LibreriaFunciones.alertPopUp('error', 'Error en la operación !!');
         });
     });
-
-
 }
 
-function getInfoEstudiante(rut, input_nombre, input_curso) { // Terminado y revisado !!
-    let datos = 'getEstudiante';
-
-    if (rut != '' && rut.length > 7 && rut.length <= 9) {
-        if (input_nombre.val() == '') {
-            $.ajax({
-                url: "./controller/controller_estudiante.php",
-                type: "POST",
-                dataType: "json",
-                cache: false,
-                data: {datos: datos, rut: rut, tipo: 'justificacion'},
-                success: function(data) {
-                    if (data != false) {
-                        input_nombre.val(data[0].nombre_estudiante);
-                        input_curso.val(data[0].curso);
-                        LibreriaFunciones.loadApoderado(rut, '#justificacion_apoderado');
-                    } else {
-                        input_nombre.val('sin datos');
-                        input_curso.val('N/A');
-                    }
-                }
-            });
-        }
-    
-    } else {
-        input_nombre.val('');
-        input_curso.val('');
-    }
-}
-
-function validarRut() { // Terminado y revisado !!
-    $('#justificacion_rut_estudiante').keyup((e) => {
-        e.preventDefault();
-        generar_dv($('#justificacion_rut_estudiante'), $('#justificacion_dv_rut_estudiante'));
-        getInfoEstudiante($('#justificacion_rut_estudiante').val(), $('#justificacion_nombre_estudiante'), $('#justificacion_curso_estudiante'));
-        LibreriaFunciones.validarNumberRut($('#justificacion_rut_estudiante'), 'Rut sin puntos, sin guión y sin dígito verificador');
-    });
-}
-
-function beforeRegistroJustificacion(tabla_justificacion) { // Terminado y revisado !!
-    tabla_justificacion.ajax.reload(null, false);
-    getCantidadJustificacion('#justificacion_diaria');
-}
-
-function deleteRegistroJustificacion(tabla_justificacion) { // Terminado y revisado !!
-    $('#justificacion_estudiante tbody').on('click', '#btn_delete_justificar', function() {
-        let data = tabla_justificacion.row($(this).parents()).data();
+// Función para eliminar un registro de justificación
+function deleteRegistroJustificacion(tabla) {
+    $('#tabla_justificacion_estudiante tbody').on('click', '#btn_delete_justificar', function() {
+        let data = tabla.row($(this).parents()).data();
         let id_justificacion = data.id_justificacion;
 
         Swal.fire({
@@ -312,56 +326,31 @@ function deleteRegistroJustificacion(tabla_justificacion) { // Terminado y revis
                     dataType: "json",
                     data: {datos: datos, id_justificacion: id_justificacion},
                     success: function(data) {
-                        if (data == false) {
-                            LibreriaFunciones.alertPopUp('error', 'Registro no eliminado !!');
+                        if (data == true) {
+                            LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
+                            beforeRegistroJustificacion(tabla);
                             return false;
                         }
-
-                        LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
-                        beforeRegistroJustificacion(tabla_justificacion);
+                        LibreriaFunciones.alertPopUp('error', 'Registro no eliminado !!');
                     }
                 }). fail (() => {
                     LibreriaFunciones.alertPopUp('error', 'Error en la operación !!');
                 });
             }
         });
-    })
-}
-
-function getDocument(tabla_justificacion) { // En desarrollo ...... 
-    $('#justificacion_estudiante tbody').on('click', '#btn_download_justificar', function() {
-        let data = tabla_justificacion.row($(this).parents()).data();
-        let id_justificacion = data.id_justificacion;
-        datos = 'getDocument';
-
-        // console.log(id_justificacion);
-
-        $.ajax({
-            url: "./controller/controller_justificacion.php",
-            type: "post",
-            dataType: "html",
-            cache: false,
-            data: {datos: datos},
-            success: (data) => {
-                let opResult = JSON.parse(data);
-                let $a = $("<a>");
-    
-                $a.attr("href", opResult.data);
-                $("body").append($a);
-                $a.attr("download", "plantilla.docx");
-                $a[0].click();
-                $a.remove();
-            }
-        }). fail(() => {
-            LibreriaFunciones.alertPopUp('error', 'Error al generar documento');
-        });
-
-        
     });
 }
 
-// función para generar documento
-function exportarJustificaciones(btn, ext) { // Terminado y revisado !!
+// Función para generar un certificado de justificacion
+function getCertificadoJustificacion(table) {
+    $('#tabla_justificacion_estudiante tbody').on('click', '#btn_download_justificar', function() {
+        LibreriaFunciones.alertPopUp('info', 'Función en mantenimiento');
+
+    });
+}
+
+// Función para exportar justificaciones
+function exportarJustificaciones(btn, ext) {
     let datos = 'exportarJustificaciones';
 
     $(btn).click((e) => {
@@ -390,17 +379,15 @@ function exportarJustificaciones(btn, ext) { // Terminado y revisado !!
 }
 
 
+
 // ==================== FUNCIONES INTERNAS ===============================//
 
 
-
 $(document).ready(function() {
-    // Cantidad de atrasos diarios y total
-    getCantidadJustificacion('#justificacion_diaria');
+    getCantidadJustificacion();
 
     // LLENAR DATATABLE CON INFORMACIÓN =============================== 
-    let tabla_justificacion = $('#justificacion_estudiante').DataTable({ // Terminado y revisado !!
-        aaSorting: [], // Para evitar que dataTable ordene la información
+    let tabla_justificacion_estudiante = $('#tabla_justificacion_estudiante').DataTable({
         ajax: {
             url: "./controller/controller_justificacion.php",
             type: "POST",
@@ -415,15 +402,14 @@ $(document).ready(function() {
             },
             {
                 className: "dt-control",
-                // orderable: false, para evitar el orden de una fila
                 bSortable: false,
                 data: null,
                 defaultContent: ""
             },
             {data: "rut"},
-            {data: "ap_paterno"},
-            {data: "ap_materno"},
-            {data: "nombre"},
+            {data: "ap_estudiante"},
+            {data: "am_estudiante"},
+            {data: "nombres_estudiante"},
             {data: "curso"},
             {data: "fecha_inicio"},
             {data: "fecha_termino"},
@@ -438,29 +424,16 @@ $(document).ready(function() {
         language: spanish
     });
 
-    // Expandir información adicional sobre la justificación del estudiante
-    expandInfoSecundaria(tabla_justificacion);
-
-    // Prepara el modal para ingresar una justificación
+    expandirData(tabla_justificacion_estudiante);
     prepararModalJustificacion();
+    getPruebaAsignaturas();
+    setModalJustificacion(tabla_justificacion_estudiante);
+    deleteRegistroJustificacion(tabla_justificacion_estudiante);
 
-    // Obtener valores del modal asignatura
-    getModalAsignatura();
+    getCertificadoJustificacion(tabla_justificacion_estudiante);
 
-    // Registrar justificación
-    setModalJustificacion(tabla_justificacion);
-
-    // Funcion para eliminar un registro de justificación
-    deleteRegistroJustificacion(tabla_justificacion);
-
-    // Función para generar documento para justificar pruebas 
-    getDocument(tabla_justificacion);
-
-    // Función para generar documento con las justificaciones del año
-    exportarJustificaciones('#btn_excel_justificacion', 'xlsx');
-    exportarJustificaciones('#btn_csv_justificacion', 'csv');
-
-
+    exportarJustificaciones('#btn_excel', 'xlsx');
+    exportarJustificaciones('#btn_csv', 'csv');
 
 
 
@@ -477,10 +450,6 @@ $(document).ready(function() {
     // VER si genero un word o un archivo PDF con toda la estructura necesaria
     // de manera manual, así no requiere de una plantilla. !!!!!!!
 
-
-
-    // Función para validar rut del estudiante
-    validarRut();
 
 });
 

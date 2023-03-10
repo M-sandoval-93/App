@@ -74,7 +74,7 @@ function cantidadEstudiante(contexto = false) {
 }
 
 // Función para mostrar los datos adicionales del estudiante
-function expandInfoEstudiante(tabla) {
+function expandInfoSecundaria(tabla) {
     $('#tabla_estudiante tbody').on('click', 'td.dt-control', function () {
         let tr = $(this).closest('tr');
         let row = tabla.row(tr);
@@ -89,101 +89,10 @@ function expandInfoEstudiante(tabla) {
     });    
 }
 
-// Función para eliminar el registro de un estudiante
-function deleteRegistroEstudiante(tabla) {
-    $('#tabla_estudiante tbody').on('click', '#btn_eliminar_estudiante', function() {
-        let data = tabla.row($(this).parents()).data();
-        let id_estudiante = data.id_estudiante;
-
-        Swal.fire({
-            icon: 'question',
-            title: 'Eliminar registro de "' + data.nombres_estudiante + ' ' + data.ap_estudiante + '"',
-            showCancelButton: true,
-            confirmButtonText: 'Confirmar',
-            cancelButtonText: 'Cancelar',
-            confirmButtonColor: '#2691d9',
-            cancelButtonColor: '#adadad'
-        }). then(resultado => {
-            if (resultado.isConfirmed) {
-                datos = "deleteEstudiante";
-
-                $.ajax({
-                    url: "./controller/controller_estudiante.php",
-                    type: "post",
-                    dataType: "json",
-                    data: {datos: datos, id_estudiante: id_estudiante},
-                    success: function(data) {
-                        if (data == true) {
-                            LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
-                            beforeRecord(tabla);
-                            return false;
-                        }
-                        LibreriaFunciones.alertPopUpButton('error', 'No se puede eliminar el registro, por la integridad de los datos !!');
-                    }
-                }).fail(() => {
-                    LibreriaFunciones.alertPopUp('error', 'Error en la operación  !!');
-                });
-            }
-        });
-    });
-}
-
  // Función para generar acción al terminar algún proceso de edición de datos
 function beforeRecord(tabla) {
     tabla.ajax.reload(null, false);
     cantidadEstudiante();
-}
-
-// Función para generar documento
-function exportarEstudiantes(btn, ext) { // Terminado y revisado !!
-    let datos = 'exportarEstudiantes';
-
-    $(btn).click((e) => {
-        e.preventDefault();
-
-        $.ajax({
-            url: "./controller/controller_estudiante.php",
-            type: "post",
-            dataType: "html",
-            cache: false,
-            data: {datos: datos, ext: ext},
-            success: (data) => {
-                let opResult = JSON.parse(data);
-                let $a = $("<a>");
-    
-                $a.attr("href", opResult.data);
-                $("body").append($a);
-                $a.attr("download", "Registro estudiante." + ext);
-                $a[0].click();
-                $a.remove();
-            }
-        }). fail(() => {
-            LibreriaFunciones.alertPopUp('error', 'Error al generar documento');
-        });
-    });
-}
-
-// Función generica para restablecer el formato del modal
-function prepararModal() {
-    $('#form_registro_estudiante').trigger('reset');
-    $('#rut_estudiante').removeClass('is-invalid');
-    $('#informacion_rut').removeClass('text-danger');
-    $('#informacion_rut').text('Rut sin puntos, sin guión y sin dígito verificador');
-    $('#informacion_rut').addClass('form-text');
-    LibreriaFunciones.autoFocus($('#modal_estudiante'), $('#rut_estudiante'));
-    validarRutEstudiante();
-}
-
-// Función para lanzar el modal de nuevo estudiante
-function lanzarModalNuevoEstudiante() {
-    $('#btn_nuevo_estudiante').click(() => {
-        prepararModal();
-        $('#modal_estudiante_tittle').text('REGISTRAR ESTUDIANTE');
-        $('#btn_registrar_estudiante').text('Registrar');
-        $('#texto_secundario').text('Nuevo registro N°');
-        $('#fecha_ingreso_estudiante').val(LibreriaFunciones.getFecha());
-        cantidadEstudiante(true);
-    });
 }
 
 // Función para validar el rut ingresado 
@@ -219,17 +128,6 @@ function comprobarEstudiante(rut) {
     } 
 }
 
-// Función para comprobar los campos vacios del formulario
-function comprobarCamposVacios(exclusion, objeto) {
-    let count = 0;
-    for (const [key, value] of Object.entries(objeto)) {
-        if (key != exclusion && value == '') {
-            count += 1;
-        }
-    }
-    return count;
-}
-
 // Función que obtiene los datos del formulario modal de estudiante
 function getDataFormulario() {
     const estudiante = {
@@ -248,40 +146,40 @@ function getDataFormulario() {
     return estudiante;
 }
 
-// Función para registrar un nuevo estudiante 
-function setEstudiante(tabla) {
-    $('#btn_registrar_estudiante').click((e) => {
-        e.preventDefault();
-        if ($('#modal_estudiante_tittle').text() != 'REGISTRAR ESTUDIANTE') { return false; }
-        if (LibreriaFunciones.comprobarLongitud($('#rut_estudiante').val(), 7, 9, 'RUT', 'Estudiante') == false) { return false; }
-
-        datos = 'setEstudiante';
-        const estudiante = getDataFormulario();
-        if (comprobarCamposVacios('n_social', estudiante) >= 1) {
-            LibreriaFunciones.alertPopUp('info', 'Faltan datos importantes !!');
-            return false;
+// Función para comprobar los campos vacios del formulario
+function comprobarCamposVacios(exclusion, objeto) {
+    let count = 0;
+    for (const [key, value] of Object.entries(objeto)) {
+        if (key != exclusion && value == '') {
+            count += 1;
         }
+    }
+    return count;
+}
 
-        $.ajax({
-            url: "./controller/controller_estudiante.php",
-            type: "post",
-            dataType: "json",
-            data: {datos: datos, estudiante: estudiante},
-            success: function(data) {
-                if (data == 'existe') {
-                    LibreriaFunciones.alertPopUp('warning', 'El rut ingresado ya existe en la base de datos de los estudiantes');
-                    return false;
-                }
-                if (data == true) {
-                    LibreriaFunciones.alertPopUp('success', 'Estudiante registrado !!');
-                    $('#modal_estudiante').modal('hide');
-                    beforeRecord(tabla);
-                } 
-                LibreriaFunciones.alertPopUp('warning', 'No se registro el estudiante !!');
-            }
-        }).fail(() => {
-            LibreriaFunciones.alertPopUp('error', 'Error en la consulta !!');
-        });
+
+
+// ================== FUNCÓN PARA TRABAJAR CON MODALES ================== //
+// Función generica para restablecer el formato del modal
+function prepararModal() {
+    $('#form_registro_estudiante').trigger('reset');
+    $('#rut_estudiante').removeClass('is-invalid');
+    $('#informacion_rut').removeClass('text-danger');
+    $('#informacion_rut').text('Rut sin puntos, sin guión y sin dígito verificador');
+    $('#informacion_rut').addClass('form-text');
+    LibreriaFunciones.autoFocus($('#modal_estudiante'), $('#rut_estudiante'));
+    validarRutEstudiante();
+}
+
+// Función para lanzar el modal de nuevo estudiante
+function lanzarModalNuevoEstudiante() {
+    $('#btn_nuevo_estudiante').click(() => {
+        prepararModal();
+        $('#modal_estudiante_tittle').text('REGISTRAR ESTUDIANTE');
+        $('#btn_registrar_estudiante').text('Registrar');
+        $('#texto_secundario').text('Nuevo registro N°');
+        $('#fecha_ingreso_estudiante').val(LibreriaFunciones.getFecha());
+        cantidadEstudiante(true);
     });
 }
 
@@ -322,6 +220,49 @@ function lanzarModalupdateEstudiante(tabla) {
     });
 }
 
+
+
+// ================== MANEJO DE INFORMARCIÓN ================== //
+// Función para registrar un nuevo estudiante 
+function setEstudiante(tabla) {
+    $('#btn_registrar_estudiante').click((e) => {
+        e.preventDefault();
+        if ($('#modal_estudiante_tittle').text() != 'REGISTRAR ESTUDIANTE') { return false; }
+        if (LibreriaFunciones.comprobarLongitud($('#rut_estudiante').val(), 7, 9, 'RUT', 'Estudiante') == false) { return false; }
+
+        datos = 'setEstudiante';
+        const estudiante = getDataFormulario();
+        if (comprobarCamposVacios('n_social', estudiante) >= 1) {
+            LibreriaFunciones.alertPopUp('info', 'Faltan datos importantes !!');
+            return false;
+        }
+
+        $.ajax({
+            url: "./controller/controller_estudiante.php",
+            type: "post",
+            dataType: "json",
+            data: {datos: datos, estudiante: estudiante},
+            success: (response) => {
+                if (response == 'existe') {
+                    LibreriaFunciones.alertPopUp('warning', 'El rut ingresado ya existe en la base de datos de los estudiantes');
+                    return false;
+                }
+
+                if (response == true) {
+                    LibreriaFunciones.alertPopUp('success', 'Estudiante registrado !!');
+                    $('#modal_estudiante').modal('hide');
+                    beforeRecord(tabla);
+                    return false;
+                }
+
+                LibreriaFunciones.alertPopUp('warning', 'No se registro el estudiante !!');
+            }
+        }).fail(() => {
+            LibreriaFunciones.alertPopUp('error', 'Error en la consulta !!');
+        });
+    });
+}
+
 // Función para actualizar un registro estudiante
 function updateEstudiante(tabla) {
     $('#btn_registrar_estudiante').click((e) => {
@@ -350,6 +291,7 @@ function updateEstudiante(tabla) {
                     beforeRecord(tabla);
                     return false;
                 }
+
                 LibreriaFunciones.alertPopUp('warning', 'No se actualizó el estudiante !!');
             }
         }).fail(() => {
@@ -361,10 +303,79 @@ function updateEstudiante(tabla) {
     });
 }
 
+// Función para eliminar el registro de un estudiante
+function deleteRegistroEstudiante(tabla) {
+    $('#tabla_estudiante tbody').on('click', '#btn_eliminar_estudiante', function() {
+        let data = tabla.row($(this).parents()).data();
+        let id_estudiante = data.id_estudiante;
+
+        Swal.fire({
+            icon: 'question',
+            title: 'Eliminar registro de "' + data.nombres_estudiante + ' ' + data.ap_estudiante + '"',
+            showCancelButton: true,
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#2691d9',
+            cancelButtonColor: '#adadad'
+        }). then(resultado => {
+            if (resultado.isConfirmed) {
+                datos = "deleteEstudiante";
+
+                $.ajax({
+                    url: "./controller/controller_estudiante.php",
+                    type: "post",
+                    dataType: "json",
+                    data: {datos: datos, id_estudiante: id_estudiante},
+                    success: (response) => {
+                        if (response == true) {
+                            LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
+                            beforeRecord(tabla);
+                            return false;
+                        }
+
+                        LibreriaFunciones.alertPopUpButton('error', 'No se puede eliminar el registro, por la integridad de los datos !!');
+                    }
+                }).fail(() => {
+                    LibreriaFunciones.alertPopUp('error', 'Error en la operación  !!');
+                });
+            }
+        });
+    });
+}
+
+// Función para generar documento
+function exportarEstudiantes(btn, ext) { // Terminado y revisado !!
+    let datos = 'exportarEstudiantes';
+
+    $(btn).click((e) => {
+        e.preventDefault();
+
+        $.ajax({
+            url: "./controller/controller_estudiante.php",
+            type: "post",
+            dataType: "html",
+            cache: false,
+            data: {datos: datos, ext: ext},
+            success: (data) => {
+                let opResult = JSON.parse(data);
+                let $a = $("<a>");
+    
+                $a.attr("href", opResult.data);
+                $("body").append($a);
+                $a.attr("download", "Registro estudiante." + ext);
+                $a[0].click();
+                $a.remove();
+            }
+        }). fail(() => {
+            LibreriaFunciones.alertPopUp('error', 'Error al generar documento');
+        });
+    });
+}
+
+
+
 // ==================== FUNCIONES INTERNAS ===============================//
-
 $(document).ready(function() {
-
     cantidadEstudiante();
 
     let tabla_estudiante = $('#tabla_estudiante').DataTable({
@@ -411,10 +422,10 @@ $(document).ready(function() {
         language: spanish
     });
 
-    expandInfoEstudiante(tabla_estudiante);
+    expandInfoSecundaria(tabla_estudiante);
+
     lanzarModalNuevoEstudiante();
     lanzarModalupdateEstudiante(tabla_estudiante);
-    
     setEstudiante(tabla_estudiante);
     updateEstudiante(tabla_estudiante);
     deleteRegistroEstudiante(tabla_estudiante);

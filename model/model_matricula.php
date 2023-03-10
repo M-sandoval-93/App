@@ -242,7 +242,8 @@
         // Método para exportar el registro de las matriculas
         public function exportarMatriculas($ext) {
             $extension = 'Xlsx';
-            $query = "SELECT matricula.matricula, curso.curso, (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut_estudiante,
+            $query = "SELECT matricula.matricula, COALESCE(curso.curso, 'N/A') AS curso,
+                (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut_estudiante,
                 estudiante.ap_estudiante, estudiante.am_estudiante, estudiante.nombres_estudiante, estudiante.nombre_social,
                 estudiante.fecha_nacimiento, estudiante.sexo, estudiante.fecha_ingreso, estudiante.fecha_retiro,
                 (ap_titular.rut_apoderado || '-' || ap_titular.dv_rut_apoderado) AS rut_ap_titular,
@@ -252,12 +253,12 @@
                 ap_suplente.ap_apoderado AS ap_suplente, ap_suplente.am_apoderado AS am_suplente, ap_suplente.nombres_apoderado AS nombres_suplente,
                 ap_suplente.telefono AS telefono_suplente, ap_suplente.direccion AS direccion_suplente, estado.nombre_estado
                 FROM matricula
-                INNER JOIN curso ON curso.id_curso = matricula.id_curso
+                LEFT JOIN curso ON curso.id_curso = matricula.id_curso
                 INNER JOIN estudiante ON estudiante.id_estudiante = matricula.id_estudiante
                 LEFT JOIN apoderado AS ap_titular ON ap_titular.id_apoderado = matricula.id_ap_titular
                 LEFT JOIN apoderado AS ap_suplente ON ap_suplente.id_apoderado = matricula.id_ap_suplente
                 LEFT JOIN estado ON estado.id_estado = matricula.id_estado
-                WHERE matricula.anio_lectivo = EXTRACT (YEAR FROM now())
+                WHERE matricula.anio_lectivo = EXTRACT (YEAR FROM CURRENT_DATE)
                 ORDER BY estudiante.ap_estudiante ASC;";
 
             $sentencia = $this->preConsult($query);

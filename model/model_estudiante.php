@@ -151,7 +151,7 @@
                 COALESCE(SUM(CASE WHEN retraso.estado_retraso = 'sin justificar' THEN 1 ELSE 0 END), 0) AS cantidad_retraso
                 FROM estudiante AS e
                 INNER JOIN matricula ON matricula.id_estudiante = e.id_estudiante
-                INNER JOIN curso ON curso.id_curso = matricula.id_curso
+                LEFT JOIN curso ON curso.id_curso = matricula.id_curso
                 LEFT JOIN retraso ON retraso.id_estudiante = e.id_estudiante
                 WHERE e.rut_estudiante = ? AND matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
                 GROUP BY e.id_estudiante, curso.curso, matricula.id_estado;";
@@ -177,7 +177,7 @@
                 || ' ' || estudiante.am_estudiante) AS nombre_estudiante, curso.curso
                 FROM estudiante
                 INNER JOIN matricula ON matricula.id_estudiante = estudiante.id_estudiante
-                INNER JOIN curso ON curso.id_curso = matricula.id_curso
+                LEFT JOIN curso ON curso.id_curso = matricula.id_curso
                 WHERE estudiante.rut_estudiante = ? AND matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE);";
             
             $sentencia = $this->preConsult($query);

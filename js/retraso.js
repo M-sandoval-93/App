@@ -215,6 +215,7 @@ function setRetraso(tabla) {
                     beforeRegistro(tabla);
                     return false;
                 }
+
                 LibreriaFunciones.alertPopUp('error', 'Retraso no registrado !!');
             }
         }).fail(() => {
@@ -259,6 +260,7 @@ function setJustificarRetraso(tabla) {
                     $('#modal_justificar_retraso').modal('hide');
                     return false;
                 }
+
                 LibreriaFunciones.alertPopUp('warning', 'Retrasos no justificados !!');
             }
         }).fail(() => {
@@ -296,6 +298,7 @@ function deleteRegistroRetraso(tabla) {
                             beforeRegistro(tabla);
                             return false;
                         }
+
                         LibreriaFunciones.alertPopUp('error', 'Registro no eliminado !!');
                     }
                 }).fail(() => {
@@ -336,10 +339,8 @@ function exportarRetraso(btn, ext) {
 }
 
 
+
 // ==================== FUNCIONES INTERNAS ===============================//
-
-// REFACTORIZAR Y ORDENAR !!!!!
-
 $(document).ready(function() {
     getCantidadRetraso();
 

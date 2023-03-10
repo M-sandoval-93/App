@@ -120,6 +120,13 @@ function cargarTipoInasistencia() {
     });
 }
 
+
+// ================== FUNCÓN PARA TRABAJAR CON MODALES ================== //
+// ================== MANEJO DE INFORMARCIÓN ================== //
+
+
+
+
 // ==================== FUNCIONES INTERNAS ===============================//
 
 // MODULO CENTRAL =================== >>>>>>>>>

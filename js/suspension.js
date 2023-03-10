@@ -2,7 +2,6 @@ import {LibreriaFunciones, generar_dv, spanish } from './librerias/librerias.js'
 let datos = 'getSuspension';
 
 
-
 // ==================== FUNCIONES INTERNAS ===============================//
 // Función para mostrar datos extras
 function getData(data) {
@@ -87,6 +86,7 @@ function exportarSuspension(btn, ext) {
 }
 
 
+
 // ================== MANEJO DE INFORMARCIÓN ================== //
 // Función para eliminar el registro de una suspension
 function deleteRegistroSuspension(tabla) {
@@ -119,12 +119,13 @@ function deleteRegistroSuspension(tabla) {
                     type: "post",
                     dataType: "json",
                     data: {datos: datos, id_suspension: data.id_suspension},
-                    success: (data) => {
-                        if (data == true) {
+                    success: (response) => {
+                        if (response == true) {
                             LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
                             beforeRegistroSuspension(tabla);
                             return false;
                         }
+
                         LibreriaFunciones.alertPopUp('warning', 'Registro no eliminado !!');
                     }
                 }).fail(() => {
@@ -135,10 +136,9 @@ function deleteRegistroSuspension(tabla) {
     });
 }
 
+
+
 // ==================== FUNCIONES INTERNAS ===============================//
-
-
-// ==================== SCRIPT DEL MODULO ===============================//
 $(document).ready(function() {
     getCantidadSuspension();
 

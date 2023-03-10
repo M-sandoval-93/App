@@ -340,6 +340,7 @@ function getApoderadosTS(id_matricula) {
 }
 
 
+
 // ================== FUNCÓN PARA TRABAJAR CON MODALES ================== //
 // Función para preparar el modal de matrícula
 function prepararModalMatricula(modal) {
@@ -390,8 +391,9 @@ function lanzarModalActualizarMatricula(tabla) {
         let data = tabla.row($(this).parents()).data();
         let rut = data.rut.slice(0, data.rut.length - 2);
         let nombres = data.nombre + ' ' + data.ap_paterno + ' ' + data.ap_materno;
-        let grado = data.curso.slice(0, data.curso.length-1);
-        let letra = data.curso.slice(1, data.curso.length);
+
+        let grado = (data.curso == null) ? '' : data.curso.slice(0, data.curso.length-1);
+        let letra = (data.curso == null) ? '' : data.curso.slice(1, data.curso.length);
 
         prepararModalMatricula('actualizar');
 
@@ -492,22 +494,23 @@ function setMatricula(tabla) {
             type: "post",
             dataType: "json",
             data: {datos: datos, matricula: matricula},
-            success: function(data) {
-                if (data == 'existe') {
+            success: (response) => {
+                if (response == 'existe') {
                     LibreriaFunciones.alertPopUp('warning', 'El rut ingresado ya se encuentra matriculado');
                     return false;
                 }
 
-                if (data == 'matriculaExiste') {
+                if (response == 'matriculaExiste') {
                     LibreriaFunciones.alertPopUp('warning', 'El número de matricula para para el grado ya existe !!');
                     return false;
                 }
 
-                if (data == true) {
+                if (response == true) {
                     LibreriaFunciones.alertPopUp('success', 'Matrícula registrada !!');
                     beforeRegistroMatricula(tabla, '#modal_matricula');
                     return false;
                 }
+
                 LibreriaFunciones.alertPopUp('warning', 'Error de registro !!');
             }
         }).fail(() => {
@@ -534,12 +537,13 @@ function setSuspension(tabla) {
             type: "post",
             dataType: "json",
             data: {datos: datos, suspension: infoSuspension },
-            success: function(data) {
-                if (data == true) {
+            success: (response) => {
+                if (response == true) {
                     LibreriaFunciones.alertPopUp('success', 'Suspensión registrada con exito !!');
                     beforeRegistroMatricula(tabla, '#modal_suspender_matricula');
                     return false;
                 }
+
                 LibreriaFunciones.alertPopUp('warning', 'Error de registro !!');
             }
         }).fail(() => {
@@ -564,12 +568,13 @@ function setRetiroMatricula(tabla) {
             type: "post",
             dataType: "json",
             data: {datos: datos, retiro: infoRetiro },
-            success: function(data) {
-                if (data == true) {
+            success: (response) => {
+                if (response == true) {
                     LibreriaFunciones.alertPopUp('success', 'Retiro efectuado con éxito !!');
                     beforeRegistroMatricula(tabla, '#modal_retiro_matricula');
                     return false;
                 }
+
                 LibreriaFunciones.alertPopUp('warning', 'Error de registro !!');
             }
         }).fail(() => {
@@ -602,12 +607,13 @@ function updateMatricula(tabla) {
             type: "post",
             dataType: "json",
             data: {datos: datos, matricula: matricula},
-            success: function(data) {
-                if (data == true) {
+            success: (response) => {
+                if (response == true) {
                     LibreriaFunciones.alertPopUp('success', 'Matricula actualizada !!');
                     beforeRegistroMatricula(tabla, '#modal_matricula');
                     return false;
                 }
+
                 LibreriaFunciones.alertPopUp('warning', 'Error de registro !!');
             }
         }).fail(() => {
@@ -638,12 +644,13 @@ function deleteRegistroMatricula(tabla) {
                     type: "post",
                     dataType: "json",
                     data: {datos: datos, id_matricula: id_matricula},
-                    success: (data) => {
-                        if (data == true) {
+                    success: (response) => {
+                        if (response == true) {
                             LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
                             beforeRegistroMatricula(tabla);
                             return false;
                         } 
+                        
                         LibreriaFunciones.alertPopUp('warning', 'La matrícula no puede ser eliminada !!');
                     }
                 }).fail(() => {
@@ -683,14 +690,10 @@ function exportarMatriculas(btn, ext) {
     });
 }
 
+
+
 // ==================== FUNCIONES INTERNAS ===============================//
-
-
-
-
-// ==================== SCRIPT DEL MODULO ===============================//
 $(document).ready(function() {
-
     getCantidadMatricula();
 
     let tabla_matricula = $('#tabla_matricula_estudiante').DataTable({
@@ -749,7 +752,6 @@ $(document).ready(function() {
     lanzarModalActualizarMatricula(tabla_matricula);
     lanzarModalSuspencion(tabla_matricula);
     lanzarModalRetiro(tabla_matricula);
-
     setMatricula(tabla_matricula);
     updateMatricula(tabla_matricula);
     setSuspension(tabla_matricula);

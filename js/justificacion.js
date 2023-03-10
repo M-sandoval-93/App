@@ -264,7 +264,6 @@ function prepararModalAsignatura() {
 
 
 
-
 // ================== MANEJO DE INFORMARCIÓN ================== //
 // Función para registrar la justificación de un estudiante
 function setModalJustificacion(tabla) {
@@ -425,13 +424,13 @@ $(document).ready(function() {
     });
 
     expandirData(tabla_justificacion_estudiante);
+
     prepararModalJustificacion();
     getPruebaAsignaturas();
     setModalJustificacion(tabla_justificacion_estudiante);
     deleteRegistroJustificacion(tabla_justificacion_estudiante);
 
     getCertificadoJustificacion(tabla_justificacion_estudiante);
-
     exportarJustificaciones('#btn_excel', 'xlsx');
     exportarJustificaciones('#btn_csv', 'csv');
 

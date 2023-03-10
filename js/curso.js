@@ -1,3 +1,10 @@
+// ==================== FUNCIONES INTERNAS ===============================//
+
+// ================== FUNCÓN PARA TRABAJAR CON MODALES ================== //
+// ================== MANEJO DE INFORMARCIÓN ================== //
+
+// ==================== FUNCIONES INTERNAS ===============================//
+
 $(document).ready(function () {
 
     // PARA CONSULTA Y CREACIÓN DE LETRAS DEL GRADO ---------- //

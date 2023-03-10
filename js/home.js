@@ -3,13 +3,12 @@ let datos = 'comprobarSuspension';
 
 // Función para comprobar y actualizar la suspensión de matrículas
 function comprobarSuspension() {
-    
     $.ajax({
         url: "./controller/controller_suspension.php",
         type: "post",
         dataType: "json",
         data: {datos: datos},
-        success: function(response) {
+        success: (response) => {
             if (response != true) {
                 LibreriaFunciones.alertPopUp('warning', 'No se ha podido actualizar las suspensiones !!');
             }

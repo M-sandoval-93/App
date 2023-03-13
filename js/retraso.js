@@ -137,6 +137,31 @@ function beforeRegistro(tabla, retraso = true) {
     if (retraso == true) { prepararModalRetraso(); }
 }
 
+async function imprimir() {
+    let nombreImpresora = "Printer";
+    let api_key = "123456";
+    const conector = new connector_plugin();
+
+    conector.fontsize("1");
+    conector.textaling("center");
+    conector.text("LICEO BICENTENARIO");
+    conector.text("VALENTIN LETELIER MADARIAGA");
+    conector.feed("2");
+    conector.fontsize("2");
+    conector.text("Ticket de Entrada");
+    conector.fontsize("1");
+    conector.text("--------------------------------------------");
+
+    // agregar contenido de la impresión
+
+    const resp = await conector.imprimir(nombreImpresora, api_key);
+    if (resp === true) {
+
+    } else {
+        LibreriaFunciones.alertPopUp('warning', 'No se pudo imprimir el ticket !!');
+    }
+}
+
 
 
 // ================== FUNCÓN PARA TRABAJAR CON MODALES ================== //
@@ -213,6 +238,7 @@ function setRetraso(tabla) {
                 if (response == true) {
                     LibreriaFunciones.alertPopUp('success', 'Retraso registrado !!');
                     beforeRegistro(tabla);
+                    imprimir();
                     return false;
                 }
 

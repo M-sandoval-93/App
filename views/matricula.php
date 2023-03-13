@@ -72,6 +72,7 @@
                             <th>Nombres</th>
                             <th>Curso</th>
                             <th>Estado</th>
+                            <!-- <th>Certificado</th> -->
                             <th>Edición</th>
                         </tr>
                     </thead>

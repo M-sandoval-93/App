@@ -734,6 +734,11 @@ $(document).ready(function() {
                             </div>`
                 }
             },
+            // {
+            //     data: null,
+            //     bSortable: false,
+            //     defaultContent: '<button class="btn btn-primary btn-justify px-3" id="btn_certificado" title="Descargar certificado" type="button"><i class="fas fa-file-download"></i></button>'
+            // },
             {
                 data: null,
                 bSortable: false,

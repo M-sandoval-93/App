@@ -137,10 +137,20 @@ function beforeRegistro(tabla, retraso = true) {
     if (retraso == true) { prepararModalRetraso(); }
 }
 
+
+
+// SECCIÓN FUNCIONES DE IMPRESIÓN PARA PUNTO DE TICKET
+function getImpresoras() {
+    connetor_plugin.obtenerImpresoras()
+        .then(impresoras => {
+            console.log(impresoras);
+        })
+}
+
 async function imprimir() {
     let nombreImpresora = "Printer";
     let api_key = "123456";
-    const conector = new connector_plugin();
+    const conector = new connetor_plugin();
 
     conector.fontsize("1");
     conector.textaling("center");
@@ -154,9 +164,11 @@ async function imprimir() {
 
     // agregar contenido de la impresión
 
+    // Antes de la promesa!!
+    console.log("conector");
     const resp = await conector.imprimir(nombreImpresora, api_key);
     if (resp === true) {
-
+        LibreriaFunciones.alertPopUp('Impresipón efectuada con éxito');
     } else {
         LibreriaFunciones.alertPopUp('warning', 'No se pudo imprimir el ticket !!');
     }
@@ -216,37 +228,43 @@ function lanzarModalJustificaciones(tabla) {
 // Función para registrar un retraso
 function setRetraso(tabla) {
     $('#btn_registrar_retraso').click((e) => {
-        e.preventDefault();
-        datos = 'setRetraso';
-        let rut;
+        // e.preventDefault();
+        // datos = 'setRetraso';
+        // let rut;
 
         
-        if (LibreriaFunciones.comprobarLongitud($('#rut_estudiante_retraso').val(), 7, 9, 'RUT', 'Estudiante') == false) { return false; }
-        if ($('#rut_estudiante_retraso').val() == '' || $('#nombre_estudiante_retraso').val() == 'Sin datos' || $('#nombre_estudiante_retraso').val() == '') {
-            LibreriaFunciones.alertPopUp('info', 'Los datos ingresados no son correctos !!');
-            return false;
-        } 
+        // if (LibreriaFunciones.comprobarLongitud($('#rut_estudiante_retraso').val(), 7, 9, 'RUT', 'Estudiante') == false) { return false; }
+        // if ($('#rut_estudiante_retraso').val() == '' || $('#nombre_estudiante_retraso').val() == 'Sin datos' || $('#nombre_estudiante_retraso').val() == '') {
+        //     LibreriaFunciones.alertPopUp('info', 'Los datos ingresados no son correctos !!');
+        //     return false;
+        // } 
 
-        rut = $.trim($('#rut_estudiante_retraso').val());
+        // rut = $.trim($('#rut_estudiante_retraso').val());
 
-        $.ajax({
-            url: "./controller/controller_retraso.php",
-            type: "post",
-            dataType: "json",
-            data: {datos: datos, rut: rut },
-            success: (response) => {
-                if (response == true) {
-                    LibreriaFunciones.alertPopUp('success', 'Retraso registrado !!');
-                    beforeRegistro(tabla);
-                    imprimir();
-                    return false;
-                }
+        // $.ajax({
+        //     url: "./controller/controller_retraso.php",
+        //     type: "post",
+        //     dataType: "json",
+        //     data: {datos: datos, rut: rut },
+        //     success: (response) => {
+        //         if (response == true) {
+        //             LibreriaFunciones.alertPopUp('success', 'Retraso registrado !!');
+        //             beforeRegistro(tabla);
+        //             // imprimir();
+        //             return false;
+        //         }
 
-                LibreriaFunciones.alertPopUp('error', 'Retraso no registrado !!');
-            }
-        }).fail(() => {
-            LibreriaFunciones.alertPopUp('error', 'Error en la ejecución !!');
-        });
+        //         LibreriaFunciones.alertPopUp('error', 'Retraso no registrado !!');
+        //     }
+        // }).fail(() => {
+        //     LibreriaFunciones.alertPopUp('error', 'Error en la ejecución !!');
+        // });
+
+
+        //PRUEBA DE PLUGIN DE IMPRESIÓN 
+        getImpresoras;
+
+
     });
 }
 

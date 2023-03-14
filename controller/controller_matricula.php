@@ -51,7 +51,7 @@
             break;
 
         case "getCertificado":
-            if ($id_usuario != 4) {
+            if ($id_usuario == 4) {
                 break;
             }
             print $datosMatricula->getCertificado($_POST['id_matricula']);

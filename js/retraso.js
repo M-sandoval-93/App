@@ -140,7 +140,7 @@ function beforeRegistro(tabla, retraso = true) {
 
 
 // SECCIÓN FUNCIONES DE IMPRESIÓN PARA PUNTO DE TICKET
-function getImpresoras() {
+function getImpresoras(data) {
     connetor_plugin.obtenerImpresoras()
         .then(impresoras => {
             console.log(impresoras);
@@ -152,23 +152,49 @@ async function imprimir() {
     let api_key = "123456";
     const conector = new connetor_plugin();
 
-    conector.fontsize("1");
-    conector.textaling("center");
-    conector.text("LICEO BICENTENARIO");
-    conector.text("VALENTIN LETELIER MADARIAGA");
-    conector.feed("2");
-    conector.fontsize("2");
-    conector.text("Ticket de Entrada");
-    conector.fontsize("1");
-    conector.text("--------------------------------------------");
+    // conector.fontsize("1");
+    // conector.textaling("center");
+    // conector.text("LICEO BICENTENARIO");
+    // conector.text("VALENTIN LETELIER MADARIAGA");
+    // conector.feed("2");
+    // conector.fontsize("2");
+    // conector.text("Ticket de Entrada");
+    // conector.fontsize("1");
+    // conector.text("--------------------------------------------");
+
+    conector.fontsize("1")
+    conector.textaling("center")
+    conector.text("LICEO BICENTENARIO")
+    conector.text("VALENTIN LETELIER MADARIAGA")
+    conector.feed("2")
+    conector.fontsize("2")
+    conector.text("Ticket de Entrada")
+    conector.fontsize("1")
+    conector.text("--------------------------------------------")
+
+    conector.textaling("left")
+
+    // conector.text("Nombre: <?php echo $nombre_alumno; ?>")
+    // conector.text("Curso: <?php echo $curso_alumno; ?>   /   Hora Ingreso: <?php echo $hora_atraso; ?>")
+    // conector.text("Fecha Ingreso: <?php echo $fecha_atraso; ?>")
+    conector.feed("1")
+
+    conector.textaling("center")
+    conector.text("--------------------------------------------")
+    conector.feed("1")
+    conector.fontsize("2")
+    conector.text("Registro N°: " + data.id_retraso)
+
+    conector.feed("5")
+    conector.cut("0") 
 
     // agregar contenido de la impresión
 
     // Antes de la promesa!!
-    console.log("conector");
+    // console.log("conector");
     const resp = await conector.imprimir(nombreImpresora, api_key);
     if (resp === true) {
-        LibreriaFunciones.alertPopUp('Impresipón efectuada con éxito');
+        // LibreriaFunciones.alertPopUp('Impresipón efectuada con éxito');
     } else {
         LibreriaFunciones.alertPopUp('warning', 'No se pudo imprimir el ticket !!');
     }
@@ -256,7 +282,7 @@ function setRetraso(tabla) {
                     }).then((result) => {
                         if (result.isConfirmed) {
                             // console.log("se genera una acción secundaria");
-                            imprimir();
+                            imprimir(response);
                         }
                     });
                     beforeRegistro(tabla);

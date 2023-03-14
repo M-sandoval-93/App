@@ -228,41 +228,46 @@ function lanzarModalJustificaciones(tabla) {
 // Función para registrar un retraso
 function setRetraso(tabla) {
     $('#btn_registrar_retraso').click((e) => {
-        // e.preventDefault();
-        // datos = 'setRetraso';
-        // let rut;
+        e.preventDefault();
+        datos = 'setRetraso';
+        let rut;
 
         
-        // if (LibreriaFunciones.comprobarLongitud($('#rut_estudiante_retraso').val(), 7, 9, 'RUT', 'Estudiante') == false) { return false; }
-        // if ($('#rut_estudiante_retraso').val() == '' || $('#nombre_estudiante_retraso').val() == 'Sin datos' || $('#nombre_estudiante_retraso').val() == '') {
-        //     LibreriaFunciones.alertPopUp('info', 'Los datos ingresados no son correctos !!');
-        //     return false;
-        // } 
+        if (LibreriaFunciones.comprobarLongitud($('#rut_estudiante_retraso').val(), 7, 9, 'RUT', 'Estudiante') == false) { return false; }
+        if ($('#rut_estudiante_retraso').val() == '' || $('#nombre_estudiante_retraso').val() == 'Sin datos' || $('#nombre_estudiante_retraso').val() == '') {
+            LibreriaFunciones.alertPopUp('info', 'Los datos ingresados no son correctos !!');
+            return false;
+        } 
 
-        // rut = $.trim($('#rut_estudiante_retraso').val());
+        rut = $.trim($('#rut_estudiante_retraso').val());
 
-        // $.ajax({
-        //     url: "./controller/controller_retraso.php",
-        //     type: "post",
-        //     dataType: "json",
-        //     data: {datos: datos, rut: rut },
-        //     success: (response) => {
-        //         if (response == true) {
-        //             LibreriaFunciones.alertPopUp('success', 'Retraso registrado !!');
-        //             beforeRegistro(tabla);
-        //             // imprimir();
-        //             return false;
-        //         }
+        $.ajax({
+            url: "./controller/controller_retraso.php",
+            type: "post",
+            dataType: "json",
+            data: {datos: datos, rut: rut },
+            success: (response) => {
+                if (response.response == true) {
+                    // LibreriaFunciones.alertPopUp('success', 'Retraso N° ' + response.id_retraso + ' registrado !!');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Retraso N° ' + response.id_retraso + ' registrado !!',
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            console.log("se genera una acción secundaria");
+                            // imprimir();
+                        }
+                    });
+                    beforeRegistro(tabla);
+                    return false;
+                }
 
-        //         LibreriaFunciones.alertPopUp('error', 'Retraso no registrado !!');
-        //     }
-        // }).fail(() => {
-        //     LibreriaFunciones.alertPopUp('error', 'Error en la ejecución !!');
-        // });
-
-
-        //PRUEBA DE PLUGIN DE IMPRESIÓN 
-        getImpresoras;
+                LibreriaFunciones.alertPopUp('error', 'Retraso no registrado !!');
+            }
+        }).fail(() => {
+            LibreriaFunciones.alertPopUp('error', 'Error en la ejecución !!');
+        });
 
 
     });
@@ -338,12 +343,14 @@ function deleteRegistroRetraso(tabla) {
                     data: {datos: datos, id_retraso: id_retraso},
                     success: function(response) {
                         if (response == true) {
-                            LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
+                            // LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
+                            LibreriaFunciones.alertToast('success', 'Registro eliminado !!');
                             beforeRegistro(tabla);
                             return false;
                         }
 
-                        LibreriaFunciones.alertPopUp('error', 'Registro no eliminado !!');
+                        // LibreriaFunciones.alertPopUp('error', 'Registro no eliminado !!');
+                        LibreriaFunciones.alertToast('error', 'Registro no eliminado !!');
                     }
                 }).fail(() => {
                     LibreriaFunciones.alertPopUp('error', 'Error en la operación !!');

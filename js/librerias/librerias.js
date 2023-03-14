@@ -275,8 +275,24 @@ export let LibreriaFunciones = {
         Swal.fire({
             icon: icon,
             title: title,
-            // showConfirmButton: true,
-            // timer: 1500
+            allowOutsideClick: false
+        });
+    },
+
+    alertToast: (icon, title) => {
+        Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        }).fire({
+            icon: icon,
+            title: title
         });
     },
 

@@ -646,17 +646,47 @@ function deleteRegistroMatricula(tabla) {
                     data: {datos: datos, id_matricula: id_matricula},
                     success: (response) => {
                         if (response == true) {
-                            LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
+                            // LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
+                            LibreriaFunciones.alertToast('success', 'Registro eliminado !!');
                             beforeRegistroMatricula(tabla);
                             return false;
                         } 
                         
-                        LibreriaFunciones.alertPopUp('warning', 'La matrícula no puede ser eliminada !!');
+                        // LibreriaFunciones.alertPopUp('warning', 'La matrícula no puede ser eliminada !!');
+                        LibreriaFunciones.alertToast('warning', 'La matrícula no puede ser eliminada !!');
                     }
                 }).fail(() => {
                     LibreriaFunciones.alertPopUp('error', 'Error de ejecución !!');
                 });
             }
+        });
+    });
+}
+
+// Función para descargar el certificado de alumno regular
+function getCertificado(tabla) {
+    $('#tabla_matricula_estudiante tbody').on('click', '#btn_certificado', function() {
+        let data = tabla.row($(this).parents()).data();
+        let id_matricula = data.id_matricula;
+        let datos = "getCertificado";
+
+        $.ajax({
+            url: "./controller/controller_matricula.php",
+            type: "post",
+            data: {datos: datos, id_matricula: id_matricula},
+            xhrFields: { responseType: 'blob' },
+            success: (response) => {
+                var url = window.URL.createObjectURL(response);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'Certificado Alumno Regular.docx'; // nombre del archivo
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            }
+        }).fail(() => {
+            LibreriaFunciones.alertPopUp('error', 'Error de ejecución !!');
         });
     });
 }
@@ -734,15 +764,11 @@ $(document).ready(function() {
                             </div>`
                 }
             },
-            // {
-            //     data: null,
-            //     bSortable: false,
-            //     defaultContent: '<button class="btn btn-primary btn-justify px-3" id="btn_certificado" title="Descargar certificado" type="button"><i class="fas fa-file-download"></i></button>'
-            // },
             {
                 data: null,
                 bSortable: false,
                 defaultContent:`<button class="btn btn-primary btn-justify px-3" id="btn_editar_matricula" title="Editar matricula" type="button" data-bs-toggle="modal" data-bs-target="#modal_matricula"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-info btn-justify px-3" id="btn_certificado" title="Descargar certificado" type="button"><i class="fas fa-file-download"></i></button>
                                 <button class="btn btn-warning btn-justify px-3" id="btn_retiro_matricula" title="Retirar estudiante" type="button"><i class="fas fa-sign-out-alt"></i></button>
                                 <button class="btn btn-danger btn-delete px-3" id="btn_delete_matricula" title="Eliminar matricula" type="button"><i class="fas fa-trash-alt"></i></button>`,
                 className: "text-center"
@@ -763,6 +789,7 @@ $(document).ready(function() {
     setRetiroMatricula(tabla_matricula);
     deleteRegistroMatricula(tabla_matricula);
 
+    getCertificado(tabla_matricula);
     exportarMatriculas('#btn_excel', 'xlsx');
     exportarMatriculas('#btn_csv', 'csv');
 

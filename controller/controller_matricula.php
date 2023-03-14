@@ -47,6 +47,10 @@
             print $datosMatricula->deleteMatricula($_POST['id_matricula']);
             break;
 
+        case "getCertificado":
+            print $datosMatricula->getCertificado($_POST['id_matricula']);
+            break;
+
         case "exportarMatriculas":
             print $datosMatricula->exportarMatriculas($_POST['ext']);
             break;

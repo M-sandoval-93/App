@@ -326,11 +326,13 @@ function deleteRegistroJustificacion(tabla) {
                     data: {datos: datos, id_justificacion: id_justificacion},
                     success: function(data) {
                         if (data == true) {
-                            LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
+                            // LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
+                            LibreriaFunciones.alertToast('success', 'Registro eliminado !!');
                             beforeRegistroJustificacion(tabla);
                             return false;
                         }
-                        LibreriaFunciones.alertPopUp('error', 'Registro no eliminado !!');
+                        // LibreriaFunciones.alertPopUp('error', 'Registro no eliminado !!');
+                        LibreriaFunciones.alertToast('error', 'Registro no eliminado !!');
                     }
                 }). fail (() => {
                     LibreriaFunciones.alertPopUp('error', 'Error en la operación !!');

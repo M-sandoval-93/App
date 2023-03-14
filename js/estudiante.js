@@ -328,7 +328,8 @@ function deleteRegistroEstudiante(tabla) {
                     data: {datos: datos, id_estudiante: id_estudiante},
                     success: (response) => {
                         if (response == true) {
-                            LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
+                            // LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
+                            LibreriaFunciones.alertToast('success', 'Registro eliminado !!');
                             beforeRecord(tabla);
                             return false;
                         }

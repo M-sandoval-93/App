@@ -93,10 +93,23 @@
             $sentencia = $this->preConsult($query);
             if ($sentencia->execute([$rut])) {
                 $this->res = true;
+
+                $query = "SELECT retraso.id_retraso, curso.curso,
+                    (e.nombres_estudiante || ' ' || e.ap_estudiante || ' ' || e.am_estudiante) AS nombres
+                    FROM estudiante e
+                    INNER JOIN retraso ON retraso.id_estudiante = e.id_estudiante
+                    INNER JOIN matricula ON matricula.id_estudiante = e.id_estudiante
+                    INNER JOIN curso ON curso.id_curso = matricula.id_curso
+                    WHERE retraso.id_retraso = (SELECT MAX(id_retraso) FROM retraso);";
+                
+                $sentencia = $this->preConsult($query);
+                $sentencia->execute();
+                $this->json = $sentencia->fetch(PDO::FETCH_ASSOC);
             }
+            $this->json['response'] = $this->res;
 
             $this->closeConnection();
-            return json_encode($this->res);
+            return json_encode($this->json);
         }
 
         // Método para justificar uno o varios retrasos

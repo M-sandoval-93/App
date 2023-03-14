@@ -152,41 +152,31 @@ async function imprimir(data) {
     let api_key = "123456";
     const conector = new connetor_plugin();
 
-    // conector.fontsize("1");
-    // conector.textaling("center");
-    // conector.text("LICEO BICENTENARIO");
-    // conector.text("VALENTIN LETELIER MADARIAGA");
-    // conector.feed("2");
-    // conector.fontsize("2");
-    // conector.text("Ticket de Entrada");
-    // conector.fontsize("1");
-    // conector.text("--------------------------------------------");
+    conector.fontsize("1");
+    conector.textaling("center");
+    conector.text("LICEO BICENTENARIO");
+    conector.text("VALENTIN LETELIER MADARIAGA");
+    conector.feed("2");
+    conector.fontsize("2");
+    conector.text("Ticket de Entrada");
+    conector.fontsize("1");
+    conector.text("--------------------------------------------");
 
-    conector.fontsize("1")
-    conector.textaling("center")
-    conector.text("LICEO BICENTENARIO")
-    conector.text("VALENTIN LETELIER MADARIAGA")
-    conector.feed("2")
-    conector.fontsize("2")
-    conector.text("Ticket de Entrada")
-    conector.fontsize("1")
-    conector.text("--------------------------------------------")
+    conector.textaling("left");
 
-    conector.textaling("left")
+    conector.text("Nombre: " + data.nombres);
+    conector.text("Curso: " + data.curso + "   /   Hora Ingreso: " + data.hora_retraso);
+    conector.text("Fecha Ingreso: " + data.fecha_retraso);
+    conector.feed("1");
 
-    // conector.text("Nombre: <?php echo $nombre_alumno; ?>")
-    // conector.text("Curso: <?php echo $curso_alumno; ?>   /   Hora Ingreso: <?php echo $hora_atraso; ?>")
-    // conector.text("Fecha Ingreso: <?php echo $fecha_atraso; ?>")
-    conector.feed("1")
+    conector.textaling("center");
+    conector.text("--------------------------------------------");
+    conector.feed("1");
+    conector.fontsize("2");
+    conector.text("Registro N°: " + data.id_retraso);
 
-    conector.textaling("center")
-    conector.text("--------------------------------------------")
-    conector.feed("1")
-    conector.fontsize("2")
-    conector.text("Registro N°: " + data.id_retraso)
-
-    conector.feed("5")
-    conector.cut("0") 
+    conector.feed("5");
+    conector.cut("0"); 
 
     // agregar contenido de la impresión
 
@@ -279,12 +269,14 @@ function setRetraso(tabla) {
                         icon: 'success',
                         title: 'Retraso N° ' + response.id_retraso + ' registrado !!',
                         allowOutsideClick: false
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // console.log("se genera una acción secundaria");
-                            imprimir(response);
-                        }
                     });
+                    imprimir(response);
+                    // .then((result) => {
+                    //     if (result.isConfirmed) {
+                    //         // console.log("se genera una acción secundaria");
+                    //         imprimir(response);
+                    //     }
+                    // });
                     beforeRegistro(tabla);
                     return false;
                 }

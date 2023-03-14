@@ -95,7 +95,9 @@
                 $this->res = true;
 
                 $query = "SELECT retraso.id_retraso, curso.curso,
-                    (e.nombres_estudiante || ' ' || e.ap_estudiante || ' ' || e.am_estudiante) AS nombres
+                    (e.nombres_estudiante || ' ' || e.ap_estudiante || ' ' || e.am_estudiante) AS nombres,
+                    to_char(retraso.fecha_retraso, 'DD/MM/YYYY') AS fecha_retraso,
+                    to_char(retraso.hora_retraso, 'HH:MI:SS') AS hora_retraso
                     FROM estudiante e
                     INNER JOIN retraso ON retraso.id_estudiante = e.id_estudiante
                     INNER JOIN matricula ON matricula.id_estudiante = e.id_estudiante

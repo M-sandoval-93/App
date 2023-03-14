@@ -676,16 +676,14 @@ function getCertificado(tabla) {
             data: {datos: datos, id_matricula: id_matricula},
             xhrFields: { responseType: 'blob' },
             success: (response) => {
-                var blob = new Blob(response, {type : 'text/html'}); // el blob
-                console.log(blob);
-                // var url = window.URL.createObjectURL(response);
-                // var a = document.createElement('a');
-                // a.href = url;
-                // a.download = 'Certificado Alumno Regular.docx'; // nombre del archivo
-                // document.body.appendChild(a);
-                // a.click();
-                // a.remove();
-                // window.URL.revokeObjectURL(url);
+                var url = window.URL.createObjectURL(response);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'Certificado Alumno Regular.docx'; // nombre del archivo
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
             }
         }).fail(() => {
             LibreriaFunciones.alertPopUp('error', 'Error de ejecución !!');

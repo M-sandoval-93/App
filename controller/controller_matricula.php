@@ -1,7 +1,10 @@
 <?php
     // Incluimos el modelo que utilizara el controlador
     require_once '../model/model_matricula.php';
-    // require_once "../model/model_session.php";
+    require_once "../model/model_session.php";
+
+    $session = new Session();
+    $id_usuario = $session->getId();
 
     $type = $_POST['datos']; // Recibimos la acción a realizar por el controlador
     $datosMatricula = new MatriculaEstudiantes(); // Creamos el objeto para trabajar con datatable
@@ -48,7 +51,11 @@
             break;
 
         case "getCertificado":
-            print $datosMatricula->getCertificado($_POST['id_matricula']);
+            if ($id_usuario == 4) {
+                print json_encode('restringido');
+            } else {
+                print $datosMatricula->getCertificado($_POST['id_matricula']);
+            }
             break;
 
         case "exportarMatriculas":

@@ -5,7 +5,6 @@ let datos = 'getJustificaciones';
 // ==================== FUNCIONES INTERNAS ===============================//
 // Estructura de la tabla con información adicional
 function getDataSecundaria(data) {
-
     return(
         '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
             '<tr>' +

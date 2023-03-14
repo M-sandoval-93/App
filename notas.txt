@@ -3,14 +3,11 @@
 
 ** trabajando en modal de suspencion de estudiante
 revisión por soluciona:
+-- verificar informacion de apoderados
 
 
 
-PRINCIPAL: Cargar base de datos  **** tomado para trabajar ****
-    a.- estudiante ****
-    b.- apoderados
-    c.- cursos
-    d.- matriculas
+
 
 1.- agregar validación de solo números a campo de telefono en modulo de apoderado
 2.- Pasar función de exportar documento a función generica

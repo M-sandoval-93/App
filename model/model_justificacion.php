@@ -34,8 +34,6 @@
                 INNER JOIN estudiante ON estudiante.id_estudiante = justificacion.id_estudiante
                 INNER JOIN matricula ON matricula.id_estudiante = estudiante.id_estudiante
                 INNER JOIN curso ON curso.id_curso = matricula.id_curso
-                --INNER JOIN apoderado ON apoderado.id_apoderado = matricula.id_ap_titular 
-                --OR apoderado.id_apoderado = matricula.id_ap_suplente
                 INNER JOIN apoderado ON apoderado.id_apoderado = justificacion.id_apoderado
                 LEFT JOIN prueba_pendiente ON prueba_pendiente.id_justificacion = justificacion.id_justificacion
                 LEFT JOIN asignatura ON asignatura.id_asignatura = prueba_pendiente.id_asignatura
@@ -122,31 +120,34 @@
 
         }
 
-        public function exportarJustificaciones($ext) { // mantenimiento
-            $query = "SELECT (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut,
-                estudiante.ap_estudiante, estudiante.am_estudiante, estudiante.nombres_estudiante, 
-                estudiante.nombre_social, curso.curso,
-                to_char(justificacion.fecha_inicio, 'DD/MM/YYYY') AS fecha_inicio,
+        // Método para generar excel de las justificaciones
+        public function exportarJustificaciones($ext) {
+            $query = "SELECT justificacion.id_justificacion, (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut,
+                estudiante.ap_estudiante, estudiante.am_estudiante, 
+                CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante
+                ELSE '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END AS nombres_estudiante,
+                curso.curso, to_char(justificacion.fecha_inicio, 'DD/MM/YYYY') AS fecha_inicio,
                 to_char(justificacion.fecha_termino, 'DD/MM/YYYY') AS fecha_termino,
+                to_char(justificacion.fecha_hora_actual, 'DD/MM/YYY - HH:MI:SS') AS fecha_justificacion,
                 ('(' || CASE WHEN matricula.id_ap_titular = apoderado.id_apoderado THEN 'Titular'
-                WHEN matricula.id_ap_suplente = apoderado.id_apoderado THEN 'Suplente'
+                WHEN matricula.id_ap_suplente = apoderado.id_apoderado THEN 'Suplente' 
                 END || ') ' || apoderado.nombres_apoderado || ' ' || apoderado.ap_apoderado || ' ' ||
-                apoderado.am_apoderado) AS apoderado_justifica,
-                justificacion.motivo_falta, justificacion.prueba_pendiente, justificacion.presenta_documento
+                apoderado.am_apoderado) AS nombre_apoderado, justificacion.motivo_falta,
+                CASE WHEN justificacion.prueba_pendiente = true THEN string_agg(asignatura.asignatura, ' - ')
+                ELSE 'SIN PRUEBAS PENDIENTES' END AS prueba_pendiente,
+                CASE WHEN justificacion.presenta_documento = true THEN 'SI' ELSE 'NO' END AS presenta_documento 
                 FROM justificacion
                 INNER JOIN estudiante ON estudiante.id_estudiante = justificacion.id_estudiante
                 INNER JOIN matricula ON matricula.id_estudiante = estudiante.id_estudiante
-                LEFT JOIN apoderado ON apoderado.id_apoderado = matricula.id_ap_titular
-                OR apoderado.id_apoderado = matricula.id_ap_suplente
                 INNER JOIN curso ON curso.id_curso = matricula.id_curso
-                WHERE EXTRACT(YEAR FROM fecha_hora_actual) = EXTRACT(YEAR FROM CURRENT_DATE)
+                INNER JOIN apoderado ON apoderado.id_apoderado = justificacion.id_apoderado
+                LEFT JOIN prueba_pendiente ON prueba_pendiente.id_justificacion = justificacion.id_justificacion
+                LEFT JOIN asignatura ON asignatura.id_asignatura = prueba_pendiente.id_asignatura
+                WHERE matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
+                GROUP BY justificacion.id_justificacion, rut, estudiante.ap_estudiante, estudiante.am_estudiante,
+                nombres_estudiante, estudiante.nombre_social, curso.curso, fecha_inicio, fecha_termino,
+                fecha_justificacion, nombre_apoderado, justificacion.motivo_falta, presenta_documento
                 ORDER BY justificacion.fecha_inicio DESC;";
-
-            // Query para consultar las asignaturas si existen pruebas pendientes
-            $queryPruebas = "SELECT asignatura.asignatura
-                FROM prueba_pendiente
-                INNER JOIN asignatura ON asignatura.id_asignatura = prueba_pendiente.id_asignatura
-                WHERE prueba_pendiente.id_justificacion = ?;";
 
             $sentencia = $this->preConsult($query);
             $sentencia->execute();            
@@ -179,10 +180,10 @@
             $sheetActive->getColumnDimension('E')->setWidth(10);
             $sheetActive->getColumnDimension('F')->setWidth(20);
             $sheetActive->getColumnDimension('G')->setWidth(20);
-            $sheetActive->getColumnDimension('H')->setWidth(25);
-            $sheetActive->getColumnDimension('I')->setWidth(30);
+            $sheetActive->getColumnDimension('H')->setWidth(40);
+            $sheetActive->getColumnDimension('I')->setWidth(50);
             $sheetActive->getColumnDimension('J')->setWidth(25);
-            $sheetActive->getColumnDimension('K')->setWidth(30);
+            $sheetActive->getColumnDimension('K')->setWidth(35);
             $sheetActive->getStyle('J:K')->getAlignment()->setHorizontal('left');
 
             $sheetActive->setCellValue('A3', 'RUT');
@@ -200,48 +201,20 @@
             $fila = 4;
             foreach ($justificaciones as $justificacion) {
                 $sheetActive->setCellValue('A'.$fila, $justificacion['rut']);
-                $sheetActive->setCellValue('B'.$fila, $justificacion['ap_paterno']);
-                $sheetActive->setCellValue('C'.$fila, $justificacion['ap_materno']);
-
-                // Control de nombre social
-                if ($justificacion['n_social'] == '') {
-                    $sheetActive->setCellValue('D'.$fila, $justificacion['nombre']);
-                } else {
-                    $sheetActive->setCellValue('D'.$fila, '('.$justificacion['n_social'].') '.$justificacion['nombre']);
-                }
-
+                $sheetActive->setCellValue('B'.$fila, $justificacion['ap_estudiante']);
+                $sheetActive->setCellValue('C'.$fila, $justificacion['am_estudiante']);
+                $sheetActive->setCellValue('D'.$fila, $justificacion['nombres_estudiante']);
                 $sheetActive->setCellValue('E'.$fila, $justificacion['curso']);
                 $sheetActive->setCellValue('F'.$fila, $justificacion['fecha_inicio']);
                 $sheetActive->setCellValue('G'.$fila, $justificacion['fecha_termino']);
-                $sheetActive->setCellValue('H'.$fila, $justificacion['apoderado_justifica']);
+                $sheetActive->setCellValue('H'.$fila, $justificacion['nombre_apoderado']);
                 $sheetActive->setCellValue('I'.$fila, $justificacion['motivo_falta']);
                 $sheetActive->setCellValue('J'.$fila, $justificacion['presenta_documento']);
-
-                // Control de pruebas pendientes
-                if ($justificacion['prueba_pendiente'] == true) {
-                    $sentencia = $this->preConsult($queryPruebas);
-                    $sentencia->execute([$justificacion['id_justificacion']]);
-                    $asignaturas = $sentencia->fetchAll(PDO::FETCH_ASSOC);
-
-                    foreach($asignaturas as $asignaturas) {
-                        foreach($asignaturas as $nombre) {
-                            $listaAsignaturas[] = $nombre;
-                        }
-                    }
-                    $justificacion['prueba_pendiente'] = implode(' - ', $listaAsignaturas);
-                }
-
                 $sheetActive->setCellValue('K'.$fila, $justificacion['prueba_pendiente']);
                 $fila++;
             }
 
-            if ($ext == 'csv') {
-                $extension = 'Csv';
-            }
-
-            // if ($ext == 'pdf') {
-            //     $extension == 'Mpdf';  
-            // }
+            if ($ext == 'csv') { $extension = 'Csv'; }
 
             $writer = IOFactory::createWriter($file, $extension);
 
@@ -251,87 +224,10 @@
             ob_end_clean();
 
             $file = array ( "data" => 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; base64,'.base64_encode($documentData));
-            // $file = array ( "data" => 'data:application/pdf; base64,'.base64_encode($documentData));
 
             $this->closeConnection();
             return json_encode($file);
-
-
-
-
-
         }
-
-        public function getDocument() {
-            // $templateWord = new TemplateProcessor('../Document/plantilla.docx');
-            // $templateWord = new TemplateProcessor('../Document/plantilla.docx');
-
-            // $nombre = "Mario Sandoval";
-
-            // $templateWord->setValue('nombre_prueba', $nombre);
-            // $templateWord->saveAs('Documento_01.docx');
-
-            // header("Content-Disposition: attachment; filename=Documento_01.docx; charset=iso-8859-1");
-            // $documento = file_get_contents("Documento_01.docx");
-
-            // return json_encode($documento);
-            
-        }
-
-        // public function infoAdicional($id_registro) { // Terminado y revisado !!
-        //     $query = "SELECT to_char(justificacion.fecha_hora_actual, 'DD/MM/YYY - HH:MI:SS') AS fecha_justificacion,
-        //         (ap_titular.rut_apoderado || '-' || ap_titular.dv_rut_apoderado || ' / ' || ap_titular.ap_apoderado || ' ' || 
-        //         ap_titular.am_apoderado || ' ' || ap_titular.nombres_apoderado) AS apoderado_titular,
-        //         (ap_suplente.rut_apoderado || '-' || ap_suplente.dv_rut_apoderado || ' / ' || ap_suplente.ap_apoderado || ' ' || 
-        //         ap_suplente.am_apoderado || ' ' || ap_suplente.nombres_apoderado) AS apoderado_suplente,
-        //         justificacion.motivo_falta, justificacion.prueba_pendiente, justificacion.presenta_documento
-        //         FROM justificacion
-        //         INNER JOIN matricula ON matricula.id_matricula = justificacion.id_matricula
-        //         LEFT JOIN apoderado AS ap_titular ON ap_titular.id_apoderado = matricula.id_ap_titular
-        //         LEFT JOIN apoderado AS ap_suplente ON ap_suplente.id_apoderado = matricula.id_ap_suplente
-        //         WHERE justificacion.id_justificacion = ?;";
-
-        //     $queryPruebas = "SELECT asignatura.asignatura
-        //         FROM prueba_pendiente
-        //         INNER JOIN asignatura ON asignatura.id_asignatura = prueba_pendiente.id_asignatura
-        //         WHERE prueba_pendiente.id_justificacion = ?;";
-
-        //     $sentencia = $this->preConsult($query);
-        //     $sentencia->execute([$id_registro]);
-
-        //     if ($this->json = $sentencia->fetchAll(PDO::FETCH_ASSOC)) {
-        //         if ($this->json[0]['apoderado_suplente'] == null) {
-        //             $this->json[0]['apoderado'] = $this->json[0]['apoderado_titular'].(' (TITULAR)');
-        //         } else {
-        //             $this->json[0]['apoderado'] = $this->json[0]['apoderado_suplente'].(' (SUPLENTE)');
-        //         }
-
-        //         unset($this->json[0]['apoderado_suplente']);
-        //         unset($this->json[0]['apoderado_titular']);
-
-        //         if ($this->json[0]['prueba_pendiente'] == true) {
-        //             $sentencia = $this->preConsult($queryPruebas);
-        //             $sentencia->execute([$id_registro]);
-        //             $asignaturas = $sentencia->fetchAll(PDO::FETCH_ASSOC);
-
-        //             foreach($asignaturas as $asignatura) {
-        //                 foreach($asignatura as $nombre) {
-        //                     $listaAsignaturas[] = $nombre;
-        //                 }
-        //             }
-
-        //             $this->json[0]['asignatura'] = implode(' - ', $listaAsignaturas);
-        //         }
-
-        //         $this->closeConnection();
-        //         return json_encode($this->json);
-        //     }
-
-        //     $this->closeConnection();
-        //     return json_encode($this->res);
-        // }
-
-
 
     }
 

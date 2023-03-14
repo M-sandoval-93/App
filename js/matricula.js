@@ -676,7 +676,8 @@ function getCertificado(tabla) {
             data: {datos: datos, id_matricula: id_matricula},
             xhrFields: { responseType: 'blob' },
             success: (response) => {
-                console.log(response);
+                let blob = new Blob([response], { type: 'application/octet-stream' });
+                console.log(blob);
                 // var url = window.URL.createObjectURL(response);
                 // var a = document.createElement('a');
                 // a.href = url;

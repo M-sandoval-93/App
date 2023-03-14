@@ -152,6 +152,7 @@ async function imprimir(data) {
     let api_key = "123456";
     const conector = new connetor_plugin();
 
+    // Cuerpo de la impresión
     conector.fontsize("1");
     conector.textaling("center");
     conector.text("LICEO BICENTENARIO");
@@ -178,13 +179,10 @@ async function imprimir(data) {
     conector.feed("5");
     conector.cut("0"); 
 
-    // agregar contenido de la impresión
 
-    // Antes de la promesa!!
-    // console.log("conector");
     const resp = await conector.imprimir(nombreImpresora, api_key);
     if (resp === true) {
-        // LibreriaFunciones.alertPopUp('Impresipón efectuada con éxito');
+
     } else {
         LibreriaFunciones.alertPopUp('warning', 'No se pudo imprimir el ticket !!');
     }
@@ -248,7 +246,6 @@ function setRetraso(tabla) {
         datos = 'setRetraso';
         let rut;
 
-        
         if (LibreriaFunciones.comprobarLongitud($('#rut_estudiante_retraso').val(), 7, 9, 'RUT', 'Estudiante') == false) { return false; }
         if ($('#rut_estudiante_retraso').val() == '' || $('#nombre_estudiante_retraso').val() == 'Sin datos' || $('#nombre_estudiante_retraso').val() == '') {
             LibreriaFunciones.alertPopUp('info', 'Los datos ingresados no son correctos !!');
@@ -264,19 +261,12 @@ function setRetraso(tabla) {
             data: {datos: datos, rut: rut },
             success: (response) => {
                 if (response.response == true) {
-                    // LibreriaFunciones.alertPopUp('success', 'Retraso N° ' + response.id_retraso + ' registrado !!');
                     Swal.fire({
                         icon: 'success',
                         title: 'Retraso N° ' + response.id_retraso + ' registrado !!',
                         allowOutsideClick: false
                     });
                     imprimir(response);
-                    // .then((result) => {
-                    //     if (result.isConfirmed) {
-                    //         // console.log("se genera una acción secundaria");
-                    //         imprimir(response);
-                    //     }
-                    // });
                     beforeRegistro(tabla);
                     return false;
                 }

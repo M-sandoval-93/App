@@ -52,7 +52,7 @@
 
         case "getCertificado":
             if ($id_usuario == 4) {
-                print json_encode('restringido');
+                print json_encode('restrigido');
             } else {
                 print $datosMatricula->getCertificado($_POST['id_matricula']);
             }

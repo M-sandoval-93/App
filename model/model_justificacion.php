@@ -34,8 +34,9 @@
                 INNER JOIN estudiante ON estudiante.id_estudiante = justificacion.id_estudiante
                 INNER JOIN matricula ON matricula.id_estudiante = estudiante.id_estudiante
                 INNER JOIN curso ON curso.id_curso = matricula.id_curso
-                INNER JOIN apoderado ON apoderado.id_apoderado = matricula.id_ap_titular 
-                OR apoderado.id_apoderado = matricula.id_ap_suplente
+                --INNER JOIN apoderado ON apoderado.id_apoderado = matricula.id_ap_titular 
+                --OR apoderado.id_apoderado = matricula.id_ap_suplente
+                INNER JOIN apoderado ON apoderado.id_apoderado = justificacion.id_apoderado
                 LEFT JOIN prueba_pendiente ON prueba_pendiente.id_justificacion = justificacion.id_justificacion
                 LEFT JOIN asignatura ON asignatura.id_asignatura = prueba_pendiente.id_asignatura
                 WHERE matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)

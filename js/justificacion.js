@@ -285,11 +285,9 @@ function setModalJustificacion(tabla) {
             dataType: "json",
             data: {datos: datos, justificacion: justificacion, asignatura: asignatura},
             success:(response) => {
-                console.log(response);
-
                 if (response == true) {
                     LibreriaFunciones.alertPopUp('success', 'Justificación registrada !!');
-                    ('#modal_registro_justificacion_falta').modal('hide');
+                    $('#modal_registro_justificacion_falta').modal('hide');
                     beforeRegistroJustificacion(tabla);
                     return false;
                 }

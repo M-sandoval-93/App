@@ -62,7 +62,7 @@ inputs.forEach(input => {
                             timer: 1500
                         }).then(result => {
                             if (response.id == 3) { window.location.href = 'retraso'; }
-                            if (response.id == 5 || response.id == 6) { window.location.href = 'matricula'; }
+                            if (response.id == 5 || response.id == 4) { window.location.href = 'matricula'; }
                             else { window.location.href = 'home'; }
                         });
                     }

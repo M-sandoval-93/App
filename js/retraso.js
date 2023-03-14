@@ -255,8 +255,8 @@ function setRetraso(tabla) {
                         allowOutsideClick: false
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            console.log("se genera una acción secundaria");
-                            // imprimir();
+                            // console.log("se genera una acción secundaria");
+                            imprimir();
                         }
                     });
                     beforeRegistro(tabla);

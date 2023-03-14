@@ -47,9 +47,11 @@
 
             <!-- main content table -->
             <div class="d-flex justify-content-between mb-4">
+<?php if ($_SESSION['usser']['id'] != 6) { ?>
                 <button type="button" class="btn-lg btn-primary" title="Nuevo registro" id="btn_nueva_matricula" data-bs-toggle="modal" data-bs-target="#modal_matricula">
                     <i class="fas fa-user-plus icon"></i>
                 </button>
+<?php } ?>
                 <div class="row g-2">
                     <div class="col-6">
                         <button class="btn-lg btn-success" id="btn_excel" title="Exportar Excel"><i class="fas fa-file-excel icon"></i></button>

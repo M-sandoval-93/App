@@ -96,7 +96,7 @@
 
           <!-- Apoderado suplente -->
           <div class="row align-items-center mt-3">
-            <label for="rut_ap_suplente" class="form-label">Rut titular <span class="text-danger fs-5">*</span></label>
+            <label for="rut_ap_suplente" class="form-label">Rut suplente <span class="text-danger fs-5">*</span></label>
             <div class="col-sm-6 col-lg-5">
               <div class="row align-items-center">
                 <div class="col-7 rut">

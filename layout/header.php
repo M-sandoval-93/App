@@ -79,7 +79,7 @@ if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 3) {
 
 <?php
 }
-if ($_SESSION['usser']['id'] == 1) {
+if ($_SESSION['usser']['id'] == 1 || $_SESSION['user']['id'] == 5) {
 ?>
 
             <!-- <li>
@@ -101,6 +101,10 @@ if ($_SESSION['usser']['id'] == 1) {
                 </ul>
             </li>
 
+<?php
+}
+if ($_SESSION['usser']['id'] == 1 || $_SESSION['user']['id'] == 5) {
+?>
 
             <!-- <li>
                 <a href="cursos">

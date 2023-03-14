@@ -164,9 +164,9 @@ async function imprimir(data) {
 
     conector.textaling("left");
 
-    conector.text("Nombre: " + data.nombres);
-    conector.text("Curso: " + data.curso + "   /   Hora Ingreso: " + data.hora_retraso);
-    conector.text("Fecha Ingreso: " + data.fecha_retraso);
+    conector.text("   NOMBRE: " + data.nombres);
+    conector.text("   CURSO: " + data.curso + "   /   HORA INGRESO: " + data.hora_retraso);
+    conector.text("   FECHA INGRESO: " + data.fecha_retraso);
     conector.feed("1");
 
     conector.textaling("center");

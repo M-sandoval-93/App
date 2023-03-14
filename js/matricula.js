@@ -546,7 +546,11 @@ function setSuspension(tabla) {
 
                 LibreriaFunciones.alertPopUp('warning', 'Error de registro !!');
             }
-        }).fail(() => {
+        }).fail((jqXHR) => {
+            if (jqXHR.status == 404) {
+                LibreriaFunciones.alertPopUp('warning', 'Acceso restringido !!');
+                return false;
+            }
             LibreriaFunciones.alertPopUp('error', 'Error en la ejecución !!');
         });
 
@@ -577,7 +581,12 @@ function setRetiroMatricula(tabla) {
 
                 LibreriaFunciones.alertPopUp('warning', 'Error de registro !!');
             }
-        }).fail(() => {
+        }).fail((jqXHR) => {
+            if (jqXHR.status == 404) {
+                LibreriaFunciones.alertPopUp('warning', 'Acceso restringido !!');
+                return false;
+            }
+
             LibreriaFunciones.alertPopUp('error', 'Error en la consulta')
         });
     });
@@ -616,7 +625,12 @@ function updateMatricula(tabla) {
 
                 LibreriaFunciones.alertPopUp('warning', 'Error de registro !!');
             }
-        }).fail(() => {
+        }).fail((jqXHR) => {
+            if (jqXHR.status == 404) {
+                LibreriaFunciones.alertPopUp('warning', 'Acceso restringido !!');
+                return false;
+            }
+
             LibreriaFunciones.alertPopUp('error', 'Error en la consulta !!');
         });
     });
@@ -655,7 +669,12 @@ function deleteRegistroMatricula(tabla) {
                         // LibreriaFunciones.alertPopUp('warning', 'La matrícula no puede ser eliminada !!');
                         LibreriaFunciones.alertToast('warning', 'La matrícula no puede ser eliminada !!');
                     }
-                }).fail(() => {
+                }).fail((jqXHR) => {
+                    if (jqXHR.status == 404) {
+                        LibreriaFunciones.alertPopUp('warning', 'Acceso restringido !!');
+                        return false;
+                    }
+
                     LibreriaFunciones.alertPopUp('error', 'Error de ejecución !!');
                 });
             }
@@ -685,7 +704,11 @@ function getCertificado(tabla) {
                 a.remove();
                 window.URL.revokeObjectURL(url);
             }
-        }).fail(() => {
+        }).fail((jqXHR) => {
+            if (jqXHR.status == 404) {
+                LibreriaFunciones.alertPopUp('warning', 'Acceso restringido !!');
+                return false;
+            }
             LibreriaFunciones.alertPopUp('error', 'Error de ejecución !!');
         });
     });

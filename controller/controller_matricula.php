@@ -32,28 +32,50 @@
             break;
 
         case "setSuspension":
+            if ($id_usuario == 4) {
+                http_response_code(404);
+                exit();
+            }
+
             $suspension = json_decode(json_encode($_POST['suspension'])); // Convertir un objeto js a un objeto php
             print($datosMatricula->setSuspension($suspension));
             break;
 
         case "setRetiroMatricula":
+            if ($id_usuario == 4) {
+                http_response_code(404);
+                exit();
+            }
+
             $retiro = json_decode(json_encode($_POST['retiro'])); // Convertir un objeto js a un objeto php
             print($datosMatricula->setRetiroMatricula($retiro));
             break;
 
         case "updateMatricula":
+            if ($id_usuario == 4) {
+                http_response_code(404);
+                exit();
+            }
+
             $matricula = json_decode(json_encode($_POST['matricula'])); // Convertir un objeto js a un objeto php
             print($datosMatricula->updateMatricula($matricula));
             break;
         
         case "deleteMatricula":
+            if ($id_usuario == 4) {
+                http_response_code(404);
+                exit();
+            }
+
             print $datosMatricula->deleteMatricula($_POST['id_matricula']);
             break;
 
         case "getCertificado":
             if ($id_usuario == 4) {
-                break;
+                http_response_code(404);
+                exit();
             }
+
             print $datosMatricula->getCertificado($_POST['id_matricula']);
             break;
 

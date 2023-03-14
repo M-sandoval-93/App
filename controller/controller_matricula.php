@@ -52,8 +52,9 @@
 
         case "getCertificado":
             if ($id_usuario != 4) {
-                print $datosMatricula->getCertificado($_POST['id_matricula']);
+                break;
             }
+            print $datosMatricula->getCertificado($_POST['id_matricula']);
             break;
 
         case "exportarMatriculas":

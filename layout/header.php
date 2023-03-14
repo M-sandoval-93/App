@@ -79,7 +79,7 @@ if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 3) {
 
 <?php
 }
-if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 4) {
+if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 4 || $_SESSION['usser']['id'] == 5) {
 ?>
 
             <!-- <li>
@@ -96,8 +96,14 @@ if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 4) {
                 </a>
                 <ul class="sub_grupo">
                     <li><a href="matricula"><span class="titulo">Matricula</span></a></li>
+<?php
+    if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 5) {
+?>
                     <li><a href="estudiante"><span class="titulo">Estudiante</span></a></li>
                     <li><a href="apoderado"><span class="titulo">Apoderado</span></a></li>
+<?php
+    }
+?>
                 </ul>
             </li>
 

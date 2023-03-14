@@ -147,7 +147,7 @@ function getImpresoras(data) {
         })
 }
 
-async function imprimir() {
+async function imprimir(data) {
     let nombreImpresora = "Printer";
     let api_key = "123456";
     const conector = new connetor_plugin();

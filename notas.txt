@@ -6,7 +6,7 @@ revisión por soluciona:
 -- verificar informacion de apoderados
 
 
-
+HACER CONTROLADOR DE REDIRECCION !!!!!
 
 
 1.- agregar validación de solo números a campo de telefono en modulo de apoderado

@@ -1,8 +1,8 @@
 <?php   
+        include_once "./layout/header.php"; 
         // Controlador de acceso
         if ($_SESSION['usser']['id'] == 3) { header("location: ./retraso"); }
         if ($_SESSION['usser']['id'] == 4) { header("location: ./matricula"); }
-        include_once "./layout/header.php"; 
 ?>
 
 <!-- CONTENIDO PRINCIPAL -->
@@ -18,8 +18,8 @@
 
 
             <!-- card -->
-            <!-- <div class="caja_tarjeta">
-                <div class="tarjeta">
+            <div class="caja_tarjeta">
+                <!-- <div class="tarjeta">
                     <div>
                         <div class="numero">1000</div>
                         <div class="detalle">Estudiantes</div>
@@ -27,19 +27,21 @@
                     <div class="icono_tarjeta">
                         <i class="fas fa-users"></i>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="tarjeta">
                     <div>
-                        <div class="numero">1000</div>
-                        <div class="detalle">Retiro</div>
+                        <!-- <div class="numero">1000</div>
+                        <div class="detalle">Retiro</div> -->
+                        <div class="date" id="date"></div>
                     </div>
                     <div class="icono_tarjeta">
-                        <i class="fas fa-users"></i>
+                        <!-- <i class="fas fa-users"></i> -->
+                        <div class="time" id="time"></div>
                     </div>
                 </div>
 
-                <div class="tarjeta">
+                <!-- <div class="tarjeta">
                     <div>
                         <div class="numero">1000</div>
                         <div class="detalle">Funcionarios</div>
@@ -47,9 +49,9 @@
                     <div class="icono_tarjeta">
                         <i class="fas fa-users"></i>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="tarjeta">
+                <!-- <div class="tarjeta">
                     <div>
                         <div class="numero">1000</div>
                         <div class="detalle">Licencias</div>
@@ -57,8 +59,8 @@
                     <div class="icono_tarjeta">
                         <i class="fas fa-users"></i>
                     </div>
-                </div>
-            </div> -->
+                </div> -->
+            </div>
 
             
 

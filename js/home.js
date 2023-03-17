@@ -18,8 +18,38 @@ function comprobarSuspension() {
     });
 }
 
-$(document).ready(function() {
 
+//   function updateClock() {
+//     const now = new Date();
+//     const hour = now.getHours() % 12 || 12;
+//     const minute = now.getMinutes().toString().padStart(2, '0');
+//     const second = now.getSeconds().toString().padStart(2, '0');
+//     const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+//     const timeString = `${hour}:${minute}:${second} ${ampm}`;
+//     const dateString = now.toLocaleDateString();
+    
+//     document.getElementById('time').textContent = timeString;
+//     document.getElementById('date').textContent = dateString;
+    
+//     requestAnimationFrame(updateClock);
+//   }
+// digitalClock() {
+//     const now = new Date();
+//     const hour = now.getHours() % 12 || 12;
+//     const minute = now.getMinutes().toString().padStart(2, '0');
+//     const second = now.getSeconds().toString().padStart(2, '0');
+//     const am_pm = now.getHours() >= 12 ? 'PM' : 'AM';
+//     const timeString = `${hour}:${minute}:${second} ${am_pm}`;
+//     const
+// }
+  
+
+
+
+
+
+$(document).ready(function() {
     comprobarSuspension();
+    // requestAnimationFrame(updateClock);
 
 });

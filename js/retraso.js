@@ -264,7 +264,9 @@ function setRetraso(tabla) {
                     Swal.fire({
                         icon: 'success',
                         title: 'Retraso N° ' + response.id_retraso + ' registrado !!',
-                        allowOutsideClick: false
+                        // allowOutsideClick: false,
+                        showConfirmButton: false,
+                        timer: 1500
                     });
                     imprimir(response);
                     beforeRegistro(tabla);
@@ -443,33 +445,6 @@ $(document).ready(function() {
 
     exportarRetraso('#btn_excel', 'xlsx');
     exportarRetraso('#btn_csv', 'csv');
-
-    
-    // // Btn para generar PDF  --ver si realmente es necesario !!!!
-    // $('#btn_pdf').click(function(e) { // En progreso...
-    //     e.preventDefault();
-    //     LibreriaFunciones.alertPopUp('warning', 'En mantenimiento !!');
-
-    //     // // trabajando para probar fetch !!!!!!!
-    //     // const data = new FormData();
-    //     // data.append('nombre', 'juan manuel');
-
-    //     // // let data = {nombre: 'juan manuel'};
-
-    //     // fetch('http://localhost/update_atrasos/impresion/', {
-    //     //     method: 'POST',
-    //     //     body: data
-    //     //     // body: JSON.stringify(data)
-    //     // })
-    //     // .then(response => response.json())
-    //     // .then(data => {
-    //     //     if (data == true) {
-    //     //         console.log('impresion ejecutada');
-    //     //     } else {
-    //     //         console.log('impresión no ejecutada');
-    //     //     }
-    //     // });
-    // });
 
 
 });

@@ -109,7 +109,7 @@ if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 4 || $_SESSION[
 
 <?php
 }
-if ($_SESSION['usser']['id'] == 1 || $_SESSION['user']['id'] == 5) {
+if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 5) {
 ?>
 
             <!-- <li>

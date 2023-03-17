@@ -264,7 +264,6 @@ function setRetraso(tabla) {
                     Swal.fire({
                         icon: 'success',
                         title: 'Retraso N° ' + response.id_retraso + ' registrado !!',
-                        // allowOutsideClick: false,
                         showConfirmButton: false,
                         timer: 1500
                     });

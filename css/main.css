@@ -531,6 +531,15 @@ li {
     grid-gap: 30px;
 }
 
+.caja_tarjeta_3 {
+    position: relative;
+    width: 100%;
+    padding: 20px;
+    /* display: grid;
+    grid-template-columns: repeat(1, 1fr); */
+    grid-gap: 30px;
+}
+
 .caja_tarjeta_2 {
     position: relative;
     width: 100%;
@@ -573,13 +582,19 @@ li {
     color: var(--grey);
 }
 
+.tarjeta .icono_tarjeta_2 {
+    font-size: 8em;
+    color: var(--grey);
+}
+
 .tarjeta:hover {
     background-color: var(--blue);
 }
 
 .tarjeta:hover .numero,
 .tarjeta:hover .detalle,
-.tarjeta:hover .icono_tarjeta {
+.tarjeta:hover .icono_tarjeta,
+.tarjeta:hover .icono_tarjeta_2 {
     color: var(--white);
 }
 
@@ -858,6 +873,10 @@ div#check {
     .caja_tarjeta,
     .caja_tarjeta_2 {
         grid-template-columns: repeat(1, 1fr);
+    }
+
+    .tarjeta .icono_tarjeta_2 {
+        font-size: 5em;
     }
 
     .cabecera h2 {

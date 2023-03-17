@@ -1,5 +1,20 @@
 import {LibreriaFunciones, generar_dv, spanish } from './librerias/librerias.js';
 let datos = 'comprobarSuspension';
+const meses = {
+    0: "enero",
+    1: "febrero",
+    2: "marzo",
+    3: "abril",
+    4: "mayo",
+    5: "junio",
+    6: "julio",
+    7: "agosto",
+    8: "septiembre",
+    9: "octubre",
+    10: "noviembre",
+    11: "diciembre"
+}
+
 
 // Función para comprobar y actualizar la suspensión de matrículas
 function comprobarSuspension() {
@@ -18,30 +33,45 @@ function comprobarSuspension() {
     });
 }
 
+// función para reloj animado
+function digitalClock() {
+    const meses = {
+        0: "enero",
+        1: "febrero",
+        2: "marzo",
+        3: "abril",
+        4: "mayo",
+        5: "junio",
+        6: "julio",
+        7: "agosto",
+        8: "septiembre",
+        9: "octubre",
+        10: "noviembre",
+        11: "diciembre"
+    }
 
-//   function updateClock() {
-//     const now = new Date();
-//     const hour = now.getHours() % 12 || 12;
-//     const minute = now.getMinutes().toString().padStart(2, '0');
-//     const second = now.getSeconds().toString().padStart(2, '0');
-//     const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
-//     const timeString = `${hour}:${minute}:${second} ${ampm}`;
-//     const dateString = now.toLocaleDateString();
-    
-//     document.getElementById('time').textContent = timeString;
-//     document.getElementById('date').textContent = dateString;
-    
-//     requestAnimationFrame(updateClock);
-//   }
-// digitalClock() {
-//     const now = new Date();
-//     const hour = now.getHours() % 12 || 12;
-//     const minute = now.getMinutes().toString().padStart(2, '0');
-//     const second = now.getSeconds().toString().padStart(2, '0');
-//     const am_pm = now.getHours() >= 12 ? 'PM' : 'AM';
-//     const timeString = `${hour}:${minute}:${second} ${am_pm}`;
-//     const
-// }
+    const date = new Date();
+    const hour = date.getHours() % 12 || 12;
+
+    // hour
+    const minute = date.getMinutes().toString().padStart(2, '0');
+    const second = date.getSeconds().toString().padStart(2, '0');
+    const am_pm = date.getHours() >= 12 ? 'PM' : 'AM';
+
+    //date
+    const year = date.getFullYear();
+    const month = meses[date.getMonth()];
+    const day = date.getDate();
+
+    const timeString = `${hour}:${minute}:${second} ${am_pm}`;
+    const dateString = `${day} de ${month} de ${year}`;
+
+    $('#date').text(dateString);
+    $('#time').text(timeString);
+
+    requestAnimationFrame(digitalClock);
+}
+
   
 
 
@@ -50,6 +80,7 @@ function comprobarSuspension() {
 
 $(document).ready(function() {
     comprobarSuspension();
+    digitalClock();
     // requestAnimationFrame(updateClock);
 
 });

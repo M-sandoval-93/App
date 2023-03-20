@@ -1,4 +1,9 @@
-<?php   include_once "./layout/header.php"; ?>
+<?php   
+    include_once "./layout/header.php";
+
+    // Controlador de acceso
+    if ($_SESSION['usser']['id'] == 5) { header("location: ./matricula"); }
+?>
 
 
             <!-- titulo del layout -->
@@ -43,9 +48,6 @@
                     <div class="col-6">
                         <button class="btn-lg btn-secondary" id="btn_csv" title="Exportar CSV"><i class="fas fa-file-csv icon"></i></button>
                     </div>
-                    <!-- <div class="col-4">
-                        <button class="btn-lg btn-danger" id="btn_pdf_justificacion" title="Exportar PDF"><i class="fas fa-file-pdf icon"></i></button>
-                    </div> -->
                 </div>
             </div>
 

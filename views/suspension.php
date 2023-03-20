@@ -1,4 +1,9 @@
-<?php   include_once "./layout/header.php"; ?>
+<?php   
+    include_once "./layout/header.php";
+
+    // Controlador de acceso
+    if ($_SESSION['usser']['id'] == 5) { header("location: ./matricula"); }
+?>
 
             <!-- titulo del layout -->
             <div class="row d-flex align-items-center">
@@ -13,21 +18,6 @@
                         </ul>
                     </div>
                 </div>
-
-                <!-- <div class="col-md-7 ">  -->
-                    <!-- card -->
-                    <!-- <div class="caja_tarjeta_2 d-flex justify-content-center">
-                        <div class="tarjeta">
-                            <div>
-                                <div class="numero d-flex justify-content-center" id="cantidad_suspension"></div>
-                                <div class="detalle">Cantidad Registros</div>
-                            </div>
-                            <div class="icono_tarjeta ms-2">
-                                <i class="fas fa-user-friends"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
 
                 <div class="col-md-7">
                     <!-- card -->
@@ -88,8 +78,6 @@
                 </table>
             </div>
 
-<!-- modal -->
-<?php   // include_once "./layout/modal_apoderado.php";   ?>
 
 <!-- script generales del proyecto -->
 <?php   include_once "./layout/footer.php"; ?>

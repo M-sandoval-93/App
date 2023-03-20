@@ -2,7 +2,7 @@
 
     // SE INCLUYE EL ARCHIVO DE CONEXION BBDD
     include_once "../model/model_conexion.php";
-    include_once "../config/listas.php";
+    // include_once "../config/listas.php";
 
 
     class Curso extends Conexion {
@@ -11,6 +11,53 @@
             parent:: __construct();
         }
 
+        // Método para obtener los grados y la cantidad de estudiantes
+        public function getGrado() {
+            $query = "SELECT DISTINCT (substr(curso.curso, 1, 1)||'°') AS grado,
+                CASE WHEN (substr(curso.curso, 1, 1)::int) IN (7, 8) THEN 'BÁSICA'
+                WHEN (substr(curso.curso, 1, 1)::int) BETWEEN 1 AND 4 THEN 'MEDIA' END AS nivel,
+                COUNT(matricula.id_estudiante) AS cantidad_estudiante
+                FROM curso
+                INNER JOIN matricula ON matricula.id_curso = curso.id_curso
+                WHERE curso.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
+                AND matricula.id_estado = 1
+                GROUP BY grado, nivel;";
+
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute();
+            $grados = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($grados as $grado) {
+                $this->json['data'][] = $grado;
+            }
+
+            $this->closeConnection();
+            return json_encode($this->json);
+        }
+
+        // Método para obtener los cursos por grado y la cantidad de estudiantes
+        public function getLetraPorGrado($grado) {
+            $query = "SELECT substr(curso.curso, 2, 2) AS letra_grado,
+                COUNT(matricula.id_estudiante) AS cantidad_estudiante
+                FROM curso
+                INNER JOIN matricula ON matricula.id_curso = curso.id_curso
+                WHERE curso.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
+                AND matricula.id_estado = 1 AND (substr(curso.curso, 1, 1)::int) = ?
+                GROUP BY letra_grado ORDER BY letra_grado;";
+
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute([intval($grado)]);
+            $cursos = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach($cursos as $curso) {
+                $this->json[] = $curso;
+            }
+
+            $this->closeConnection();
+            return json_encode($this->json);
+        }
+
+        // Método para obtener la letra de los cursos según el grado
         public function loadLetra($grado) {
             $query = "SELECT id_curso, substr(curso, 2,2) AS curso FROM curso 
                 WHERE curso LIKE ? AND anio_lectivo = EXTRACT (YEAR FROM now());";

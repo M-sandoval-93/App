@@ -6,6 +6,7 @@
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,32 +15,26 @@
     <!-- logo -->
     <link rel="shortcut icon" href="./assets/logo_liceo.png">
 
-
     <!-- fonts -->
     
     
     <!-- icons -->
     <link rel="stylesheet" href="./Pluggins/Fontawesome-5.15.4/css/all.min.css">
     
-    
     <!-- style normalize -->
     <link rel="stylesheet" href="./css/normalize.css">
-    
     
     <!-- style pluggins -->
     <link rel="stylesheet" href="./Pluggins/Bootstrap-5.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="./Pluggins/DataTables/datatables.min.css">
     
-    
     <!-- main style -->
     <link rel="stylesheet" href="./css/main.css">
 
-
     <title>Liceo Valentín Letelier</title>
 </head>
-<body>
 
-    <!-- <div class="contenedor"> -->
+<body>
     <div class="barra_navegacion">
         <ul>
             <li>
@@ -48,9 +43,11 @@
                 </a>
             </li>
 
+<!-- Restricción de acceso -->
 <?php
-if ($_SESSION['usser']['id'] == 1) {
+// if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 2) { // Administrador
 ?>
+<!-- Restricción de acceso -->
 
             <li>
                 <a href="home">
@@ -59,10 +56,12 @@ if ($_SESSION['usser']['id'] == 1) {
                 </a>
             </li>
 
+<!-- Restricción de acceso -->
 <?php
-}
-if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 3) {
+// }
+if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 3) { // Administrador sistema y Usuario estándar
 ?>
+<!-- Restricción de acceso -->
 
             <li>
                 <a href="#">
@@ -77,17 +76,13 @@ if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 3) {
                 </ul>
             </li>
 
+<!-- Restricción de acceso -->
 <?php
 }
-if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 4 || $_SESSION['usser']['id'] == 5) {
+if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 4 || $_SESSION['usser']['id'] == 5) { // Administrador sistema, Usuario restringido y Usuario matrícula
 ?>
+<!-- Restricción de acceso -->
 
-            <!-- <li>
-                <a href="#">
-                    <span class="icono"><i class="fas fa-calendar-alt"></i></span>
-                    <span class="titulo">Horario</span>
-                </a>
-            </li> -->
             <li>
                 <a href="#">
                     <span class="icono"><i class="fas fa-graduation-cap"></i></span>
@@ -96,44 +91,45 @@ if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 4 || $_SESSION[
                 </a>
                 <ul class="sub_grupo">
                     <li><a href="matricula"><span class="titulo">Matricula</span></a></li>
+
+<!-- Restricción de acceso -->
 <?php
-    if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 5) {
+    if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 5) { // Administrador sistema y Usuario matrícula
 ?>
+<!-- Restricción de acceso -->
+
                     <li><a href="estudiante"><span class="titulo">Estudiante</span></a></li>
                     <li><a href="apoderado"><span class="titulo">Apoderado</span></a></li>
+
+<!-- Restricción de acceso -->
 <?php
     }
 ?>
+<!-- Restricción de acceso -->
+
                 </ul>
             </li>
 
+<!-- Restricción de acceso -->
 <?php
 }
-if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 5) {
+if ($_SESSION['usser']['id'] == 1) { // Administrador sistema
 ?>
+<!-- Restricción de acceso -->
 
-            <!-- <li>
-                <a href="cursos">
-                    <span class="icono"><i class="fas fa-graduation-cap"></i></span>
-                    <span class="titulo">Cursos</span>
-                </a>
-            </li>
             <li>
-                <a href="#">
-                    <span class="icono"><i class="fas fa-utensils"></i></span>
-                    <span class="titulo">Junaeb</span>
-                </a>
-            </li> -->
-            <!-- <li>
                 <a href="#">
                     <span class="icono"><i class="fas fa-user-friends"></i></span>
                     <span class="titulo">Personal</span>
                     <i class="fas fa-angle-right icon icon-right"></i>
                 </a>
                 <ul class="sub_grupo">
-                    <li><a href=""><span class="titulo">Funcionarios</span></a></li>
+                    <li><a href="funcionario"><span class="titulo">Funcionario</span></a></li>
+                    <li><a href=""><span class="titulo">Licencia</span></a></li>
+                    <li><a href=""><span class="titulo">Permiso</span></a></li>
                 </ul>
-            </li> -->
+            </li>
+
              <li>
                 <a href="#">
                     <span class="icono"><i class="fas fa-cogs"></i></span>
@@ -144,16 +140,19 @@ if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 5) {
                     <li><a href=""><span class="titulo">Usuarios</span></a></li>
                 </ul>
             </li>
-            <!-- <li>
+
+            <li>
                 <a href="#">
                     <span class="icono"><i class="fas fa-server"></i></span>
                     <span class="titulo">Mantenimiento</span>
                 </a>
-            </li> -->
+            </li>
 
+<!-- Restricción de acceso -->
 <?php
 }
 ?>
+<!-- Restricción de acceso -->
 
         </ul>
     </div>
@@ -164,15 +163,6 @@ if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 5) {
             <div class="toggle_interactive">
                 <div class="menu-btn__burger"></div>
             </div>
-
-            <!-- search -->
-            <!-- <div class="search">
-                <label>
-                    <input type="text" placeholder="Search here">
-                    <i class="fas fa-search"></i>
-                </label> 
-            </div> -->
-
 
             <!-- AGREGAR EN BARRA SUPERIOR:
                 NOTIFICACIONES

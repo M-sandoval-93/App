@@ -1,15 +1,15 @@
 <?php   
         include_once "./layout/header.php"; 
         // Controlador de acceso
-        if ($_SESSION['usser']['id'] == 3) { header("location: ./retraso"); }
-        if ($_SESSION['usser']['id'] == 4) { header("location: ./matricula"); }
+        // if ($_SESSION['usser']['id'] == 3) { header("location: ./retraso"); }
+        // if ($_SESSION['usser']['id'] == 4) { header("location: ./matricula"); }
 ?>
 
 <!-- CONTENIDO PRINCIPAL -->
 
             <!-- titulo del layout -->
             <div class="row d-flex align-items-center">
-                <div class="col-md-5">
+                <div class="col-md-6">
                     <!-- titulo del layout -->
                     <div class="titulo_main">
                         <h1 class="titulo_main__titulo">Home</h1>
@@ -21,12 +21,12 @@
                     </div>
                 </div>
 
-                <div class="col-7 col-md-5">
+                <div class="col-12 col-md-6">
                     <!-- card -->
                     <div class="caja_tarjeta_3">
                         <div class="tarjeta">
                             <div>
-                                <div class="detalle pb-3 fw-bolder fs-2" id="date"></div>
+                                <div class="detalle pb-3 pt-2 fw-bolder fs-2" id="date"></div>
                                 <div class="numero fw-bolder fs-1" id="time"></div>
                             </div>
                             <div class="icono_tarjeta_2">
@@ -34,6 +34,70 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- CONTENIDO CENTRAL -->
+            <div class="row">
+                <!-- Tabla de cursos -->
+                <div class="col-md-6">
+                    <div class="texto_tabla pb-3 fw-bolder fs-2">Lista de cursos por grado</div>
+                    <div class="table-responsive">
+                        <table id="tabla_grados" class="table table-hover text-nowrap" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Grado</th>
+                                    <th>Nivel</th>
+                                    <th>Cantidad estudiante</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tarjetas de información -->
+                <div class="col-md-6">
+                    <div class="row d-flex align-items-center">
+                        <!-- Tarjeta cantidad matriculas -->
+                        <div class="col-md-12">
+                            <div class="caja_tarjeta_3">
+                                <div class="tarjeta">
+                                    <div>
+                                        <div class="numero fw-bolder pt-3 fs-1" id="cantidad_estudiante_matriculado"></div>
+                                        <div class="detalle pb-3 fw-bolder fs-3">Estudiantes matriculados</div>
+                                    </div>
+                                    <div class="icono_tarjeta_2">
+                                    <i class="fas fa-user-graduate"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta cantidad funcionarios -->
+                        <div class="col-md-12">
+                            <div class="caja_tarjeta_3">
+                                <div class="tarjeta">
+                                    <div>
+                                        <div class="numero fw-bolder pt-3 fs-1" id="cantidad_funcionario"></div>
+                                        <div class="detalle pb-3 fw-bolder fs-3">Funcionarios contratados</div>
+                                    </div>
+                                    <div class="icono_tarjeta_2">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                    </div>
+
                 </div>
             </div>
 

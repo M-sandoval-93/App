@@ -9,13 +9,20 @@
     $datosCurso = new Curso(); // Creamos el objeto para trabajar con datatable
 
     switch ($type) {
+        case "getGrado":
+            print $datosCurso->getGrado();
+            break;
+
+        case "getLetraPorGrado":
+            print $datosCurso->getLetraPorGrado($_POST['grado']);
+            break;
+
         case "loadLetra":
             print $datosCurso->loadLetra($_POST['grado']);
             break;
 
     
     }
-
 
 
 ?>

@@ -1,8 +1,8 @@
 <?php   
     include_once "./layout/header.php"; 
-    // Controlador de acceso
-    if ($_SESSION['usser']['id'] == 3) { header("location: ./retraso"); }
-    if ($_SESSION['usser']['id'] == 4) { header("location: ./matricula"); }
+    // // Controlador de acceso
+    // if ($_SESSION['usser']['id'] == 3) { header("location: ./retraso"); }
+    // if ($_SESSION['usser']['id'] == 4) { header("location: ./matricula"); }
 ?>
 
             <!-- titulo del layout -->
@@ -25,7 +25,7 @@
                         <div class="tarjeta">
                             <div>
                                 <div class="numero d-flex justify-content-center" id="cantidad_apoderado"></div>
-                                <div class="detalle">Cantidad Registros</div>
+                                <div class="detalle">Cantidad Apoderados</div>
                             </div>
                             <div class="icono_tarjeta ms-2">
                                 <i class="fas fa-user-friends"></i>

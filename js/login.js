@@ -61,9 +61,9 @@ inputs.forEach(input => {
                             showConfirmButton: false,
                             timer: 1500
                         }).then(result => {
-                            if (response.id == 3) { window.location.href = 'retraso'; }
-                            if (response.id == 5 || response.id == 4) { window.location.href = 'matricula'; }
-                            else { window.location.href = 'home'; }
+                            if (response.id == 3) { window.location.href = 'retraso'; return false; }
+                            if (response.id == 5 || response.id == 4) { window.location.href = 'matricula'; return false; }
+                            window.location.href = 'home';
                         });
                     }
                 }

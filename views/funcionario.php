@@ -1,8 +1,7 @@
 <?php   
-    include_once "./layout/header.php";
-
+    include_once "./layout/header.php"; 
     // Controlador de acceso
-    if ($_SESSION['usser']['id'] == 5) { header("location: ./matricula"); }
+    if ($_SESSION['usser']['id'] == 4 || $_SESSION['usser']['id'] == 5) { header("location: ./matricula"); }
 ?>
 
             <!-- titulo del layout -->
@@ -10,34 +9,25 @@
                 <div class="col-md-5">
                     <!-- titulo del layout -->
                     <div class="titulo_main">
-                        <h1 class="titulo_main__titulo">Registro Retraso Estudiantes</h1>
+                        <h1 class="titulo_main__titulo">Registro Funcionarios</h1>
                         <ul class="titulo_main__sub">
                             <li><a href="home">Home</a></li>
                             <li class="divider">/</li>
-                            <li><a href="#" class="active">Retraso estudiantes</a></li>
+                            <li><a href="#" class="active">Funcionarios</a></li>
                         </ul>
                     </div>
                 </div>
 
-                <div class="col-md-7">
+                <div class="col-md-7 "> 
                     <!-- card -->
-                    <div class="caja_tarjeta_2">
+                    <div class="caja_tarjeta_2 d-flex justify-content-center">
                         <div class="tarjeta">
                             <div>
-                                <div class="numero" id="retraso_diario"></div>
-                                <div class="detalle">Retrasos durante el día</div>
+                                <div class="numero d-flex justify-content-center" id="cantidad_funcionario"></div>
+                                <div class="detalle">Cantidad Funcionarios</div>
                             </div>
-                            <div class="icono_tarjeta">
-                                <i class="fas fa-users"></i>
-                            </div>
-                        </div>
-                        <div class="tarjeta">
-                            <div>
-                                <div class="numero" id="retraso_total"></div>
-                                <div class="detalle">Retrasos durante el año</div>
-                            </div>
-                            <div class="icono_tarjeta">
-                                <i class="fas fa-users"></i>
+                            <div class="icono_tarjeta ms-2">
+                                <i class="fas fa-user-friends"></i>
                             </div>
                         </div>
                     </div>
@@ -47,7 +37,7 @@
 
             <!-- main content table -->
             <div class="d-flex justify-content-between mb-4">
-                <button type="button" class="btn-lg btn-primary" id="btn_nuevo_retraso" data-bs-toggle="modal" data-bs-target="#modal_registro_retraso">
+                <button type="button" class="btn-lg btn-primary" id="btn_nuevo_funcionario" title="Nuevo funcionario" data-bs-toggle="modal" data-bs-target="#modal_funcionario">
                     <i class="fas fa-user-plus icon"></i>
                 </button>
                 <div class="row g-2">
@@ -57,25 +47,22 @@
                     <div class="col-6">
                         <button class="btn-lg btn-secondary" id="btn_csv" title="Exportar CSV"><i class="fas fa-file-csv icon"></i></button>
                     </div>
-                    <!-- <div class="col-4">
-                        <button class="btn-lg btn-danger" id="btn_pdf" title="Exportar PDF"><i class="fas fa-file-pdf icon"></i></button>
-                    </div> -->
                 </div>
             </div>
 
             <div class="table-responsive">
-                <table id="tabla_retraso" class="table table-hover text-nowrap" style="width: 100%">
+                <table id="tabla_funcionario" class="table table-hover text-nowrap" style="width: 100%">
                     <thead>
                         <tr>
                             <th>Id</th>
+                            <!-- <th></th> -->
                             <th>Rut</th>
                             <th>Ap Paterno</th>
                             <th>Ap Materno</th>
                             <th>Nombres</th>
-                            <th>Curso</th>
-                            <th>Fecha</th>
-                            <th>Hora</th>
-                            <th>Acción</th>
+                            <th>Departamento</th>
+                            <!-- <th>Asignación</th> -->
+                            <th>Edición</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -84,18 +71,13 @@
             </div>
 
 <!-- modal -->
-<?php   include_once "./layout/modal_retraso.php";   ?>
-
+<?php   //include_once "./layout/modal_apoderado.php";   ?>
 
 <!-- script generales del proyecto -->
 <?php   include_once "./layout/footer.php"; ?>
 
-
-    <!-- script layout atrasos -->
-    <script src="./Pluggins/plugin_impresion/conector_impresora.js"></script>
-    <script src="./js/retraso.js" type="module"></script>
-
+    <!-- script layout apoderado -->
+    <script src="./js/funcionario.js" type="module"></script>
 
 </body>
 </html>
-

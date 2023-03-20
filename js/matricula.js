@@ -465,7 +465,6 @@ function lanzarModalRetiro(tabla) {
         infoRetiro = {
             rut: rut,
             id_matricula: data.id_matricula,
-            fecha_retiro: $('#fecha_retiro_estudiante').val()
         }
     });
 }
@@ -566,6 +565,7 @@ function setRetiroMatricula(tabla) {
             LibreriaFunciones.alertPopUp('info', 'Ingresar fecha de retiro !!');
             return false;
         }
+        infoRetiro.fecha_retiro = $('#fecha_retiro_estudiante').val();
 
         $.ajax({
             url: "./controller/controller_matricula.php",
@@ -685,6 +685,16 @@ function getCertificado(tabla) {
         let data = tabla.row($(this).parents()).data();
         let id_matricula = data.id_matricula;
         let datos = "getCertificado";
+
+        if (data.nombre_estado == 'Retirado(a)') {
+            LibreriaFunciones.alertPopUp('warning', 'El estudiante esta retirado(a) !!');
+            return false;
+        }
+
+        if (data.nombre_estado == 'Suspendido(a)') {
+            LibreriaFunciones.alertPopUp('warning', 'El estudiante esta suspendido(a) !!');
+            return false;
+        }
 
         $.ajax({
             url: "./controller/controller_matricula.php",

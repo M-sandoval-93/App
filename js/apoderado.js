@@ -77,7 +77,7 @@ function validarRutApoderado() {
 function comprobarApoderado(rut) {
     datos = "getApoderado";
 
-    if (rut != '' && rut.length > 7 && rut.length < 9) {
+    if (rut != '' && rut.length >= 7 && rut.length <= 9) {
         $.ajax({
             url: "./controller/controller_apoderado.php",
             type: "post",

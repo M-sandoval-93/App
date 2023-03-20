@@ -196,7 +196,7 @@ function getEstudiante(rut) {
 function getApoderado(rut, campo_nombre, texto) {
     datos = 'getApoderado';
 
-    if (rut != '' && rut.length > 7 && rut.length < 9) {
+    if (rut != '' && rut.length >= 7 && rut.length <= 9) {
         $.ajax({
             url: "./controller/controller_apoderado.php",
             type: "post",
@@ -590,9 +590,6 @@ function setRetiroMatricula(tabla) {
             LibreriaFunciones.alertPopUp('error', 'Error en la consulta')
         });
     });
-
-
-
 }
 
 // Función para actualizar una matricula

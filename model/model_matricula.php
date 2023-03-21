@@ -21,13 +21,15 @@
             $query = "SELECT matricula.id_matricula, matricula.matricula,
                 (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut,
                 estudiante.ap_estudiante AS ap_paterno, estudiante.am_estudiante AS ap_materno,
-                estudiante.nombres_estudiante AS nombre, estudiante.nombre_social AS n_social, curso.curso,
+                (CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante ELSE
+                '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END) AS nombre,
                 to_char(estudiante.fecha_nacimiento, 'DD / MM / YYYY') AS fecha_nacimiento,
                 to_char(estudiante.fecha_ingreso, 'DD / MM / YYYY') AS fecha_ingreso,
                 to_char(matricula.fecha_matricula, 'DD / MM / YYYY') AS fecha_matricula,
-                estudiante.sexo, estado.nombre_estado,
-                (apt.nombres_apoderado || ' ' || apt.ap_apoderado || ' ' || apt.am_apoderado) AS apoderado_titular,
-                (aps.nombres_apoderado || ' ' || aps.ap_apoderado || ' ' || aps.am_apoderado) AS apoderado_suplente
+                CASE WHEN estudiante.sexo = 'M' THEN 'Masculimo' ELSE 'Femenina' END AS sexo,
+                estado.nombre_estado, curso.curso,
+                ('(' || apt.rut_apoderado || '-' || apt.dv_rut_apoderado || ') ' || '/ ' || apt.nombres_apoderado || ' ' || apt.ap_apoderado || ' ' || apt.am_apoderado) AS apoderado_titular,
+                ('(' || aps.rut_apoderado || '-' || aps.dv_rut_apoderado || ') ' || '/ ' || aps.nombres_apoderado || ' ' || aps.ap_apoderado || ' ' || aps.am_apoderado) AS apoderado_suplente
                 FROM matricula
                 INNER JOIN estudiante ON estudiante.id_estudiante = matricula.id_estudiante
                 LEFT JOIN curso ON curso.id_curso = matricula.id_curso
@@ -42,12 +44,7 @@
             $matriculas = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($matriculas as $matricula) {
-                // condición para el nombre social
-                if ($matricula['n_social'] != null) {
-                    $matricula['nombre'] = '('. $matricula['n_social']. ') '. $matricula['nombre']; 
-                }
                 $this->json['data'][] = $matricula;
-                unset($this->json['data'][0]['n_social']); // Se elimina del array un dato innesesario
             }
 
             $this->closeConnection();

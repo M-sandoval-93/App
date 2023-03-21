@@ -16,8 +16,9 @@
         // Método para obtener el registro de suspensiones del año
         public function getSuspension() {
             $query = "SELECT suspension_estudiante.id_suspension, (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut,
-                (estudiante.nombres_estudiante || ' ' || estudiante.ap_estudiante || ' ' || estudiante.am_estudiante) AS nombres,
-                estudiante.nombre_social, curso.curso, to_char(suspension_estudiante.fecha_inicio, 'DD / MM / YYYY') AS fecha_inicio,
+                ((CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante ELSE
+                '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END) || ' ' || estudiante.ap_estudiante || ' ' || 
+                estudiante.am_estudiante) AS nombres, curso.curso, to_char(suspension_estudiante.fecha_inicio, 'DD / MM / YYYY') AS fecha_inicio,
                 to_char(suspension_estudiante.fecha_termino, 'DD / MM / YYYY') AS fecha_termino, suspension_estudiante.motivo,
                 EXTRACT (DAY FROM AGE(suspension_estudiante.fecha_termino, suspension_estudiante.fecha_inicio)) + 1 AS dias_suspension,
                 CASE WHEN suspension_estudiante.fecha_inicio < CURRENT_DATE AND suspension_estudiante.fecha_termino > CURRENT_DATE THEN 'Suspensión en curso' 
@@ -35,11 +36,7 @@
             $suspensiones = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($suspensiones as $suspension) {
-                if ($suspension['nombre_social'] != '') {
-                    $suspension['nombres'] = '('. $suspension['nombre_social']. ') '. $suspension['nombres']; 
-                }
                 $this->json['data'][] = $suspension;
-                unset($this->json['data'][0]['nombre_social']); // Se elimina del array un dato innesesario
             }
 
             $this->closeConnection();
@@ -110,9 +107,11 @@
         // Método para descargar la información de las suspensiones
         public function exportarSuspension($ext) {
             $extension = 'Xlsx';
-            $query = "SELECT (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut_estudiante, 
-                (estudiante.nombres_estudiante || ' ' || estudiante.ap_estudiante || ' ' || estudiante.am_estudiante) AS nombres_estudiante,
-                estudiante.nombre_social, curso.curso, suspension_estudiante.fecha_inicio, suspension_estudiante.fecha_termino, 
+            $query = "SELECT (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut_estudiante,
+                ((CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante ELSE
+                '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END) || ' ' || estudiante.ap_estudiante || ' ' || 
+                estudiante.am_estudiante) AS nombres_estudiante,
+                curso.curso, suspension_estudiante.fecha_inicio, suspension_estudiante.fecha_termino, 
                 EXTRACT (DAY FROM AGE(suspension_estudiante.fecha_termino, suspension_estudiante.fecha_inicio)) + 1 AS dias_suspension,
                 suspension_estudiante.motivo
                 FROM suspension_estudiante
@@ -168,14 +167,7 @@
             $fila = 4;
             foreach ($suspensiones as $suspension) {
                 $sheetActive->setCellValue('A'.$fila, $suspension['rut_estudiante']);
-
-                // Control de nombre social
-                if ($suspension['nombre_social'] == '') {
-                    $sheetActive->setCellValue('B'.$fila, $suspension['nombres_estudiante']);
-                } else {
-                    $sheetActive->setCellValue('B'.$fila, '('.$suspension['nombre_social'].') '.$suspension['nombres_estudiante']);
-                }
-
+                $sheetActive->setCellValue('B'.$fila, $suspension['nombres_estudiante']);
                 $sheetActive->setCellValue('C'.$fila, $suspension['curso']);
                 $sheetActive->setCellValue('D'.$fila, $suspension['fecha_inicio']);
                 $sheetActive->setCellValue('E'.$fila, $suspension['fecha_termino']);

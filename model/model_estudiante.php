@@ -17,8 +17,10 @@
         public function getEstudiantes() {
             $query = "SELECT estudiante.id_estudiante, estudiante.sexo,
                 (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) as rut_estudiante,
-                estudiante.ap_estudiante, estudiante.am_estudiante, estudiante.nombres_estudiante,
-                estudiante.nombre_social, estudiante.junaeb, estudiante.fecha_retiro,
+                estudiante.ap_estudiante, estudiante.am_estudiante, 
+                (CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante ELSE
+                '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END) AS nombres_estudiante,
+                estudiante.junaeb, estudiante.fecha_retiro,
                 to_char(estudiante.fecha_ingreso, 'DD / MM / YYYY') AS fecha_ingreso,
                 to_char(estudiante.fecha_nacimiento, 'DD / MM / YYYY') AS fecha_nacimiento,
                 CASE WHEN matricula.anio_lectivo = EXTRACT(YEAR FROM now()) THEN 'Matriculado'
@@ -28,20 +30,13 @@
                 LEFT JOIN matricula ON matricula.id_estudiante = estudiante.id_estudiante
                 ORDER BY estudiante.ap_estudiante;";
 
+
             $sentencia = $this->preConsult($query);
             $sentencia->execute();
             $estudiantes = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 
             foreach($estudiantes as $estudiante) {
-
-                // Condición para asignar nombre social
-                if ($estudiante['nombre_social'] != null) {
-                    $estudiante['nombres_estudiante'] = '('. $estudiante['nombre_social']. ') '. $estudiante['nombres_estudiante']; 
-                }
-
                 $this->json['data'][] = $estudiante;
-                unset($this->json['data'][0]['nombre_social']); // Se elimina del array un dato innesesario
-
             }
 
             $this->closeConnection();
@@ -146,8 +141,9 @@
 
         // Método para obtener información del estudiante para registrar retraso
         public function getEstudianteRetraso($rut) {
-            $query = "SELECT (e.nombres_estudiante || ' ' || e.ap_estudiante || ' ' || e.am_estudiante) AS nombre_estudiante, 
-                e.nombre_social, curso.curso, matricula.id_estado, 
+            $query = "SELECT ((CASE WHEN e.nombre_social IS NULL THEN e.nombres_estudiante ELSE
+                '(' || e.nombre_social || ') ' || e.nombres_estudiante END) || ' ' || e.ap_estudiante
+                || ' ' || e.am_estudiante) AS nombre_estudiante, curso.curso, matricula.id_estado, 
                 COALESCE(SUM(CASE WHEN retraso.estado_retraso = 'sin justificar' THEN 1 ELSE 0 END), 0) AS cantidad_retraso
                 FROM estudiante AS e
                 INNER JOIN matricula ON matricula.id_estudiante = e.id_estudiante
@@ -159,11 +155,7 @@
             $sentencia = $this->preConsult($query);
             $sentencia->execute([$rut]);
 
-            $this->json = $sentencia->fetchAll(PDO::FETCH_ASSOC); // cambiar a fetch
-            if ($this->json[0]['nombre_social'] != null) {
-                $this->json[0]['nombre_estudiante'] = '('.$this->json[0]['nombre_social']. ') '. $this->json[0]['nombre_estudiante'];
-            }
-            unset($this->json[0]['nombre_social']);
+            $this->json = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 
             $this->closeConnection();
             return json_encode($this->json);
@@ -201,7 +193,7 @@
         }
 
         // Método para registrar un nuevo estudiante
-        public function setEstudiante($e) { // Revisado y terminado !!
+        public function setEstudiante($e) {
             $query = "SELECT id_estudiante FROM estudiante WHERE rut_estudiante = ?;";
             $sentencia = $this->preConsult($query);
             $sentencia->execute([$e->rut]);
@@ -241,7 +233,7 @@
         }
 
         // Método para eliminar el registro de un estudiante
-        public function deleteEstudiante($id_estudiante) { // Revisado y terminado !!
+        public function deleteEstudiante($id_estudiante) {
             $preQuery = "SELECT COUNT(id_estudiante) AS cantidad FROM matricula WHERE id_estudiante = ?;";
             $sentencia = $this->preConsult($preQuery);
             $sentencia->execute([$id_estudiante]);
@@ -260,12 +252,14 @@
         }
 
         // Método para exportar el registro de los estudiantes
-        public function exportarEstudiantes($ext) { // Revisado y terminado !!
+        public function exportarEstudiantes($ext) {
             $extension = 'Xlsx';
             $query = "SELECT estudiante.id_estudiante, estudiante.sexo,
                 (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) as rut_estudiante,
-                estudiante.ap_estudiante, estudiante.am_estudiante, estudiante.nombres_estudiante,
-                estudiante.nombre_social, estudiante.junaeb, estudiante.fecha_retiro, matricula.anio_lectivo,
+                estudiante.ap_estudiante, estudiante.am_estudiante, 
+                (CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante ELSE
+                '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END) AS nombres_estudiante,
+                estudiante.junaeb, estudiante.fecha_retiro, matricula.anio_lectivo,
                 to_char(estudiante.fecha_ingreso, 'DD / MM / YYYY') AS fecha_ingreso,
                 to_char(estudiante.fecha_nacimiento, 'DD / MM / YYYY') AS fecha_nacimiento
                 FROM estudiante
@@ -323,14 +317,7 @@
                 $sheetActive->setCellValue('A'.$fila, $estudiante['rut_estudiante']);
                 $sheetActive->setCellValue('B'.$fila, $estudiante['ap_estudiante']);
                 $sheetActive->setCellValue('C'.$fila, $estudiante['am_estudiante']);
-
-                // Control de nombre social
-                if ($estudiante['nombre_social'] == '') {
-                    $sheetActive->setCellValue('D'.$fila, $estudiante['nombres_estudiante']);
-                } else {
-                    $sheetActive->setCellValue('D'.$fila, '('.$estudiante['nombre_social'].') '.$estudiante['nombres_estudiante']);
-                }
-
+                $sheetActive->setCellValue('D'.$fila, $estudiante['nombres_estudiante']);
                 $sheetActive->setCellValue('E'.$fila, $estudiante['fecha_nacimiento']);
                 $sheetActive->setCellValue('F'.$fila, $estudiante['sexo']);
                 $sheetActive->setCellValue('G'.$fila, $estudiante['junaeb']);

@@ -16,8 +16,9 @@
         public function getRetraso() {
             $query = "SELECT retraso.id_retraso, (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut,
                 estudiante.ap_estudiante AS ap_paterno, estudiante.am_estudiante AS ap_materno,
-                estudiante.nombres_estudiante AS nombre, estudiante.nombre_social AS n_social, curso.curso,
-                to_char(retraso.fecha_retraso, 'DD/MM/YYYY') AS fecha_retraso,
+                (CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante ELSE
+                '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END) AS nombre,
+                curso.curso, to_char(retraso.fecha_retraso, 'DD/MM/YYYY') AS fecha_retraso,
                 to_char(retraso.hora_retraso, 'HH:MI:SS') AS hora_retraso
                 FROM retraso
                 INNER JOIN estudiante ON estudiante.id_estudiante = retraso.id_estudiante
@@ -32,12 +33,7 @@
             $retrasos = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($retrasos as $retraso) {
-                // condición para el nombre social
-                if ($retraso['n_social'] != null) {
-                    $retraso['nombre'] = '('. $retraso['n_social']. ') '. $retraso['nombre'];
-                }
                 $this->json['data'][] = $retraso;
-                unset($this->json['data'][0]['n_social']); // Se elimina del array un dato innesesario
             }
 
             $this->closeConnection();
@@ -148,8 +144,9 @@
         public function exportarRetraso($ext) {
             $query = "SELECT (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut,
                 estudiante.ap_estudiante AS ap_paterno, estudiante.am_estudiante AS ap_materno,
-                estudiante.nombres_estudiante AS nombre, estudiante.nombre_social AS n_social, curso.curso, 
-                to_char(retraso.fecha_retraso, 'DD/MM/YYYY') AS fecha_retraso,
+                (CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante ELSE
+                '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END) AS nombre,
+                curso.curso, to_char(retraso.fecha_retraso, 'DD/MM/YYYY') AS fecha_retraso,
                 to_char(retraso.hora_retraso, 'HH:MI:SS') AS hora_retraso,
                 (apoderado.nombres_apoderado || ' ' || apoderado.ap_apoderado || ' ' || apoderado.am_apoderado) as apoderado_justifica,
                 retraso.estado_retraso
@@ -210,14 +207,7 @@
                 $sheetActive->setCellValue('A'.$fila, $atraso['rut']);
                 $sheetActive->setCellValue('B'.$fila, $atraso['ap_paterno']);
                 $sheetActive->setCellValue('C'.$fila, $atraso['ap_materno']);
-
-                // Control de nombre social
-                if ($atraso['n_social'] == '') {
-                    $sheetActive->setCellValue('D'.$fila, $atraso['nombre']);
-                } else {
-                    $sheetActive->setCellValue('D'.$fila, '('.$atraso['n_social'].') '.$atraso['nombre']);
-                }
-
+                $sheetActive->setCellValue('D'.$fila, $atraso['nombre']);
                 $sheetActive->setCellValue('E'.$fila, $atraso['curso']);
                 $sheetActive->setCellValue('F'.$fila, $atraso['fecha_retraso']);
                 $sheetActive->setCellValue('G'.$fila, $atraso['hora_retraso']);

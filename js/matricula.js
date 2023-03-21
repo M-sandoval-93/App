@@ -6,12 +6,6 @@ let infoSuspension;
 // ==================== FUNCIONES INTERNAS ===============================//
 // Función para generar tabla expansiba con datos secundarios
 function getData(data) {
-    let sexo = 'Masculino';
-
-    if (data.sexo == 'F') {
-        sexo = 'femenina';
-    }
-
     let apoderado = (ap) => {
         let apoderado_estudiante = 'Apoderado no asignado';
         if (ap != null) {
@@ -29,7 +23,7 @@ function getData(data) {
 
             '<tr>' +
                 '<td>Sexo estudiante:</td>' +
-                '<td>' + sexo + '</td>' +
+                '<td>' + data.sexo + '</td>' +
             '</tr>' +
 
             '<tr>' +

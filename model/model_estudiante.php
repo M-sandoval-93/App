@@ -208,7 +208,7 @@
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
             $sentencia = $this->preConsult($query);
-            if ($sentencia->execute([$e->rut, $e->dv_rut, $e->ap, $e->am, $e->nombres, $e->n_social, $e->f_nacimiento, intval($e->junaeb), $e->sexo, $e->f_ingreso])) {
+            if ($sentencia->execute([$e->rut, $e->dv_rut, $e->ap, $e->am, $e->nombres, ($e->n_social == '') ? null : $e->n_social, $e->f_nacimiento, intval($e->junaeb), $e->sexo, $e->f_ingreso])) {
                 $this->res = true;
             }
             

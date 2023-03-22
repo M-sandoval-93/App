@@ -136,13 +136,12 @@ function getDataFormulario() {
         nombres: $.trim($('#nombre_estudiante').val().toUpperCase()),
         ap: $.trim($('#ap_estudiante').val().toUpperCase()),
         am: $.trim($('#am_estudiante').val().toUpperCase()),
-        n_social: $.trim($('#n_social_estudiante').val().toUpperCase()), // Valor que puede ser nulo !!
+        n_social: $.trim($('#n_social_estudiante').val().toUpperCase()), 
         sexo: $.trim($('#sexo_estudiante').val()),
         f_nacimiento: $.trim($('#fecha_nacimiento').val()),
         f_ingreso: $.trim($('#fecha_ingreso_estudiante').val()),
         junaeb: $.trim($('#beneficio_junaeb').val())
     }
-
     return estudiante;
 }
 

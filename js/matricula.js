@@ -50,6 +50,11 @@ function getData(data) {
                 '<td>Fecha ingreso:</td>' +
                 '<td>' + data.fecha_ingreso + '</td>' +
             '</tr>' +
+
+            '<tr>' +
+                '<td>Fecha ingreso:</td>' +
+                '<td>' + data.fecha_retiro + '</td>' +
+            '</tr>' +
         '</table>'
     );
 }

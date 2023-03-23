@@ -25,6 +25,7 @@
                 '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END) AS nombre,
                 to_char(estudiante.fecha_nacimiento, 'DD / MM / YYYY') AS fecha_nacimiento,
                 to_char(estudiante.fecha_ingreso, 'DD / MM / YYYY') AS fecha_ingreso,
+                to_char(estudiante.fecha_retiro, 'DD / MM / YYYY') AS fecha_retiro,
                 to_char(matricula.fecha_matricula, 'DD / MM / YYYY') AS fecha_matricula,
                 CASE WHEN estudiante.sexo = 'M' THEN 'Masculimo' ELSE 'Femenina' END AS sexo,
                 estado.nombre_estado, curso.curso,

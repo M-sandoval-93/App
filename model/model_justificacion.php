@@ -116,8 +116,9 @@
             return json_encode($this->res);
         }
 
-        public function getCertificadoJustificaicon() { // mantenimiento
-
+        // Método para generar certificado de justificación
+        public function getCertificadoJustificaicon($id_justificacion) {
+            $query  = "";
         }
 
         // Método para generar excel de las justificaciones

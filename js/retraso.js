@@ -243,8 +243,7 @@ function lanzarModalJustificaciones(tabla) {
 function setRetraso(tabla) {
     $('#btn_registrar_retraso').click((e) => {
         e.preventDefault();
-        datos = 'setRetraso';
-        let rut;
+        let datos = 'setRetraso';
 
         if (LibreriaFunciones.comprobarLongitud($('#rut_estudiante_retraso').val(), 7, 9, 'RUT', 'Estudiante') == false) { return false; }
         if ($('#rut_estudiante_retraso').val() == '' || $('#nombre_estudiante_retraso').val() == 'Sin datos' || $('#nombre_estudiante_retraso').val() == '') {
@@ -252,7 +251,7 @@ function setRetraso(tabla) {
             return false;
         } 
 
-        rut = $.trim($('#rut_estudiante_retraso').val());
+        let rut = $.trim($('#rut_estudiante_retraso').val());
 
         $.ajax({
             url: "./controller/controller_retraso.php",
@@ -277,8 +276,6 @@ function setRetraso(tabla) {
         }).fail(() => {
             LibreriaFunciones.alertPopUp('error', 'Error en la ejecución !!');
         });
-
-
     });
 }
 

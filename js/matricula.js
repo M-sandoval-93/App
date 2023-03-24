@@ -277,7 +277,7 @@ function preLoadLetra(letra) {
 }
 
 // Función para comprobar los campos vacios del formulario y rut del estudiante ingresado
-function comprobarCamposVacios( objeto) {
+function comprobarCamposVacios(objeto) {  // Agregar en la condición que omita el numero de matrícula
     let count = 0;
     for (const [key, value] of Object.entries(objeto)) {
         if ((key != 'id_titular' && key != 'id_suplente' && value == '' || value == '-------')) {

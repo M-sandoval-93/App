@@ -28,7 +28,7 @@
                 to_char(estudiante.fecha_retiro, 'DD / MM / YYYY') AS fecha_retiro,
                 to_char(matricula.fecha_matricula, 'DD / MM / YYYY') AS fecha_matricula,
                 CASE WHEN estudiante.sexo = 'M' THEN 'Masculimo' ELSE 'Femenina' END AS sexo,
-                estado.nombre_estado, curso.curso,
+                estado.nombre_estado, curso.curso, matricula.numero_lista,
                 ('(' || apt.rut_apoderado || '-' || apt.dv_rut_apoderado || ') ' || '/ ' || apt.nombres_apoderado || ' ' || apt.ap_apoderado || ' ' || apt.am_apoderado) AS apoderado_titular,
                 ('(' || aps.rut_apoderado || '-' || aps.dv_rut_apoderado || ') ' || '/ ' || aps.nombres_apoderado || ' ' || aps.ap_apoderado || ' ' || aps.am_apoderado) AS apoderado_suplente
                 FROM matricula

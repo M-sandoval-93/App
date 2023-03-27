@@ -1,8 +1,8 @@
 ** POR HACER, IDEAS, PENDIENTES
 
 Trabajar !!!!
-modificar tabla de asignaturas para que pueda registrar en que grados se imparte una asignaturas
-modificar tabla matricula para registrar numero de lista
+
+Agregar los números de matrículas
 trabajar el numero de lista, al mostrar, registrar y editar (agregarlo como valor al objeto que se genera !!)
 trabajar el el numero de retistri hombre y mujer por curso
 generar nomina de estudiantes!!!!

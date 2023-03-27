@@ -9,7 +9,8 @@
 
         public function getAsignatura($grado) {
             $query = "SELECT id_asignatura, asignatura FROM asignatura
-                WHERE grado LIKE ? || '%' OR grado LIKE '%' || ? || '%' OR grado LIKE '%' || ? OR grado = ?;";
+                WHERE grado LIKE ? || '%' OR grado LIKE '%' || ? || '%' OR grado LIKE '%' || ? OR grado = ?
+                AND anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE);";
 
             $sentencia = $this->preConsult($query);
             $sentencia->execute([$grado, $grado, $grado, $grado]);

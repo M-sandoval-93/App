@@ -37,6 +37,11 @@ function getData(data) {
             '</tr>' +
 
             '<tr>' +
+                '<td>Número matrícula:</td>' +
+                '<td> N° ' + data.numero_lista + '</td>' +
+            '</tr>' +
+
+            '<tr>' +
                 '<td>Apoderado titular:</td>' +
                 '<td>' + apoderado(data.apoderado_titular) + '</td>' +
             '</tr>' +
@@ -52,7 +57,7 @@ function getData(data) {
             '</tr>' +
 
             '<tr>' +
-                '<td>Fecha ingreso:</td>' +
+                '<td>Fecha retiro:</td>' +
                 '<td>' + data.fecha_retiro + '</td>' +
             '</tr>' +
         '</table>'

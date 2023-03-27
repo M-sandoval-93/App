@@ -100,7 +100,7 @@
 
 <!-- Modal pruebas pendientes por asignatura -->
 <div class="modal fade" id="modal_justificacion_asignatura" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
 
       <div class="modal-header bg-primary text-white">

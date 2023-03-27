@@ -7,10 +7,12 @@
             parent:: __construct();
         }
 
-        public function getAsignatura() {
-            $query = "SELECT * FROM asignatura";
+        public function getAsignatura($grado) {
+            $query = "SELECT id_asignatura, asignatura FROM asignatura
+                WHERE grado LIKE ? || '%' OR grado LIKE '%' || ? || '%' OR grado LIKE '%' || ? OR grado = ?;";
+
             $sentencia = $this->preConsult($query);
-            $sentencia->execute();
+            $sentencia->execute([$grado, $grado, $grado, $grado]);
             $asignaturas = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($asignaturas as $asignatura) {
@@ -20,8 +22,6 @@
             $this->closeConnection();
             return json_encode($this->json);
         }
-
-
 
     }
 

@@ -7,16 +7,16 @@
 // const DB_PASSWORD = 'admin';
 
 
-const DB_HOST = 'localhost';
-const DB_USSER = 'postgres';
-const DB_DATA = 'db_lvl_local';
-const DB_PASSWORD = 'user2019';
-
-
 // const DB_HOST = 'localhost';
 // const DB_USSER = 'postgres';
-// const DB_DATA = 'db_liceo';
-// const DB_PASSWORD = 'admin';
+// const DB_DATA = 'db_lvl_local';
+// const DB_PASSWORD = 'user2019';
+
+
+const DB_HOST = 'localhost';
+const DB_USSER = 'postgres';
+const DB_DATA = 'db_liceo';
+const DB_PASSWORD = 'admin';
 
 
 const DB_CHARSET = 'utf8';

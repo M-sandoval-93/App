@@ -12,7 +12,7 @@
 
     switch ($type) {
         case "getAsignatura":
-            print $datosAsignatura->getAsignatura();
+            print $datosAsignatura->getAsignatura($_POST['grado']);
             break;
 
 

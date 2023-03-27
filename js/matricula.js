@@ -113,9 +113,6 @@ function getNumeroMatricula(inicial, final) {
         $('#numero_matricula').val('Sin datos !!');
     });
 
-
-
-    // $('#numero_matricula').val();
 }
 
 // Función para validar el rut del estudiante ingresado para matricular
@@ -280,7 +277,7 @@ function preLoadLetra(letra) {
 function comprobarCamposVacios(objeto) {  // Agregar en la condición que omita el numero de matrícula
     let count = 0;
     for (const [key, value] of Object.entries(objeto)) {
-        if ((key != 'id_titular' && key != 'id_suplente' && value == '' || value == '-------')) {
+        if ((key != 'id_titular' && key != 'id_suplente' && key != 'matricula' && key != 'numero_lista' && value == '' || value == '-------')) {
             count += 1;
         }
     }
@@ -395,6 +392,7 @@ function lanzarModalActualizarMatricula(tabla) {
         let letra = (data.curso == null) ? '' : data.curso.slice(1, data.curso.length);
 
         prepararModalMatricula('actualizar');
+        $('#numero_matricula').prop('disabled', false);
 
         // Asignación del contenido
         $('#modal_matricula_tittle').text('ACTUALIZAR MATRÍCULA');

@@ -233,12 +233,13 @@ function prepararModalAsignatura() {
             $('#form_justificacion_asignatura').trigger('reset')
             $('#justificacion_asignatura_nombre').val($('#justificacion_nombre_estudiante').val());
             $('#justificacion_asignatura_curso').val($('#justificacion_curso_estudiante').val());
+            let grado = $('#justificacion_asignatura_curso').val().slice(0, 1);
 
             $.ajax({
                 url: "./controller/controller_asignatura.php",
                 type: "POST",
                 dataType: "json",
-                data: {datos: datos},
+                data: {datos: datos, grado: grado},
                 success: function(response) {
                     $.each(response, (obj, datos) => {
                         $('#group_of_the_check').append(`<div class="col-6">

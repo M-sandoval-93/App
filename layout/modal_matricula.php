@@ -12,17 +12,23 @@
         <div class="modal-body">
 
           <div class="row g-3 align-items-end">
-            <div class="col-sm-7 col-md-8">
+            <div class="col-sm-6 col-md-7">
               <div class="col-sm-12 col-md-10 text-center">
                 <label for="numero_matricula" class="text-secondary h3">Registro de matrícula N°</label>
                 <div class="row d-flex justify-content-center">
-                  <div class="col-sm-4 col-md-3">
-                    <input type="text" class="form-control text-center" id="numero_matricula" disabled>
+                  <div class="col-sm-5 col-md-4">
+                    <input type="number" class="form-control text-center" id="numero_matricula" disabled>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-sm-5 col-md-3">
+
+            <div class="col-sm-2 col-md-2">
+              <label for="numero_lista" class="form-label">N° lista <span class="text-danger fs-5">*</span></label>
+              <input type="number" id="numero_lista" class="form-control">
+            </div>
+
+            <div class="col-sm-4 col-md-3">
               <label for="fecha_matricula" class="form-label">Fecha de matrícula <span class="text-danger fs-5">*</span></label>
               <input type="date" id="fecha_matricula" class="form-control">
             </div>
@@ -127,7 +133,7 @@
 
 
 <!-- MODAL PARA TRABAJAR LA SUSPENSIÓN DE UNA MATRÍCULA -->
-<div class="modal fade" id="modal_matricula_estado" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="modal_matricula_estado" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-sm">
     <div class="modal-content">
 
@@ -143,7 +149,7 @@
 
     </div>
   </div>
-</div>
+</div> -->
 
 
 <!-- MODAL PARA REGISTRAR LAS FECHAS DE SUSPENSIÓN DE UN ESTUDIANTE -->

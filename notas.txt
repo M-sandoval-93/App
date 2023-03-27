@@ -1,9 +1,11 @@
 ** POR HACER, IDEAS, PENDIENTES
 
-
-** trabajando en modal de suspencion de estudiante
-revisión por soluciona:
--- verificar informacion de apoderados
+Trabajar !!!!
+modificar tabla de asignaturas para que pueda registrar en que grados se imparte una asignaturas
+modificar tabla matricula para registrar numero de lista
+trabajar el numero de lista, al mostrar, registrar y editar (agregarlo como valor al objeto que se genera !!)
+trabajar el el numero de retistri hombre y mujer por curso
+generar nomina de estudiantes!!!!
 
 
 HACER CONTROLADOR DE REDIRECCION !!!!!
@@ -12,14 +14,7 @@ Generador de nóminas de estudiantes !!!!!
 
 1.- agregar validación de solo números a campo de telefono en modulo de apoderado
 2.- Pasar función de exportar documento a función generica
-3.- Refactorisar consultas en donde se maneja el nombre social en la sentencia SQL
-4.- Agregar alertapopup esquina superior derecha
-5.- Generar reporte de registro de justificaciones
 6.- Generar certificado de justificación por pruebas pendientes
-7.- habilitar impresión de ticket
-
-
-
 
 
 
@@ -28,21 +23,7 @@ Generador de nóminas de estudiantes !!!!!
     b.- agregar cuantos estudiantes suspendidos
     c.- agregar la cantidad de retiros que van del año
 
-2.- Ver la posibilidad de agregar información relacionada con los cursos
-    a.- agregar lista con los grados
-    b.- cada grado con la cantidad de estudiantes
-    c.- Cada grado permita desplegar la cantidad de cursos y sus respectivos estudiantes
-
-3.- Posibilidad de generar certificados de alumno regular
 4.- Trabajar en módulo de funcionarios
 
-
-
-para consulta de apoderados PROBAR
-SELECT a.nombre, a.apellido, a.telefono, j.fecha, j.motivo
-FROM justificación j
-JOIN matricula m ON j.id_apoderado = m.id_titular OR j.id_apoderado = m.id_suplente
-JOIN apoderado a ON j.id_apoderado = a.id
-WHERE m.id_estudiante = [ID del estudiante]
 
 

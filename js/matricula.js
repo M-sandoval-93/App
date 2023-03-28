@@ -37,7 +37,7 @@ function getData(data) {
             '</tr>' +
 
             '<tr>' +
-                '<td>Número matrícula:</td>' +
+                '<td>Número lista:</td>' +
                 '<td> N° ' + data.numero_lista + '</td>' +
             '</tr>' +
 

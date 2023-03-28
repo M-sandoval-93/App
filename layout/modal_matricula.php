@@ -282,5 +282,65 @@
 </div>
 
 
+<!-- MODAL PARA EXCEL DE MATRICULA POR FECHA Y POR RETIROS, ALTAS O COMLETO -->
+<div class="modal fade" id="modal_descargar_excel_matricula" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content">
+
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="modal_matricula_tittle">DESCARGAR INFORMACIÓN MATRÍCULAS</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <form id="form_descargar_excel_matricula">
+        <div class="modal-body">
+
+          <!-- <div class="row mb-4">
+            <div class="col-12">
+              <label for="nombre_estudiante_suspencion" class="form-label">Nombre completo estudiante </label>
+              <input type="text" class="form-control" id="nombre_estudiante_suspencion" disabled>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-12 col-md-6 d-grid gap-3 mb-4">
+              <div class="col-sm-6 col-md-12">
+                <label for="fecha_inicio_suspencion" class="form-label">Fecha inicio suspención <span class="text-danger fs-5">*</span></label>
+                <input type="date" id="fecha_inicio_suspencion" class="form-control">
+              </div>
+
+              <div class="col-sm-6 col-md-12">
+                <label for="fecha_termino_suspencion" class="form-label">Fecha término suspención <span class="text-danger fs-5">*</span></label>
+                <input type="date" id="fecha_termino_suspencion" class="form-control">
+              </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6 mb-4 d-flex align-items-center justify-content-center">
+              <div class="text-center">
+                <div class="text-secondary h3 text-center">Días de suspención</div>
+                <div id="numero_dias_suspencion" class="text-primary h2"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <label for="motivo_suspencion" class="form-label">Nombre completo estudiante </label>
+              <textarea class="form-control" id="motivo_suspencion"></textarea>
+            </div>
+          </div> -->
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger btn-lg" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-success btn-lg" id="btn_descargar_excel_matricula">Descargar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
 
 <!-- considerar que cada vez que se ingrese al sistema, se ejecute una funciona una única vez, comprobando el estado de la suspención de los estudiantes -->

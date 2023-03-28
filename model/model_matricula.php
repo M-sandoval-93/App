@@ -141,17 +141,18 @@
             $estudiante = $sentencia->fetch();
 
             $matricula = ($m->matricula == '0' or $m->matricula == '') ? null : intval($m->matricula);
+            $n_lista = ($m->n_lista == '0' or $m->n_lista == '') ? null : intval($m->n_lista);
             $titular = ($m->id_titular == '0') ? null : intval($m->id_titular);
             $suplente = ($m->id_suplente == '0') ? null : intval($m->id_suplente);
 
 
 
             // Sentencia para el registro de una matricula
-            $query = "INSERT INTO matricula (matricula, id_estudiante, id_ap_titular, id_ap_suplente, id_curso, anio_lectivo, fecha_matricula)
-                VALUES (?, ?, ?, ?, ?, ?, ?);";
+            $query = "INSERT INTO matricula (matricula, id_estudiante, id_ap_titular, id_ap_suplente, id_curso, anio_lectivo, fecha_matricula, numero_lista)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
             $sentencia = $this->preConsult($query);
             if ($sentencia->execute([$matricula, $estudiante['id_estudiante'], $titular, $suplente, 
-                intval($m->id_curso), intval(date('Y')), $m->fecha_matricula])) {
+                intval($m->id_curso), intval(date('Y')), $m->fecha_matricula, $n_lista])) {
                 $this->res = true;
             }
 
@@ -211,15 +212,16 @@
         // Método para actualizar una matrícula
         public function updateMatricula($m) {
             $matricula = ($m->matricula == '0' or $m->matricula == '') ? null : intval($m->matricula);
+            $n_lista = ($m->n_lista == '0' or $m->n_lista == '') ? null : intval($m->n_lista);
             $titular = ($m->id_titular == '0') ? null : intval($m->id_titular);
             $suplente = ($m->id_suplente == '0') ? null : intval($m->id_suplente);
 
             // Actualización de la matrícula
             $query = "UPDATE matricula
-                SET matricula = ?, id_ap_titular = ?, id_ap_suplente = ?, id_curso = ?, fecha_matricula = ?
+                SET matricula = ?, id_ap_titular = ?, id_ap_suplente = ?, id_curso = ?, fecha_matricula = ?, numero_lista = ?
                 WHERE id_matricula = ?;";
             $sentencia = $this->preConsult($query);
-            if ($sentencia->execute([$matricula, $titular, $suplente, intval($m->id_curso), $m->fecha_matricula, intval($m->id_matricula)])) {
+            if ($sentencia->execute([$matricula, $titular, $suplente, intval($m->id_curso), $m->fecha_matricula, $n_lista, intval($m->id_matricula)])) {
                 $this->res = true;
             }
 

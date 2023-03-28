@@ -299,6 +299,7 @@ function comprobarCamposVacios(objeto) {  // Agregar en la condición que omita 
 function getDataFormulario() {
     const matricula = {
         matricula: $.trim($('#numero_matricula').val()),
+        n_lista: $.trim($('#numero_lista').val()),
         fecha_matricula: $.trim($('#fecha_matricula').val()),
         rut: $.trim($('#rut_estudiante_matricula').val()),
         id_curso: $.trim($('#letra_curso').val().toUpperCase()),
@@ -417,6 +418,7 @@ function lanzarModalActualizarMatricula(tabla) {
         });
 
         $('#numero_matricula').val(data.matricula);
+        $('#numero_lista').val(data.numero_lista);
         $('#fecha_matricula').val(LibreriaFunciones.textFecha(data.fecha_matricula));
 
         getApoderadosTS(data.id_matricula);
@@ -468,6 +470,13 @@ function lanzarModalRetiro(tabla) {
             rut: rut,
             id_matricula: data.id_matricula,
         }
+    });
+}
+
+function lanzarModalExportar() {
+    $('#btn_excel').click(() => {
+        // Seguir trabajando !!!
+
     });
 }
 
@@ -754,6 +763,8 @@ function exportarMatriculas(btn, ext) {
 
 
 
+
+
 // ==================== FUNCIONES INTERNAS ===============================//
 $(document).ready(function() {
     getCantidadMatricula();
@@ -822,7 +833,8 @@ $(document).ready(function() {
     deleteRegistroMatricula(tabla_matricula);
 
     getCertificado(tabla_matricula);
-    exportarMatriculas('#btn_excel', 'xlsx');
+    // lanzarModalExportar();
+    // exportarMatriculas('#btn_excel', 'xlsx');
     exportarMatriculas('#btn_csv', 'csv');
 
 });

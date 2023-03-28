@@ -2,7 +2,13 @@
 
 Trabajar !!!!
 
-Agregar los números de matrículas
+Agregar los números de lista (trabajando en eso  !!!!)
+
+trabajar en descarga de altas y retiros según periodo de fecha ingresado !!!!
+
+
+
+
 trabajar el numero de lista, al mostrar, registrar y editar (agregarlo como valor al objeto que se genera !!)
 trabajar el el numero de retistri hombre y mujer por curso
 generar nomina de estudiantes!!!!
@@ -24,6 +30,22 @@ Generador de nóminas de estudiantes !!!!!
     c.- agregar la cantidad de retiros que van del año
 
 4.- Trabajar en módulo de funcionarios
+
+
+DATOR POR REVISAR EN SISTEMA VS PLANILLA INSPECTORIA
+
+
+sentenci SQL para actualizar numero de lista
+UPDATE matricula 
+SET numero_lista = <nuevo_valor>
+FROM estudiante 
+WHERE matricula.id_estudiante = estudiante.id 
+AND estudiante.rut = <valor_rut>;
+
+
+
+añadir a la consulta para generar excel de matriculas, para filtrar por fecha, de retiro o de altas
+AND estudiante.fecha_retiro < '2023-03-10'
 
 
 

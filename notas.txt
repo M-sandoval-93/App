@@ -2,8 +2,6 @@
 
 Trabajar !!!!
 
-Agregar los números de lista (trabajando en eso  !!!!)
-
 trabajar en descarga de altas y retiros según periodo de fecha ingresado !!!!
 
 
@@ -30,17 +28,11 @@ Generador de nóminas de estudiantes !!!!!
     c.- agregar la cantidad de retiros que van del año
 
 4.- Trabajar en módulo de funcionarios
-
-
-DATOR POR REVISAR EN SISTEMA VS PLANILLA INSPECTORIA
-
-
-sentenci SQL para actualizar numero de lista
-UPDATE matricula 
-SET numero_lista = <nuevo_valor>
-FROM estudiante 
-WHERE matricula.id_estudiante = estudiante.id 
-AND estudiante.rut = <valor_rut>;
+5.- Trabajar en historial de cambios de curso
+6.- trabajar en privilegio para ver:
+    - retrasos
+    - justificaicones
+    - matricula (agregar el número de telefono de los apoderados)
 
 
 

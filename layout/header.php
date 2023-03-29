@@ -43,12 +43,6 @@
                 </a>
             </li>
 
-<!-- Restricción de acceso -->
-<?php
-// if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 2) { // Administrador
-?>
-<!-- Restricción de acceso -->
-
             <li>
                 <a href="home">
                     <span class="icono"><i class="fas fa-home"></i></i></span>
@@ -59,7 +53,7 @@
 <!-- Restricción de acceso -->
 <?php
 // }
-if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 3) { // Administrador sistema y Usuario estándar
+if ($_SESSION['usser']['privilege'] == 1 || $_SESSION['usser']['privilege'] == 3) { // Administrador sistema y Usuario estándar
 ?>
 <!-- Restricción de acceso -->
 
@@ -79,7 +73,7 @@ if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 3) { // Adminis
 <!-- Restricción de acceso -->
 <?php
 }
-if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 4 || $_SESSION['usser']['id'] == 5) { // Administrador sistema, Usuario restringido y Usuario matrícula
+if ($_SESSION['usser']['privilege'] == 1 || $_SESSION['usser']['privilege'] == 4 || $_SESSION['usser']['privilege'] == 5) { // Administrador sistema, Usuario restringido y Usuario matrícula
 ?>
 <!-- Restricción de acceso -->
 
@@ -94,7 +88,7 @@ if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 4 || $_SESSION[
 
 <!-- Restricción de acceso -->
 <?php
-    if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 5) { // Administrador sistema y Usuario matrícula
+    if ($_SESSION['usser']['privilege'] == 1 || $_SESSION['usser']['privilege'] == 5) { // Administrador sistema y Usuario matrícula
 ?>
 <!-- Restricción de acceso -->
 
@@ -113,7 +107,7 @@ if ($_SESSION['usser']['id'] == 1 || $_SESSION['usser']['id'] == 4 || $_SESSION[
 <!-- Restricción de acceso -->
 <?php
 }
-if ($_SESSION['usser']['id'] == 1) { // Administrador sistema
+if ($_SESSION['usser']['privilege'] == 1) { // Administrador sistema
 ?>
 <!-- Restricción de acceso -->
 

@@ -9,7 +9,6 @@
 
     // SE INSTANCIA LA CLASE SESSION Y USA EL MÉTODO PARA COMPROBAR EL USUARIO
     $inicio_sesion = new Session();
-    // $data = $inicio_sesion->checkUsser($usuario, $clave);
 
     print $inicio_sesion->checkUsser($usuario, $clave);
 

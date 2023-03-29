@@ -5,7 +5,7 @@ require_once '../model/model_justificacion.php';
 require_once "../model/model_session.php";
 
 $session = new Session();
-$id_usuario = $session->getId();
+$privilege_usser = $session->getPrivilege();
 
 $type = $_POST['datos'];
 $datosJustificacion = new JustificacionEstudiante();

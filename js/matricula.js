@@ -282,7 +282,7 @@ function preLoadLetra(letra) {
 function comprobarCamposVacios(objeto) {  // Agregar en la condición que omita el numero de matrícula
     let count = 0;
     for (const [key, value] of Object.entries(objeto)) {
-        if ((key != 'id_titular' && key != 'id_suplente' && key != 'matricula' && key != 'numero_lista' && value == '' || value == '-------')) {
+        if ((key != 'id_titular' && key != 'id_suplente' && key != 'matricula' && key != 'n_lista' && value == '' || value == '-------')) {
             count += 1;
         }
     }
@@ -474,10 +474,22 @@ function lanzarModalRetiro(tabla) {
 }
 
 function lanzarModalExportar() {
-    $('#btn_excel').click(() => {
-        // Seguir trabajando !!!
-
+    $('#check_info_matricula_completa').click(function() {
+        if (LibreriaFunciones.comprobarCheck(this)) {
+            $('#fecha_descarga_matricula').toggle();
+            $('#fecha_inicio_descarga_matricula').val('');
+            $('#fecha_termino_descarga_matricula').val('');
+        } else {
+            $('#fecha_descarga_matricula').toggle();
+        }
     });
+
+    // $('#btn_excel').click(() => {
+        
+    // });
+
+    // hacer referencia al div y dentro a los botones
+    // ej: $('#div button').click(function() {});
 }
 
 
@@ -833,7 +845,7 @@ $(document).ready(function() {
     deleteRegistroMatricula(tabla_matricula);
 
     getCertificado(tabla_matricula);
-    // lanzarModalExportar();
+    lanzarModalExportar();
     // exportarMatriculas('#btn_excel', 'xlsx');
     exportarMatriculas('#btn_csv', 'csv');
 

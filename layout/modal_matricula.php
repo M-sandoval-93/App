@@ -292,8 +292,32 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
-      <form id="form_descargar_excel_matricula">
+      <!-- <form id="form_descargar_excel_matricula"> -->
         <div class="modal-body">
+
+          <div class="col-12 form-check mb-4" id="check">
+            <input class="form-check-input" type="checkbox" id="check_info_matricula_completa">
+            <label class="form-check-label" for="check_info_matricula_completa">Descargar información del periodo actual</label>
+          </div>
+
+          <div class="row g-2" id="fecha_descarga_matricula">
+            <div class="col-sm-12 col-md-6">
+              <label for="fecha_inicio_descarga_matricula" class="form-label">Fecha inicio</label>
+              <input type="date" id="fecha_inicio_descarga_matricula" class="form-control">
+            </div>
+
+            <div class="col-sm-12 col-md-6">
+              <label for="fecha_termino_descarga_matricula" class="form-label">Fecha término</label>
+              <input type="date" id="fecha_termino_descarga_matricula" class="form-control">
+            </div>
+          </div>
+
+          <div class="d-grid gap-2 py-4 col-md-10 col-sm-10 mx-auto">
+            <button class="btn btn-primary" title="Exportar_altas" id="btn_exportar_altas"> { <i class="fas fa-file-excel icon"></i> } Exportar > Altas de matrícula</button>
+            <button class="btn btn-success" title="Exportar_cambios_curso" id="bt_exportar_cambios"> { <i class="fas fa-file-excel icon"></i> } Exportar > Cambios de curso</button>
+            <button class="btn btn-danger" title="Exportar_retiros" id="btn_exportar_retiros"> { <i class="fas fa-file-excel icon"></i> } Exportar > Retiros de matrícula</button>
+            <button class="btn btn-secondary" title="Exportar_matrícula" id="bt_exportar_matriculas"> { <i class="fas fa-file-excel icon"></i> } Exportar > Datos matrícula</button>
+          </div>
 
           <!-- <div class="row mb-4">
             <div class="col-12">
@@ -332,11 +356,11 @@
 
         </div>
 
-        <div class="modal-footer">
+        <!-- <div class="modal-footer">
           <button type="button" class="btn btn-danger btn-lg" data-bs-dismiss="modal">Cancelar</button>
           <button type="button" class="btn btn-success btn-lg" id="btn_descargar_excel_matricula">Descargar</button>
         </div>
-      </form>
+      </form> -->
     </div>
   </div>
 </div>

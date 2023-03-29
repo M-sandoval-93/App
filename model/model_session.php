@@ -36,15 +36,16 @@
         public function checkUsser($usser, $pass) {
             // VARIABLES
             $md5Pass = md5($pass); 
-            $query = "SELECT nombre_usuario, id_privilegio FROM usuario WHERE nombre_usuario = ? AND clave_usuario = ?;";
+            $query = "SELECT nombre_usuario, id_privilegio, id_usuario FROM usuario WHERE nombre_usuario = ? AND clave_usuario = ?;";
             $sentencia = $this->preConsult($query);
             $sentencia->execute([$usser, $md5Pass]);
 
             if ($usuario = $sentencia->fetch()) {
                 $this->setUsser($usuario['nombre_usuario']);
-                $this->setId($usuario['id_privilegio']);
+                $this->setPrivilege($usuario['id_privilegio']);
+                $this->setId($usuario['id_usuario']);
                 $this->res = true;
-                $this->json['id'] = $this->getId();
+                $this->json['privilege'] = $this->getPrivilege();
             }
 
             $this->json['data'] = $this->res;

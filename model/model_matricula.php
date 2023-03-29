@@ -216,6 +216,22 @@
             $titular = ($m->id_titular == '0') ? null : intval($m->id_titular);
             $suplente = ($m->id_suplente == '0') ? null : intval($m->id_suplente);
 
+
+            // Consulta cambio de curso
+            $query_curso = "SELECT id_estudiante, id_curso FROM matricula WHERE id_matricula = ?;";
+            $sentencia = $this->preConsult($query_curso);
+            $sentencia->execute([intval($m->id_matricula)]);
+            $curso_actual = $sentencia->fetch(PDO::FETCH_ASSOC);
+
+            // Condición para registrar el histórico de los cambios de curso
+            if ($curso_actual['id_curso'] != intval($m->id_curso)) {
+                $query_historico_cambio_curso = "INSERT INTO historico_cambio_curso (fecha_cambio, id_estudiante, id_curso_actual, id_curso_nuevo, periodo, id_usuario, fecha_registro)
+                    VALUES (CURRENT_DATE, ?, ?, ?, EXTRACT(YEAR FROM CURRENT_DATE), ?, CURRENT_TIMESTAMP);";
+
+                $sentencia = $this->preConsult($query_historico_cambio_curso);
+                $sentencia->execute([intval($curso_actual['id_estudiante']), intval($curso_actual['id_curso']), intval($m->id_curso), intval($m->id_usuario)]);
+            }
+
             // Actualización de la matrícula
             $query = "UPDATE matricula
                 SET matricula = ?, id_ap_titular = ?, id_ap_suplente = ?, id_curso = ?, fecha_matricula = ?, numero_lista = ?

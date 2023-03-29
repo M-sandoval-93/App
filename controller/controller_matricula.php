@@ -4,7 +4,8 @@
     require_once "../model/model_session.php";
 
     $session = new Session();
-    $id_usuario = $session->getId();
+    $privilege_usser = $session->getPrivilege();
+    $id_usser = $session->getId();
 
     $type = $_POST['datos']; // Recibimos la acción a realizar por el controlador
     $datosMatricula = new MatriculaEstudiantes(); // Creamos el objeto para trabajar con datatable
@@ -32,7 +33,7 @@
             break;
 
         case "setSuspension":
-            if ($id_usuario == 4) {
+            if ($privilege_usser == 4) {
                 http_response_code(404);
                 exit();
             }
@@ -42,7 +43,7 @@
             break;
 
         case "setRetiroMatricula":
-            if ($id_usuario == 4) {
+            if ($privilege_usser == 4) {
                 http_response_code(404);
                 exit();
             }
@@ -52,17 +53,18 @@
             break;
 
         case "updateMatricula":
-            if ($id_usuario == 4) {
+            if ($privilege_usser == 4) {
                 http_response_code(404);
                 exit();
             }
 
             $matricula = json_decode(json_encode($_POST['matricula'])); // Convertir un objeto js a un objeto php
+            $matricula->id_usuario = $id_usser;
             print($datosMatricula->updateMatricula($matricula));
             break;
         
         case "deleteMatricula":
-            if ($id_usuario == 4) {
+            if ($privilege_usser == 4) {
                 http_response_code(404);
                 exit();
             }
@@ -71,7 +73,7 @@
             break;
 
         case "getCertificado":
-            if ($id_usuario == 4) {
+            if ($privilege_usser == 4) {
                 http_response_code(404);
                 exit();
             }

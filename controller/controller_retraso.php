@@ -4,7 +4,7 @@
     require_once "../model/model_session.php";
 
     $session = new Session();
-    $id_usuario = $session->getId();
+    $id_usser = $session->getId();
 
 
     $type = $_POST['datos']; // Recibimos la acción a realizar por el controlador
@@ -28,7 +28,7 @@
             break;
             
         case "setJustificarRetraso":
-            print $datosRetraso->setJustificarRetraso($_POST['id_apoderado'], $_POST['retrasos'], $id_usuario);
+            print $datosRetraso->setJustificarRetraso($_POST['id_apoderado'], $_POST['retrasos'], $id_usser);
             break;
 
         case "deleteRetraso":

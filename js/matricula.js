@@ -417,6 +417,23 @@ function lanzarModalActualizarMatricula(tabla) {
             preLoadLetra(letra);
         });
 
+        $('#letra_curso').change(() => {
+            $('#modal_matricula_fecha_cambio_curso').modal('show');
+        });
+
+        // Sección para trabajar la fecha del cambio de curso
+        $('#btn_guardar_fecha_cambio_curso').click(() => {
+            let f_cambio_curso = $('#fecha_cambio_curso').val();
+
+            if ( f_cambio_curso == '') {
+                LibreriaFunciones.alertPopUp('info', 'Ingresar fecha !!');
+                return false;
+            }
+
+            $('#modal_matricula_fecha_cambio_curso').modal('hide');
+            console.log(f_cambio_curso);
+        });
+
         $('#numero_matricula').val(data.matricula);
         $('#numero_lista').val(data.numero_lista);
         $('#fecha_matricula').val(LibreriaFunciones.textFecha(data.fecha_matricula));
@@ -630,6 +647,7 @@ function updateMatricula(tabla) {
             return false;
         }
         matricula.id_matricula = $('#informacion_rut').val();
+        // Agregar fecha de cambio al objeto matricula
 
         $.ajax({
             url: "./controller/controller_matricula.php",
@@ -640,6 +658,7 @@ function updateMatricula(tabla) {
                 if (response == true) {
                     LibreriaFunciones.alertPopUp('success', 'Matricula actualizada !!');
                     beforeRegistroMatricula(tabla, '#modal_matricula');
+                    // Limpiar la variable global de fecha de cambio de curso
                     return false;
                 }
 

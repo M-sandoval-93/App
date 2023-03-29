@@ -29,8 +29,10 @@
                 to_char(matricula.fecha_matricula, 'DD / MM / YYYY') AS fecha_matricula,
                 CASE WHEN estudiante.sexo = 'M' THEN 'Masculimo' ELSE 'Femenina' END AS sexo,
                 estado.nombre_estado, curso.curso, matricula.numero_lista,
-                ('(' || apt.rut_apoderado || '-' || apt.dv_rut_apoderado || ') ' || '/ ' || apt.nombres_apoderado || ' ' || apt.ap_apoderado || ' ' || apt.am_apoderado) AS apoderado_titular,
-                ('(' || aps.rut_apoderado || '-' || aps.dv_rut_apoderado || ') ' || '/ ' || aps.nombres_apoderado || ' ' || aps.ap_apoderado || ' ' || aps.am_apoderado) AS apoderado_suplente
+                ('(' || apt.rut_apoderado || '-' || apt.dv_rut_apoderado || ') ' || '/ ' || apt.nombres_apoderado || ' ' || apt.ap_apoderado || ' ' || apt.am_apoderado
+                || ' / Celular: +569-' || apt.telefono) AS apoderado_titular,
+                ('(' || aps.rut_apoderado || '-' || aps.dv_rut_apoderado || ') ' || '/ ' || aps.nombres_apoderado || ' ' || aps.ap_apoderado || ' ' || aps.am_apoderado
+                || ' / Celular: +569-' || aps.telefono) AS apoderado_suplente
                 FROM matricula
                 INNER JOIN estudiante ON estudiante.id_estudiante = matricula.id_estudiante
                 LEFT JOIN curso ON curso.id_curso = matricula.id_curso

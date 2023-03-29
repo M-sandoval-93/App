@@ -151,6 +151,32 @@
   </div>
 </div> -->
 
+<!-- MODAL PARA TRABAJAR LA SUSPENSIÓN DE UNA MATRÍCULA -->
+<div class="modal fade" id="modal_matricula_fecha_cambio_curso" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="modal_matricula_fecha_cambio_tittle">FECHA CAMBIO CURSO</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="d-flex justify-content-center p-4">
+        <div class="col-10">
+          <label for="fecha_cambio_curso" class="form-label">Fecha del cambio</label>
+          <input type="date" id="fecha_cambio_curso" class="form-control">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-lg" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success btn-lg" id="btn_guardar_fecha_cambio_curso">Registrar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 
 <!-- MODAL PARA REGISTRAR LAS FECHAS DE SUSPENSIÓN DE UN ESTUDIANTE -->
 <div class="modal fade" id="modal_suspender_matricula" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

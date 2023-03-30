@@ -67,7 +67,7 @@ function getDataCursos(grado, data) {
 
     for (let i = 0; i < data.length; i++) {
         table += '<tr>' +
-                    '<td>' + grado + 'º ' + data[i].letra_grado + '</td>' +
+                    '<td>' + grado + ' ' + data[i].letra_grado + '</td>' +
                     '<td>' + data[i].cantidad_estudiante + ' estudiantes</td>' +
                 '</tr>';
     }

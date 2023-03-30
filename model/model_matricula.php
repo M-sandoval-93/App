@@ -210,7 +210,7 @@
             $this->closeConnection();
             return json_encode($this->res);
         }
-
+ 
         // Método para actualizar una matrícula
         public function updateMatricula($m) {
             $matricula = ($m->matricula == '0' or $m->matricula == '') ? null : intval($m->matricula);
@@ -228,10 +228,10 @@
             // Condición para registrar el histórico de los cambios de curso
             if ($curso_actual['id_curso'] != intval($m->id_curso)) {
                 $query_historico_cambio_curso = "INSERT INTO historico_cambio_curso (fecha_cambio, id_estudiante, id_curso_actual, id_curso_nuevo, periodo, id_usuario, fecha_registro)
-                    VALUES (CURRENT_DATE, ?, ?, ?, EXTRACT(YEAR FROM CURRENT_DATE), ?, CURRENT_TIMESTAMP);";
+                    VALUES (?, ?, ?, ?, EXTRACT(YEAR FROM CURRENT_DATE), ?, CURRENT_TIMESTAMP);";
 
                 $sentencia = $this->preConsult($query_historico_cambio_curso);
-                $sentencia->execute([intval($curso_actual['id_estudiante']), intval($curso_actual['id_curso']), intval($m->id_curso), intval($m->id_usuario)]);
+                $sentencia->execute([$m->fecha_cambio_curso, intval($curso_actual['id_estudiante']), intval($curso_actual['id_curso']), intval($m->id_curso), intval($m->id_usuario)]);
             }
 
             // Actualización de la matrícula

@@ -2,6 +2,7 @@ import {LibreriaFunciones, generar_dv, spanish } from './librerias/librerias.js'
 let datos = 'getMatricula';
 let infoRetiro;
 let infoSuspension;
+let fecha_cambio_curso;
 
 // ==================== FUNCIONES INTERNAS ===============================//
 // Función para generar tabla expansiba con datos secundarios
@@ -411,8 +412,13 @@ function lanzarModalActualizarMatricula(tabla) {
         generar_dv('#rut_estudiante_matricula', '#dv_rut_estudiante_matricula');
         $('#nombre_estudiante_matricula').val(nombres.toUpperCase());
         $('#grado_curso').val(grado);
+        $('#numero_matricula').val(data.matricula);
+        $('#numero_lista').val(data.numero_lista);
+        $('#fecha_matricula').val(LibreriaFunciones.textFecha(data.fecha_matricula));
 
+        getApoderadosTS(data.id_matricula);
         preLoadLetra(letra);
+
         $('#grado_curso').change(() => {
             preLoadLetra(letra);
         });
@@ -421,26 +427,16 @@ function lanzarModalActualizarMatricula(tabla) {
             $('#modal_matricula_fecha_cambio_curso').modal('show');
         });
 
-        // Sección para trabajar la fecha del cambio de curso
         $('#btn_guardar_fecha_cambio_curso').click(() => {
-            let f_cambio_curso = $('#fecha_cambio_curso').val();
-
-            if ( f_cambio_curso == '') {
+            if ( $('#fecha_cambio_curso').val() == '') {
                 LibreriaFunciones.alertPopUp('info', 'Ingresar fecha !!');
                 return false;
             }
 
+            fecha_cambio_curso = $('#fecha_cambio_curso').val();
             $('#modal_matricula_fecha_cambio_curso').modal('hide');
-            console.log(f_cambio_curso);
         });
-
-        $('#numero_matricula').val(data.matricula);
-        $('#numero_lista').val(data.numero_lista);
-        $('#fecha_matricula').val(LibreriaFunciones.textFecha(data.fecha_matricula));
-
-        getApoderadosTS(data.id_matricula);
     });
-
 }
 
 // Función para preparar y lanzar el modal de suspención
@@ -491,6 +487,10 @@ function lanzarModalRetiro(tabla) {
 }
 
 function lanzarModalExportar() {
+    $('#btn_excel').click(() => {
+        $('#modal_descargar_excel_matricula').modal('show');
+    });
+
     $('#check_info_matricula_completa').click(function() {
         if (LibreriaFunciones.comprobarCheck(this)) {
             $('#fecha_descarga_matricula').toggle();
@@ -500,6 +500,12 @@ function lanzarModalExportar() {
             $('#fecha_descarga_matricula').toggle();
         }
     });
+
+    // Variables para solicitar información
+    let fecha_inicio;
+    let fecha_termino;
+    let datos;
+    let infoCompleta;
 
     // $('#btn_excel').click(() => {
         
@@ -646,8 +652,10 @@ function updateMatricula(tabla) {
             LibreriaFunciones.alertPopUp('info', 'Faltan datos importantes !!');
             return false;
         }
+
+        // Agregar propiedades al objeto matricula
         matricula.id_matricula = $('#informacion_rut').val();
-        // Agregar fecha de cambio al objeto matricula
+        matricula.fecha_cambio_curso = fecha_cambio_curso;
 
         $.ajax({
             url: "./controller/controller_matricula.php",
@@ -658,7 +666,7 @@ function updateMatricula(tabla) {
                 if (response == true) {
                     LibreriaFunciones.alertPopUp('success', 'Matricula actualizada !!');
                     beforeRegistroMatricula(tabla, '#modal_matricula');
-                    // Limpiar la variable global de fecha de cambio de curso
+                    fecha_cambio_curso = '';
                     return false;
                 }
 
@@ -792,7 +800,21 @@ function exportarMatriculas(btn, ext) {
     });
 }
 
+function exportarAltasMatricula() {
 
+}
+
+function exportarCambiosCurso() {
+
+}
+
+function exportarRetirosMatricula() {
+
+}
+
+function exportarDatosMatricula() {
+
+}
 
 
 
@@ -857,6 +879,8 @@ $(document).ready(function() {
     lanzarModalActualizarMatricula(tabla_matricula);
     lanzarModalSuspencion(tabla_matricula);
     lanzarModalRetiro(tabla_matricula);
+    // lanzarModalExportar();
+
     setMatricula(tabla_matricula);
     updateMatricula(tabla_matricula);
     setSuspension(tabla_matricula);
@@ -864,9 +888,15 @@ $(document).ready(function() {
     deleteRegistroMatricula(tabla_matricula);
 
     getCertificado(tabla_matricula);
-    lanzarModalExportar();
+    
     // exportarMatriculas('#btn_excel', 'xlsx');
     exportarMatriculas('#btn_csv', 'csv');
+
+    $('#btn_excel').click((e) => {
+        e.preventDefault();
+        LibreriaFunciones.alertPopUp('info','Mantenimiento');
+        $('#modal_matricula_fecha_cambio_curso').modal('hide');
+    });
 
 });
 

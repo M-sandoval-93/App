@@ -151,7 +151,7 @@
   </div>
 </div> -->
 
-<!-- MODAL PARA TRABAJAR LA SUSPENSIÓN DE UNA MATRÍCULA -->
+<!-- MODAL PARA TRABAJAR LA FECHA DEL CAMBIO DE CURSO -->
 <div class="modal fade" id="modal_matricula_fecha_cambio_curso" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-sm">
     <div class="modal-content">

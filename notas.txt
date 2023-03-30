@@ -51,3 +51,16 @@ añadir a la consulta para generar excel de matriculas, para filtrar por fecha, 
 AND estudiante.fecha_retiro < '2023-03-10'
 
 
+sentencia SQL para obtener los cambios de curso!!!
+SELECT historico_cambio_curso.fecha_cambio,
+(estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut_estudiante,
+estudiante.ap_estudiante, estudiante.am_estudiante, estudiante.nombres_estudiante,
+cursoActual.curso AS curso_antiguo, cursoNuevo.curso AS curso_nuevo
+FROM historico_cambio_curso
+INNER JOIN estudiante ON estudiante.id_estudiante = historico_cambio_curso.id_estudiante
+INNER JOIN curso AS cursoActual ON cursoActual.id_curso = historico_cambio_curso.id_curso_actual
+INNER JOIN curso AS cursoNuevo ON cursoNuevo.id_curso = historico_cambio_curso.id_curso_nuevo
+WHERE historico_cambio_curso.fecha_cambio >= '2023-03-31' 
+AND historico_cambio_curso.fecha_cambio <= '2023-04-10' 
+
+

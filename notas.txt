@@ -64,3 +64,6 @@ WHERE historico_cambio_curso.fecha_cambio >= '2023-03-31'
 AND historico_cambio_curso.fecha_cambio <= '2023-04-10' 
 
 
+seguir trabajando en cambios para descargar informes de matricula y despues en cuentas de usuario
+
+

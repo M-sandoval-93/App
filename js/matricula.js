@@ -800,6 +800,10 @@ function exportarMatriculas(btn, ext) {
     });
 }
 
+function exportarInfoMatricula() {
+    
+}
+
 function exportarAltasMatricula() {
 
 }
@@ -879,7 +883,7 @@ $(document).ready(function() {
     lanzarModalActualizarMatricula(tabla_matricula);
     lanzarModalSuspencion(tabla_matricula);
     lanzarModalRetiro(tabla_matricula);
-    // lanzarModalExportar();
+    lanzarModalExportar();
 
     setMatricula(tabla_matricula);
     updateMatricula(tabla_matricula);
@@ -892,11 +896,11 @@ $(document).ready(function() {
     // exportarMatriculas('#btn_excel', 'xlsx');
     exportarMatriculas('#btn_csv', 'csv');
 
-    $('#btn_excel').click((e) => {
-        e.preventDefault();
-        LibreriaFunciones.alertPopUp('info','Mantenimiento');
-        $('#modal_matricula_fecha_cambio_curso').modal('hide');
-    });
+    // $('#btn_excel').click((e) => {
+    //     e.preventDefault();
+    //     LibreriaFunciones.alertPopUp('info','Mantenimiento');
+    //     $('#modal_matricula_fecha_cambio_curso').modal('hide');
+    // });
 
 });
 

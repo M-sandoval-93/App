@@ -338,11 +338,11 @@
             </div>
           </div>
 
-          <div class="d-grid gap-2 py-4 col-md-10 col-sm-10 mx-auto">
+          <div class="d-grid gap-2 py-4 col-md-10 col-sm-10 mx-auto" id="botones_descarga_info_matricula">
             <button class="btn btn-primary" title="Exportar_altas" id="btn_exportar_altas"> { <i class="fas fa-file-excel icon"></i> } Exportar > Altas de matrícula</button>
-            <button class="btn btn-success" title="Exportar_cambios_curso" id="bt_exportar_cambios"> { <i class="fas fa-file-excel icon"></i> } Exportar > Cambios de curso</button>
+            <button class="btn btn-success" title="Exportar_cambios_curso" id="btn_exportar_cambios"> { <i class="fas fa-file-excel icon"></i> } Exportar > Cambios de curso</button>
             <button class="btn btn-danger" title="Exportar_retiros" id="btn_exportar_retiros"> { <i class="fas fa-file-excel icon"></i> } Exportar > Retiros de matrícula</button>
-            <button class="btn btn-secondary" title="Exportar_matrícula" id="bt_exportar_matriculas"> { <i class="fas fa-file-excel icon"></i> } Exportar > Datos matrícula</button>
+            <button class="btn btn-secondary" title="Exportar_matrícula" id="btn_exportar_matriculas"> { <i class="fas fa-file-excel icon"></i> } Exportar > Datos matrícula</button>
           </div>
 
           <!-- <div class="row mb-4">

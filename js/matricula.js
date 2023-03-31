@@ -500,19 +500,6 @@ function lanzarModalExportar() {
             $('#fecha_descarga_matricula').toggle();
         }
     });
-
-    // Variables para solicitar información
-    let fecha_inicio;
-    let fecha_termino;
-    let datos;
-    let infoCompleta;
-
-    // $('#btn_excel').click(() => {
-        
-    // });
-
-    // hacer referencia al div y dentro a los botones
-    // ej: $('#div button').click(function() {});
 }
 
 
@@ -801,24 +788,42 @@ function exportarMatriculas(btn, ext) {
 }
 
 function exportarInfoMatricula() {
-    
+    lanzarModalExportar();
+
+    $('#botones_descarga_info_matricula .btn').click(function() {
+        let check = LibreriaFunciones.comprobarCheck('#check_info_matricula_completa');
+        let fecha_inicio = $('#fecha_inicio_descarga_matricula').val();
+        let fecha_termino = $('#fecha_termino_descarga_matricula').val();
+
+        if (check == false && (fecha_inicio == '' || fecha_termino == '')) {
+            LibreriaFunciones.alertPopUp('info', 'Selecciona la fecha de descarga !!');
+            return false;
+        }
+
+        // Asignar la variables a utilizar !!!
+        switch (this.id) {
+            case "btn_exportar_altas":
+                console.log('exportar altas');
+                break;
+
+            case "btn_exportar_cambios":
+                console.log('exportar cambios de curso');
+                break;
+
+            case "btn_exportar_retiros":
+                console.log('exportar retiros');
+                break;
+
+            case "btn_exportar_matriculas":
+                console.log('exportar matriculas');
+                break;
+        }
+
+        // insertar la función generica
+
+    })
 }
 
-function exportarAltasMatricula() {
-
-}
-
-function exportarCambiosCurso() {
-
-}
-
-function exportarRetirosMatricula() {
-
-}
-
-function exportarDatosMatricula() {
-
-}
 
 
 
@@ -883,7 +888,7 @@ $(document).ready(function() {
     lanzarModalActualizarMatricula(tabla_matricula);
     lanzarModalSuspencion(tabla_matricula);
     lanzarModalRetiro(tabla_matricula);
-    lanzarModalExportar();
+    // lanzarModalExportar();
 
     setMatricula(tabla_matricula);
     updateMatricula(tabla_matricula);
@@ -893,6 +898,7 @@ $(document).ready(function() {
 
     getCertificado(tabla_matricula);
     
+    exportarInfoMatricula();
     // exportarMatriculas('#btn_excel', 'xlsx');
     exportarMatriculas('#btn_csv', 'csv');
 

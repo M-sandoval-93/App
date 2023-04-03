@@ -328,6 +328,97 @@
             // return json_encode($this->json['rut']);
         }
 
+        public function getAlta() {
+
+        }
+
+        // Método para descargar reporte de cambio de curso
+        public function getCambioCurso($fechas) {
+            $extension = 'Xlsx';
+            $f_inicio = ($fechas->f_inicio == '') ? date('Y').'-01-01' : $fechas->f_inicio;
+            $f_termino = ($fechas->f_termino == '') ? date('Y').'-12-31' : $fechas->f_termino;
+
+            $query = "SELECT historico_cambio_curso.fecha_cambio,
+                (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut_estudiante,
+                estudiante.ap_estudiante, estudiante.am_estudiante,
+                (CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante ELSE
+                '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END) AS nombres_estudiante,
+                cursoActual.curso AS curso_antiguo, cursoNuevo.curso AS curso_nuevo
+                FROM historico_cambio_curso
+                INNER JOIN estudiante ON estudiante.id_estudiante = historico_cambio_curso.id_estudiante
+                INNER JOIN curso AS cursoActual ON cursoActual.id_curso = historico_cambio_curso.id_curso_actual
+                INNER JOIN curso AS cursoNuevo ON cursoNuevo.id_curso = historico_cambio_curso.id_curso_nuevo
+                WHERE historico_cambio_curso.fecha_cambio >= ? 
+                AND historico_cambio_curso.fecha_cambio <= ?";
+
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute([$f_inicio, $f_termino]);
+            $cambiosCurso = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+
+             // Preparar archivo
+            $file = new Spreadsheet();
+            $file
+                ->getProperties()
+                ->setCreator("Dpto. Informática")
+                ->setLastModifiedBy('Informática')
+                ->setTitle('Registro cambios curso');
+            
+            $file->setActiveSheetIndex(0);
+            $sheetActive = $file->getActiveSheet();
+            $sheetActive->setTitle("Cambios de curso");
+            $sheetActive->setShowGridLines(false);
+            $sheetActive->getStyle('A1')->getFont()->setBold(true)->setSize(18);
+            $sheetActive->getStyle('A3:G3')->getFont()->setBold(true)->setSize(12);
+            $sheetActive->setAutoFilter('A3:G3');
+
+            $sheetActive->mergeCells('A1:D1');
+            $sheetActive->setCellValue('A1', 'CAMBIOS DE CURSO ESTUDIANTES PERIODO '. date('Y'));
+             
+            $sheetActive->getColumnDimension('A')->setWidth(20);
+            $sheetActive->getColumnDimension('B')->setWidth(20);
+            $sheetActive->getColumnDimension('C')->setWidth(20);
+            $sheetActive->getColumnDimension('D')->setWidth(20);
+            $sheetActive->getColumnDimension('E')->setWidth(30);
+            $sheetActive->getColumnDimension('F')->setWidth(20);
+            $sheetActive->getColumnDimension('G')->setWidth(20);
+             
+             $sheetActive->getStyle('F:G')->getAlignment()->setHorizontal('center');
+            //  $sheetActive->getStyle('H:K')->getAlignment()->setHorizontal('center');
+            //  $sheetActive->getStyle('A3:X3')->getAlignment()->setHorizontal('left');
+ 
+            $sheetActive->setCellValue('A3', 'FECHA CAMBIO');
+            $sheetActive->setCellValue('B3', 'RUT ESTUDIANTE');
+            $sheetActive->setCellValue('C3', 'A_PATERNO ESTUDIANTE');
+            $sheetActive->setCellValue('D3', 'A_MATERNO ESTUDIANTE');
+            $sheetActive->setCellValue('E3', 'NOMBRES ESTUDIANTE');
+            $sheetActive->setCellValue('F3', 'CURSO ANTIGUO');
+            $sheetActive->setCellValue('G3', 'CURSO NUEVO');
+ 
+            $fila = 4;
+            foreach ($cambiosCurso as $cambioCurso) {
+                $sheetActive->setCellValue('A'.$fila, $cambioCurso['fecha_cambio']);
+                $sheetActive->setCellValue('B'.$fila, $cambioCurso['rut_estudiante']);
+                $sheetActive->setCellValue('C'.$fila, $cambioCurso['ap_estudiante']);
+                $sheetActive->setCellValue('D'.$fila, $cambioCurso['am_estudiante']);
+                $sheetActive->setCellValue('E'.$fila, $cambioCurso['nombres_estudiante']);
+                $sheetActive->setCellValue('F'.$fila, $cambioCurso['curso_antiguo']);
+                $sheetActive->setCellValue('G'.$fila, $cambioCurso['curso_nuevo']);
+                $fila++;
+            }
+            
+            $writer = IOFactory::createWriter($file, $extension);
+
+            ob_start();
+            $writer->save('php://output');
+            $documentData = ob_get_contents();
+            ob_end_clean();
+
+            $file = array ( "data" => 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; base64,'.base64_encode($documentData));
+
+            $this->closeConnection();
+            return json_encode($file);
+        }
+
         // Método para exportar el registro de las matriculas
         public function exportarMatriculas($ext) {
             $extension = 'Xlsx';

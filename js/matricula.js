@@ -758,7 +758,7 @@ function getCertificado(tabla) {
     });
 }
 
-// Función para generar documento
+// Función para descargar información de matricula en csv
 function exportarMatriculas(btn, ext) {
     let datos = 'exportarMatriculas';
 
@@ -787,15 +787,42 @@ function exportarMatriculas(btn, ext) {
     });
 }
 
+// Función generica para exportar reportes
+function exportarReporte(datos, fechas, fileName) {
+    $.ajax({
+        url: "./controller/controller_matricula.php",
+        type: "post",
+        dataType: "html",
+        cache: false,
+        data: {datos: datos, fechas: fechas},
+        success: (response) => {
+            let opResult = JSON.parse(response);
+            let $a = $("<a>");
+
+            $a.attr("href", opResult.data);
+            $("body").append($a);
+            $a.attr("download", fileName + ".xlsx");
+            $a[0].click();
+            $a.remove();
+        }
+    }). fail(() => {
+        LibreriaFunciones.alertPopUp('error', 'Error al generar documento');
+    });
+}
+
+// función para exportar datos de matricula en excel por fecha
 function exportarInfoMatricula() {
     lanzarModalExportar();
 
     $('#botones_descarga_info_matricula .btn').click(function() {
         let check = LibreriaFunciones.comprobarCheck('#check_info_matricula_completa');
-        let fecha_inicio = $('#fecha_inicio_descarga_matricula').val();
-        let fecha_termino = $('#fecha_termino_descarga_matricula').val();
+        let fileName;
+        let fechaExportar = {
+            f_inicio: $('#fecha_inicio_descarga_matricula').val(),
+            f_termino: $('#fecha_termino_descarga_matricula').val(),
+        }
 
-        if (check == false && (fecha_inicio == '' || fecha_termino == '')) {
+        if (check == false && (fechaExportar.f_inicio == '' || fechaExportar.f_termino == '')) {
             LibreriaFunciones.alertPopUp('info', 'Selecciona la fecha de descarga !!');
             return false;
         }
@@ -803,25 +830,30 @@ function exportarInfoMatricula() {
         // Asignar la variables a utilizar !!!
         switch (this.id) {
             case "btn_exportar_altas":
-                console.log('exportar altas');
+                datos = 'getAlta';
+                fileName = 'Reporte atlas matrícula';
                 break;
 
             case "btn_exportar_cambios":
-                console.log('exportar cambios de curso');
+                datos = 'getCambioCurso';
+                fileName = 'Reporte cambios curso';
                 break;
 
             case "btn_exportar_retiros":
-                console.log('exportar retiros');
+                datos = 'getRetiro';
+                fileName = 'Reporte retiros matrícula';
                 break;
 
             case "btn_exportar_matriculas":
-                console.log('exportar matriculas');
+                datos = 'getMatricula';
+                fileName = 'Reporte matricula';
                 break;
         }
 
-        // insertar la función generica
+        // Función generica para descargar documentos
+        exportarReporte(datos, fechaExportar, fileName);
 
-    })
+    });
 }
 
 
@@ -888,7 +920,6 @@ $(document).ready(function() {
     lanzarModalActualizarMatricula(tabla_matricula);
     lanzarModalSuspencion(tabla_matricula);
     lanzarModalRetiro(tabla_matricula);
-    // lanzarModalExportar();
 
     setMatricula(tabla_matricula);
     updateMatricula(tabla_matricula);
@@ -897,16 +928,18 @@ $(document).ready(function() {
     deleteRegistroMatricula(tabla_matricula);
 
     getCertificado(tabla_matricula);
-    
-    exportarInfoMatricula();
-    // exportarMatriculas('#btn_excel', 'xlsx');
+    // exportarInfoMatricula();
     exportarMatriculas('#btn_csv', 'csv');
 
-    // $('#btn_excel').click((e) => {
-    //     e.preventDefault();
-    //     LibreriaFunciones.alertPopUp('info','Mantenimiento');
-    //     $('#modal_matricula_fecha_cambio_curso').modal('hide');
-    // });
+
+
+    // exportarMatriculas('#btn_excel', 'xlsx');
+
+    $('#btn_excel').click((e) => {
+        e.preventDefault();
+        LibreriaFunciones.alertPopUp('info','Mantenimiento');
+        $('#modal_matricula_fecha_cambio_curso').modal('hide');
+    });
 
 });
 

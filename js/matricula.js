@@ -827,7 +827,6 @@ function exportarInfoMatricula() {
             return false;
         }
 
-        // Asignar la variables a utilizar !!!
         switch (this.id) {
             case "btn_exportar_altas":
                 datos = 'getAlta';

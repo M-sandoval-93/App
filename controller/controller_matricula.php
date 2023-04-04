@@ -96,6 +96,11 @@
             print $datosMatricula->getRetiroMatricula($fechas);
             break;
 
+        case "getReporteMatricula":
+            $fechas = json_decode(json_encode($_POST['fechas']));
+            print $datosMatricula->getReporteMatricula($fechas);
+            break;
+
         case "exportarMatriculas":
             print $datosMatricula->exportarMatriculas($_POST['ext']);
             break;

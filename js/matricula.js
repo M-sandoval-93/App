@@ -844,7 +844,7 @@ function exportarInfoMatricula() {
                 break;
 
             case "btn_exportar_matriculas":
-                datos = 'getMatricula';
+                datos = 'getReporteMatricula';
                 fileName = 'Reporte matricula';
                 break;
         }

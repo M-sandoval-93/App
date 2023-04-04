@@ -927,18 +927,18 @@ $(document).ready(function() {
     deleteRegistroMatricula(tabla_matricula);
 
     getCertificado(tabla_matricula);
-    // exportarInfoMatricula();
+    exportarInfoMatricula();
     exportarMatriculas('#btn_csv', 'csv');
 
 
 
     // exportarMatriculas('#btn_excel', 'xlsx');
 
-    $('#btn_excel').click((e) => {
-        e.preventDefault();
-        LibreriaFunciones.alertPopUp('info','Mantenimiento');
-        $('#modal_matricula_fecha_cambio_curso').modal('hide');
-    });
+    // $('#btn_excel').click((e) => {
+    //     e.preventDefault();
+    //     LibreriaFunciones.alertPopUp('info','Mantenimiento');
+    //     $('#modal_matricula_fecha_cambio_curso').modal('hide');
+    // });
 
 });
 

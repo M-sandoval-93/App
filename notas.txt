@@ -50,4 +50,6 @@ Generador de nóminas de estudiantes !!!!!
 seguir trabajando en cambios para descargar informes de matricula y despues en cuentas de usuario
 seguir con retiros de estudiantes para descargar informes
 
+revisar drescarga de información de matricula en csv (consutla de los apoderados) !!!!!
+
 

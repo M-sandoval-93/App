@@ -81,9 +81,19 @@
             print $datosMatricula->getCertificado($_POST['id_matricula']);
             break;
 
+        case "getAlta":
+            $fechas = json_decode(json_encode($_POST['fechas']));
+            print $datosMatricula->getAltaMatricula($fechas);
+            break;
+
         case "getCambioCurso":
             $fechas = json_decode(json_encode($_POST['fechas']));
             print $datosMatricula->getCambioCurso($fechas);
+            break;
+
+        case "getRetiro":
+            $fechas = json_decode(json_encode($_POST['fechas']));
+            print $datosMatricula->getRetiroMatricula($fechas);
             break;
 
         case "exportarMatriculas":

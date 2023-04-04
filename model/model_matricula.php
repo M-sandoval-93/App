@@ -328,17 +328,101 @@
             // return json_encode($this->json['rut']);
         }
 
-        public function getAlta() {
+        // Método para descargat altas de matrícula
+        public function getAltaMatricula($fechas) {
+            $f_inicio = ($fechas->f_inicio == '') ? date('Y').'-01-01' : $fechas->f_inicio;
+            $f_termino = ($fechas->f_termino == '') ? date('Y').'-12-31' : $fechas->f_termino;
 
+            $query = "SELECT to_char(matricula.fecha_matricula, 'DD/MM/YYYY') AS fecha_matricula,
+                CASE WHEN matricula.id_curso IS NULL THEN 'N/A' ELSE curso.curso END AS curso,
+                CASE WHEN matricula.matricula IS NULL THEN 'N/A' ELSE CAST(matricula.matricula AS VARCHAR) END AS matricula,
+                (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut_estudiante,
+                estudiante.ap_estudiante, estudiante.am_estudiante,
+                (CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante ELSE
+                '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END) AS nombres_estudiante,
+                CASE WHEN matricula.id_estado = 1 THEN 'Matriculado(a)'
+                WHEN matricula.id_estado = 4 THEN 'Retirado(a)'
+                WHEN matricula.id_estado = 5 THEN 'Suspendido(a)' END AS estado_matricula
+                FROM matricula
+                INNER JOIN estudiante ON estudiante.id_estudiante = matricula.id_estudiante
+                INNER JOIN curso ON curso.id_curso = matricula.id_curso
+                WHERE matricula.fecha_matricula >= ?
+                AND matricula.fecha_matricula <= ?;";
+
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute([$f_inicio, $f_termino]);
+            $altas = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+
+            // Preparar archivo
+            $file = new Spreadsheet();
+            $file
+                ->getProperties()
+                ->setCreator("Dpto. Informática")
+                ->setLastModifiedBy('Informática')
+                ->setTitle('Registro altas matrícula');
+            
+            $file->setActiveSheetIndex(0);
+            $sheetActive = $file->getActiveSheet();
+            $sheetActive->setTitle("Altas de matrículas");
+            $sheetActive->setShowGridLines(false);
+            $sheetActive->getStyle('A1')->getFont()->setBold(true)->setSize(18);
+            $sheetActive->getStyle('A3:H3')->getFont()->setBold(true)->setSize(12);
+            $sheetActive->setAutoFilter('A3:H3');
+
+            $sheetActive->mergeCells('A1:D1');
+            $sheetActive->setCellValue('A1', 'ALTAS DE MATRÍCULA PERIODO '. date('Y'));
+             
+            $sheetActive->getColumnDimension('A')->setWidth(20);
+            $sheetActive->getColumnDimension('B')->setWidth(12);
+            $sheetActive->getColumnDimension('C')->setWidth(15);
+            $sheetActive->getColumnDimension('D')->setWidth(18);
+            $sheetActive->getColumnDimension('E')->setWidth(20);
+            $sheetActive->getColumnDimension('F')->setWidth(20);
+            $sheetActive->getColumnDimension('G')->setWidth(30);
+            $sheetActive->getColumnDimension('H')->setWidth(18);
+            $sheetActive->getStyle('B:C')->getAlignment()->setHorizontal('center');
+ 
+            $sheetActive->setCellValue('A3', 'FECHA MATRÍCULA');
+            $sheetActive->setCellValue('B3', 'CURSO');
+            $sheetActive->setCellValue('C3', 'MATRÍCULA');
+            $sheetActive->setCellValue('D3', 'RUT');
+            $sheetActive->setCellValue('E3', 'PATERNO');
+            $sheetActive->setCellValue('F3', 'MATERNO');
+            $sheetActive->setCellValue('G3', 'NOMBRES');
+            $sheetActive->setCellValue('H3', 'ESTADO');
+ 
+            $fila = 4;
+            foreach ($altas as $alta) {
+                $sheetActive->setCellValue('A'.$fila, $alta['fecha_matricula']);
+                $sheetActive->setCellValue('B'.$fila, $alta['curso']);
+                $sheetActive->setCellValue('C'.$fila, $alta['matricula']);
+                $sheetActive->setCellValue('D'.$fila, $alta['rut_estudiante']);
+                $sheetActive->setCellValue('E'.$fila, $alta['ap_estudiante']);
+                $sheetActive->setCellValue('F'.$fila, $alta['am_estudiante']);
+                $sheetActive->setCellValue('G'.$fila, $alta['nombres_estudiante']);
+                $sheetActive->setCellValue('H'.$fila, $alta['estado_matricula']);
+                $fila++;
+            }
+            
+            $writer = IOFactory::createWriter($file, 'Xlsx');
+
+            ob_start();
+            $writer->save('php://output');
+            $documentData = ob_get_contents();
+            ob_end_clean();
+
+            $file = array ( "data" => 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; base64,'.base64_encode($documentData));
+
+            $this->closeConnection();
+            return json_encode($file);
         }
 
         // Método para descargar reporte de cambio de curso
         public function getCambioCurso($fechas) {
-            $extension = 'Xlsx';
             $f_inicio = ($fechas->f_inicio == '') ? date('Y').'-01-01' : $fechas->f_inicio;
             $f_termino = ($fechas->f_termino == '') ? date('Y').'-12-31' : $fechas->f_termino;
 
-            $query = "SELECT historico_cambio_curso.fecha_cambio,
+            $query = "SELECT to_char(historico_cambio_curso.fecha_cambio, 'DD/MM/YYYY') AS fecha_cambio,
                 (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut_estudiante,
                 estudiante.ap_estudiante, estudiante.am_estudiante,
                 (CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante ELSE
@@ -349,13 +433,13 @@
                 INNER JOIN curso AS cursoActual ON cursoActual.id_curso = historico_cambio_curso.id_curso_actual
                 INNER JOIN curso AS cursoNuevo ON cursoNuevo.id_curso = historico_cambio_curso.id_curso_nuevo
                 WHERE historico_cambio_curso.fecha_cambio >= ? 
-                AND historico_cambio_curso.fecha_cambio <= ?";
+                AND historico_cambio_curso.fecha_cambio <= ?;";
 
             $sentencia = $this->preConsult($query);
             $sentencia->execute([$f_inicio, $f_termino]);
             $cambiosCurso = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 
-             // Preparar archivo
+            // Preparar archivo
             $file = new Spreadsheet();
             $file
                 ->getProperties()
@@ -381,16 +465,13 @@
             $sheetActive->getColumnDimension('E')->setWidth(30);
             $sheetActive->getColumnDimension('F')->setWidth(20);
             $sheetActive->getColumnDimension('G')->setWidth(20);
-             
-             $sheetActive->getStyle('F:G')->getAlignment()->setHorizontal('center');
-            //  $sheetActive->getStyle('H:K')->getAlignment()->setHorizontal('center');
-            //  $sheetActive->getStyle('A3:X3')->getAlignment()->setHorizontal('left');
+            $sheetActive->getStyle('F:G')->getAlignment()->setHorizontal('center');
  
             $sheetActive->setCellValue('A3', 'FECHA CAMBIO');
-            $sheetActive->setCellValue('B3', 'RUT ESTUDIANTE');
-            $sheetActive->setCellValue('C3', 'A_PATERNO ESTUDIANTE');
-            $sheetActive->setCellValue('D3', 'A_MATERNO ESTUDIANTE');
-            $sheetActive->setCellValue('E3', 'NOMBRES ESTUDIANTE');
+            $sheetActive->setCellValue('B3', 'RUT');
+            $sheetActive->setCellValue('C3', 'PATERNO');
+            $sheetActive->setCellValue('D3', 'MATERNO');
+            $sheetActive->setCellValue('E3', 'NOMBRES');
             $sheetActive->setCellValue('F3', 'CURSO ANTIGUO');
             $sheetActive->setCellValue('G3', 'CURSO NUEVO');
  
@@ -406,7 +487,90 @@
                 $fila++;
             }
             
-            $writer = IOFactory::createWriter($file, $extension);
+            $writer = IOFactory::createWriter($file, 'Xlsx');
+
+            ob_start();
+            $writer->save('php://output');
+            $documentData = ob_get_contents();
+            ob_end_clean();
+
+            $file = array ( "data" => 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; base64,'.base64_encode($documentData));
+
+            $this->closeConnection();
+            return json_encode($file);
+        }
+
+        // Método para descargar reporte de retiros de matrícula
+        public function getRetiroMatricula($fechas) {
+            $f_inicio = ($fechas->f_inicio == '') ? date('Y').'-01-01' : $fechas->f_inicio;
+            $f_termino = ($fechas->f_termino == '') ? date('Y').'-12-31' : $fechas->f_termino;
+
+            $query = "SELECT to_char(estudiante.fecha_retiro, 'DD/MM/YYYY') AS fecha_retiro,
+                CASE WHEN matricula.id_curso IS NULL THEN 'N/A' ELSE curso.curso END AS curso,
+                CASE WHEN matricula.matricula IS NULL THEN 'N/A' ELSE CAST(matricula.matricula AS VARCHAR) END AS matricula,
+                (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut_estudiante,
+                estudiante.ap_estudiante, estudiante.am_estudiante,
+                (CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante ELSE
+                '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END) AS nombres_estudiante
+                FROM matricula
+                INNER JOIN estudiante ON estudiante.id_estudiante = matricula.id_matricula
+                INNER JOIN curso ON curso.id_curso = matricula.id_curso
+                WHERE matricula.id_estado = 4 AND estudiante.fecha_retiro >= ?
+                AND estudiante.fecha_retiro <= ?;";
+
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute([$f_inicio, $f_termino]);
+            $retiros = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+
+            // Preparar archivo
+            $file = new Spreadsheet();
+            $file
+                ->getProperties()
+                ->setCreator("Dpto. Informática")
+                ->setLastModifiedBy('Informática')
+                ->setTitle('Registro retiros matrícula');
+            
+            $file->setActiveSheetIndex(0);
+            $sheetActive = $file->getActiveSheet();
+            $sheetActive->setTitle("Retiros de matrículas");
+            $sheetActive->setShowGridLines(false);
+            $sheetActive->getStyle('A1')->getFont()->setBold(true)->setSize(18);
+            $sheetActive->getStyle('A3:G3')->getFont()->setBold(true)->setSize(12);
+            $sheetActive->setAutoFilter('A3:G3');
+
+            $sheetActive->mergeCells('A1:D1');
+            $sheetActive->setCellValue('A1', 'RETIROS DE MATRÍCULA PERIODO '. date('Y'));
+             
+            $sheetActive->getColumnDimension('A')->setWidth(18);
+            $sheetActive->getColumnDimension('B')->setWidth(12);
+            $sheetActive->getColumnDimension('C')->setWidth(15);
+            $sheetActive->getColumnDimension('D')->setWidth(18);
+            $sheetActive->getColumnDimension('E')->setWidth(20);
+            $sheetActive->getColumnDimension('F')->setWidth(20);
+            $sheetActive->getColumnDimension('G')->setWidth(30);
+            $sheetActive->getStyle('B:C')->getAlignment()->setHorizontal('center');
+ 
+            $sheetActive->setCellValue('A3', 'FECHA RETIRO');
+            $sheetActive->setCellValue('B3', 'CURSO');
+            $sheetActive->setCellValue('C3', 'MATRÍCULA');
+            $sheetActive->setCellValue('D3', 'RUT');
+            $sheetActive->setCellValue('E3', 'PATERNO');
+            $sheetActive->setCellValue('F3', 'MATERNO');
+            $sheetActive->setCellValue('G3', 'NOMBRES');
+ 
+            $fila = 4;
+            foreach ($retiros as $retiro) {
+                $sheetActive->setCellValue('A'.$fila, $retiro['fecha_retiro']);
+                $sheetActive->setCellValue('B'.$fila, $retiro['curso']);
+                $sheetActive->setCellValue('C'.$fila, $retiro['matricula']);
+                $sheetActive->setCellValue('D'.$fila, $retiro['rut_estudiante']);
+                $sheetActive->setCellValue('E'.$fila, $retiro['ap_estudiante']);
+                $sheetActive->setCellValue('F'.$fila, $retiro['am_estudiante']);
+                $sheetActive->setCellValue('G'.$fila, $retiro['nombres_estudiante']);
+                $fila++;
+            }
+            
+            $writer = IOFactory::createWriter($file, 'Xlsx');
 
             ob_start();
             $writer->save('php://output');

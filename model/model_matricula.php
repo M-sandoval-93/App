@@ -269,7 +269,7 @@
                 WHEN (substring(curso.curso, 1, 1)::int) BETWEEN 1 AND 4 THEN 'Media' END AS nivel,
                 EXTRACT(YEAR FROM CURRENT_DATE) AS anio, EXTRACT(DAY FROM CURRENT_DATE) AS dia
                 FROM matricula
-                INNER JOIN estudiante ON estudiante.id_estudiante = matricula.id_matricula
+                INNER JOIN estudiante ON estudiante.id_estudiante = matricula.id_estudiante
                 INNER JOIN curso ON curso.id_curso = matricula.id_curso
                 WHERE matricula.id_matricula = ?;";
 
@@ -583,6 +583,7 @@
             return json_encode($file);
         }
 
+        // Método para descargar reporte de matrícula
         public function getReporteMatricula($fechas) {
             $f_inicio = ($fechas->f_inicio == '') ? '2022-01-01' : $fechas->f_inicio;
             $f_termino = ($fechas->f_termino == '') ? date('Y').'-12-31' : $fechas->f_termino;
@@ -596,6 +597,7 @@
                 (ap_titular.rut_apoderado || '-' || ap_titular.dv_rut_apoderado) AS rut_ap_titular,
                 ap_titular.ap_apoderado AS ap_titular, ap_titular.am_apoderado AS am_titular, ap_titular.nombres_apoderado AS nombres_titular,
                 ap_titular.telefono AS telefono_titular, ap_titular.direccion AS direccion_titular,
+                (ap_suplente.rut_apoderado || '-' || ap_suplente.dv_rut_apoderado) AS rut_ap_suplente,
                 ap_suplente.ap_apoderado AS ap_suplente, ap_suplente.am_apoderado AS am_suplente, ap_suplente.nombres_apoderado AS nombres_suplente,
                 ap_suplente.telefono AS telefono_suplente, ap_suplente.direccion AS direccion_suplente, 
                 CASE WHEN matricula.id_estado = 1 THEN 'Matriculado(a)'
@@ -636,85 +638,86 @@
             
             $sheetActive->getColumnDimension('A')->setWidth(18);
             $sheetActive->getColumnDimension('B')->setWidth(12);
-            $sheetActive->getColumnDimension('C')->setWidth(15);
-            // $sheetActive->getColumnDimension('D')->setWidth(18);
-            // $sheetActive->getColumnDimension('E')->setWidth(20);
-            // $sheetActive->getColumnDimension('F')->setWidth(20);
-            // $sheetActive->getColumnDimension('G')->setWidth(30);
-            // $sheetActive->getColumnDimension('H')->setWidth(30);
-            // $sheetActive->getColumnDimension('I')->setWidth(30);
-            // $sheetActive->getColumnDimension('J')->setWidth(30);
-            // $sheetActive->getColumnDimension('K')->setWidth(30);
-            // $sheetActive->getColumnDimension('L')->setWidth(30);
-            // $sheetActive->getColumnDimension('M')->setWidth(30);
-            // $sheetActive->getColumnDimension('N')->setWidth(30);
-            // $sheetActive->getColumnDimension('O')->setWidth(30);
-            // $sheetActive->getColumnDimension('P')->setWidth(30);
-            // $sheetActive->getColumnDimension('Q')->setWidth(30);
-            // $sheetActive->getColumnDimension('R')->setWidth(30);
-            // $sheetActive->getColumnDimension('S')->setWidth(30);
-            // $sheetActive->getColumnDimension('T')->setWidth(30);
-            // $sheetActive->getColumnDimension('U')->setWidth(30);
-            // $sheetActive->getColumnDimension('V')->setWidth(30);
-            // $sheetActive->getColumnDimension('W')->setWidth(30);
-            // $sheetActive->getColumnDimension('X')->setWidth(30);
-            // $sheetActive->getColumnDimension('Y')->setWidth(30);
-
-            // $sheetActive->getStyle('B:C')->getAlignment()->setHorizontal('center');
+            $sheetActive->getColumnDimension('C')->setWidth(13);
+            $sheetActive->getColumnDimension('D')->setWidth(15);
+            $sheetActive->getColumnDimension('E')->setWidth(20);
+            $sheetActive->getColumnDimension('F')->setWidth(20);
+            $sheetActive->getColumnDimension('G')->setWidth(30);
+            $sheetActive->getColumnDimension('H')->setWidth(20);
+            $sheetActive->getColumnDimension('I')->setWidth(20);
+            $sheetActive->getColumnDimension('J')->setWidth(10);
+            $sheetActive->getColumnDimension('K')->setWidth(20);
+            $sheetActive->getColumnDimension('L')->setWidth(20);
+            $sheetActive->getColumnDimension('M')->setWidth(15);
+            $sheetActive->getColumnDimension('N')->setWidth(20);
+            $sheetActive->getColumnDimension('O')->setWidth(20);
+            $sheetActive->getColumnDimension('P')->setWidth(30);
+            $sheetActive->getColumnDimension('Q')->setWidth(12);
+            $sheetActive->getColumnDimension('R')->setWidth(90);
+            $sheetActive->getColumnDimension('S')->setWidth(15);
+            $sheetActive->getColumnDimension('T')->setWidth(20);
+            $sheetActive->getColumnDimension('U')->setWidth(20);
+            $sheetActive->getColumnDimension('V')->setWidth(30);
+            $sheetActive->getColumnDimension('W')->setWidth(12);
+            $sheetActive->getColumnDimension('X')->setWidth(90);
+            $sheetActive->getColumnDimension('Y')->setWidth(25);
+            $sheetActive->getStyle('A:C')->getAlignment()->setHorizontal('center');
+            $sheetActive->getStyle('J')->getAlignment()->setHorizontal('center');
+            $sheetActive->getStyle('A1')->getAlignment()->setHorizontal('left');
 
             $sheetActive->setCellValue('A3', 'N° MATRÍCULA');
             $sheetActive->setCellValue('B3', 'CURSO');
             $sheetActive->setCellValue('C3', 'N° LISTA');
-            // $sheetActive->setCellValue('D3', 'RUT');
-            // $sheetActive->setCellValue('E3', 'PATERNO');
-            // $sheetActive->setCellValue('F3', 'MATERNO');
-            // $sheetActive->setCellValue('G3', 'NOMBRES');
-            // $sheetActive->setCellValue('H3', 'NOMBRE SOCIAL');
-            // $sheetActive->setCellValue('I3', 'FECHA NACIMIENTO');
-            // $sheetActive->setCellValue('J3', 'SEXO');
-            // $sheetActive->setCellValue('K3', 'FECHA MATRÍCULA');
-            // $sheetActive->setCellValue('L3', 'FECHA RETIRO');
-            // $sheetActive->setCellValue('M3', 'RUT TITULAR');
-            // $sheetActive->setCellValue('N3', 'PATERNO TITULAR');
-            // $sheetActive->setCellValue('O3', 'MATERNO TITULAR');
-            // $sheetActive->setCellValue('P3', 'NOMBRES TITULAR');
-            // $sheetActive->setCellValue('Q3', 'TELEFONO TITULAR');
-            // $sheetActive->setCellValue('R3', 'DIRECCIÓN TITULAR');
-            // $sheetActive->setCellValue('S3', 'RUT SUPLENTE');
-            // $sheetActive->setCellValue('T3', 'PATERNO SUPLENTE');
-            // $sheetActive->setCellValue('U3', 'MATERNO SUPLENTE');
-            // $sheetActive->setCellValue('V3', 'NOMBRES SUPLENTE');
-            // $sheetActive->setCellValue('W3', 'TELEFONO SUPLENTE');
-            // $sheetActive->setCellValue('X3', 'DIRECCIÓN SUPLENTE');
-            // $sheetActive->setCellValue('Y3', 'ESTADO MATRÍCULA');
+            $sheetActive->setCellValue('D3', 'RUT');
+            $sheetActive->setCellValue('E3', 'PATERNO');
+            $sheetActive->setCellValue('F3', 'MATERNO');
+            $sheetActive->setCellValue('G3', 'NOMBRES');
+            $sheetActive->setCellValue('H3', 'NOMBRE SOCIAL');
+            $sheetActive->setCellValue('I3', 'FECHA NACIMIENTO');
+            $sheetActive->setCellValue('J3', 'SEXO');
+            $sheetActive->setCellValue('K3', 'FECHA MATRÍCULA');
+            $sheetActive->setCellValue('L3', 'FECHA RETIRO');
+            $sheetActive->setCellValue('M3', 'RUT TITULAR');
+            $sheetActive->setCellValue('N3', 'PATERNO TITULAR');
+            $sheetActive->setCellValue('O3', 'MATERNO TITULAR');
+            $sheetActive->setCellValue('P3', 'NOMBRES TITULAR');
+            $sheetActive->setCellValue('Q3', 'TELEFONO TITULAR');
+            $sheetActive->setCellValue('R3', 'DIRECCIÓN TITULAR');
+            $sheetActive->setCellValue('S3', 'RUT SUPLENTE');
+            $sheetActive->setCellValue('T3', 'PATERNO SUPLENTE');
+            $sheetActive->setCellValue('U3', 'MATERNO SUPLENTE');
+            $sheetActive->setCellValue('V3', 'NOMBRES SUPLENTE');
+            $sheetActive->setCellValue('W3', 'TELEFONO SUPLENTE');
+            $sheetActive->setCellValue('X3', 'DIRECCIÓN SUPLENTE');
+            $sheetActive->setCellValue('Y3', 'ESTADO MATRÍCULA');
 
             $fila = 4;
             foreach ($matriculas as $matricula) {
                 $sheetActive->setCellValue('A'.$fila, $matricula['matricula']);
                 $sheetActive->setCellValue('B'.$fila, $matricula['curso']);
                 $sheetActive->setCellValue('C'.$fila, $matricula['numero_lista']);
-                // $sheetActive->setCellValue('D'.$fila, $matricula['rut_estudiante']);
-                // $sheetActive->setCellValue('E'.$fila, $matricula['ap_estudiante']);
-                // $sheetActive->setCellValue('F'.$fila, $matricula['am_estudiante']);
-                // $sheetActive->setCellValue('G'.$fila, $matricula['nombres_estudiante']);
-                // $sheetActive->setCellValue('H'.$fila, $matricula['nombre_social']);
-                // $sheetActive->setCellValue('I'.$fila, $matricula['fecha_nacimiento']);
-                // $sheetActive->setCellValue('J'.$fila, $matricula['sexo']);
-                // $sheetActive->setCellValue('K'.$fila, $matricula['fecha_matricula']);
-                // $sheetActive->setCellValue('L'.$fila, $matricula['fecha_retiro']);
-                // $sheetActive->setCellValue('M'.$fila, $matricula['rut_ap_titular']);
-                // $sheetActive->setCellValue('N'.$fila, $matricula['ap_titular']);
-                // $sheetActive->setCellValue('O'.$fila, $matricula['am_titular']);
-                // $sheetActive->setCellValue('P'.$fila, $matricula['nombres_titular']);
-                // $sheetActive->setCellValue('Q'.$fila, $matricula['telefono_titular']);
-                // $sheetActive->setCellValue('R'.$fila, $matricula['direccion_titular']);
-                // $sheetActive->setCellValue('S'.$fila, $matricula['rut_ap_suplente']);
-                // $sheetActive->setCellValue('T'.$fila, $matricula['ap_suplente']);
-                // $sheetActive->setCellValue('U'.$fila, $matricula['am_suplente']);
-                // $sheetActive->setCellValue('V'.$fila, $matricula['nombres_suplente']);
-                // $sheetActive->setCellValue('W'.$fila, $matricula['telefono_suplente']);
-                // $sheetActive->setCellValue('X'.$fila, $matricula['direccion_suplente']);
-                // $sheetActive->setCellValue('Y'.$fila, $matricula['estado_matricula']);
+                $sheetActive->setCellValue('D'.$fila, $matricula['rut_estudiante']);
+                $sheetActive->setCellValue('E'.$fila, $matricula['ap_estudiante']);
+                $sheetActive->setCellValue('F'.$fila, $matricula['am_estudiante']);
+                $sheetActive->setCellValue('G'.$fila, $matricula['nombres_estudiante']);
+                $sheetActive->setCellValue('H'.$fila, $matricula['nombre_social']);
+                $sheetActive->setCellValue('I'.$fila, $matricula['fecha_nacimiento']);
+                $sheetActive->setCellValue('J'.$fila, $matricula['sexo']);
+                $sheetActive->setCellValue('K'.$fila, $matricula['fecha_matricula']);
+                $sheetActive->setCellValue('L'.$fila, $matricula['fecha_retiro']);
+                $sheetActive->setCellValue('M'.$fila, $matricula['rut_ap_titular']);
+                $sheetActive->setCellValue('N'.$fila, $matricula['ap_titular']);
+                $sheetActive->setCellValue('O'.$fila, $matricula['am_titular']);
+                $sheetActive->setCellValue('P'.$fila, $matricula['nombres_titular']);
+                $sheetActive->setCellValue('Q'.$fila, $matricula['telefono_titular']);
+                $sheetActive->setCellValue('R'.$fila, $matricula['direccion_titular']);
+                $sheetActive->setCellValue('S'.$fila, $matricula['rut_ap_suplente']);
+                $sheetActive->setCellValue('T'.$fila, $matricula['ap_suplente']);
+                $sheetActive->setCellValue('U'.$fila, $matricula['am_suplente']);
+                $sheetActive->setCellValue('V'.$fila, $matricula['nombres_suplente']);
+                $sheetActive->setCellValue('W'.$fila, $matricula['telefono_suplente']);
+                $sheetActive->setCellValue('X'.$fila, $matricula['direccion_suplente']);
+                $sheetActive->setCellValue('Y'.$fila, $matricula['estado_matricula']);
                 $fila++;
             }
 
@@ -734,28 +737,33 @@
         // Método para exportar el registro de las matriculas
         public function exportarMatriculas($ext) {
             $extension = 'Xlsx';
-            $query = "SELECT matricula.matricula, COALESCE(curso.curso, 'N/A') AS curso,
+            $query = "SELECT CASE WHEN matricula.matricula IS NULL THEN 'N/A' ELSE CAST(matricula.matricula AS VARCHAR) END AS matricula,
+                COALESCE(curso.curso, 'N/A') AS curso,
+                CASE WHEN matricula.numero_lista IS NULL THEN 'N/A' ELSE CAST(matricula.numero_lista AS VARCHAR) END AS numero_lista,
                 (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut_estudiante,
                 estudiante.ap_estudiante, estudiante.am_estudiante, estudiante.nombres_estudiante, estudiante.nombre_social,
-                estudiante.fecha_nacimiento, estudiante.sexo, estudiante.fecha_ingreso, estudiante.fecha_retiro,
+                estudiante.fecha_nacimiento, estudiante.sexo, matricula.fecha_matricula, estudiante.fecha_retiro,
                 (ap_titular.rut_apoderado || '-' || ap_titular.dv_rut_apoderado) AS rut_ap_titular,
                 ap_titular.ap_apoderado AS ap_titular, ap_titular.am_apoderado AS am_titular, ap_titular.nombres_apoderado AS nombres_titular,
                 ap_titular.telefono AS telefono_titular, ap_titular.direccion AS direccion_titular,
                 (ap_suplente.rut_apoderado || '-' || ap_suplente.dv_rut_apoderado) AS rut_ap_suplente,
                 ap_suplente.ap_apoderado AS ap_suplente, ap_suplente.am_apoderado AS am_suplente, ap_suplente.nombres_apoderado AS nombres_suplente,
-                ap_suplente.telefono AS telefono_suplente, ap_suplente.direccion AS direccion_suplente, estado.nombre_estado
+                ap_suplente.telefono AS telefono_suplente, ap_suplente.direccion AS direccion_suplente, 
+                CASE WHEN matricula.id_estado = 1 THEN 'Matriculado(a)'
+                WHEN matricula.id_estado = 4 THEN 'Retirado(a)'
+                WHEN matricula.id_estado = 5 THEN 'Suspendido(a)' END AS estado_matricula
                 FROM matricula
-                LEFT JOIN curso ON curso.id_curso = matricula.id_curso
                 INNER JOIN estudiante ON estudiante.id_estudiante = matricula.id_estudiante
+                LEFT JOIN curso ON curso.id_curso = matricula.id_curso
                 LEFT JOIN apoderado AS ap_titular ON ap_titular.id_apoderado = matricula.id_ap_titular
                 LEFT JOIN apoderado AS ap_suplente ON ap_suplente.id_apoderado = matricula.id_ap_suplente
                 LEFT JOIN estado ON estado.id_estado = matricula.id_estado
-                WHERE matricula.anio_lectivo = EXTRACT (YEAR FROM CURRENT_DATE)
+                WHERE matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
                 ORDER BY estudiante.ap_estudiante ASC;";
 
             $sentencia = $this->preConsult($query);
             $sentencia->execute();            
-            $estudiantes = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+            $matriculas = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 
             // Preparar archivo
             $file = new Spreadsheet();
@@ -763,99 +771,101 @@
                 ->getProperties()
                 ->setCreator("Dpto. Informática")
                 ->setLastModifiedBy('Informática')
-                ->setTitle('Registro matriculas');
-            
+                ->setTitle('Registro matrícula');
+
             $file->setActiveSheetIndex(0);
             $sheetActive = $file->getActiveSheet();
-            $sheetActive->setTitle("Matriculas");
+            $sheetActive->setTitle("Retiros de matrículas");
             $sheetActive->setShowGridLines(false);
             $sheetActive->getStyle('A1')->getFont()->setBold(true)->setSize(18);
-            $sheetActive->getStyle('A3:X3')->getFont()->setBold(true)->setSize(12);
-            $sheetActive->setAutoFilter('A3:X3');
+            $sheetActive->getStyle('A3:Y3')->getFont()->setBold(true)->setSize(12);
+            $sheetActive->setAutoFilter('A3:Y3');
 
             $sheetActive->mergeCells('A1:D1');
-            $sheetActive->setCellValue('A1', 'REGISTRO MATRICULA ESTUDIANTES PERIODO '. date('Y'));
+            $sheetActive->setCellValue('A1', 'Registro de matrículas periodo '. date('Y'));
             
-            $sheetActive->getColumnDimension('A')->setWidth(10);
-            $sheetActive->getColumnDimension('B')->setWidth(8);
-            $sheetActive->getColumnDimension('C')->setWidth(15);
-            $sheetActive->getColumnDimension('D')->setWidth(18);
-            $sheetActive->getColumnDimension('E')->setWidth(18);
-            $sheetActive->getColumnDimension('F')->setWidth(25);
-            $sheetActive->getColumnDimension('G')->setWidth(15);
-            $sheetActive->getColumnDimension('H')->setWidth(15);
-            $sheetActive->getColumnDimension('I')->setWidth(8);
-            $sheetActive->getColumnDimension('J')->setWidth(15);
-            $sheetActive->getColumnDimension('K')->setWidth(15);  
-            $sheetActive->getColumnDimension('L')->setWidth(15);  
-            $sheetActive->getColumnDimension('M')->setWidth(18);  
-            $sheetActive->getColumnDimension('N')->setWidth(18);  
-            $sheetActive->getColumnDimension('O')->setWidth(25);  
-            $sheetActive->getColumnDimension('P')->setWidth(15);  
-            $sheetActive->getColumnDimension('Q')->setWidth(30);  
-            $sheetActive->getColumnDimension('R')->setWidth(15);  
-            $sheetActive->getColumnDimension('S')->setWidth(18);  
-            $sheetActive->getColumnDimension('T')->setWidth(18);
-            $sheetActive->getColumnDimension('U')->setWidth(25);  
-            $sheetActive->getColumnDimension('V')->setWidth(15);  
-            $sheetActive->getColumnDimension('W')->setWidth(30);
-            $sheetActive->getColumnDimension('X')->setWidth(18);
-            
-            $sheetActive->getStyle('A:B')->getAlignment()->setHorizontal('center');
-            $sheetActive->getStyle('H:K')->getAlignment()->setHorizontal('center');
-            $sheetActive->getStyle('A3:X3')->getAlignment()->setHorizontal('left');
+            $sheetActive->getColumnDimension('A')->setWidth(18);
+            $sheetActive->getColumnDimension('B')->setWidth(12);
+            $sheetActive->getColumnDimension('C')->setWidth(13);
+            $sheetActive->getColumnDimension('D')->setWidth(15);
+            $sheetActive->getColumnDimension('E')->setWidth(20);
+            $sheetActive->getColumnDimension('F')->setWidth(20);
+            $sheetActive->getColumnDimension('G')->setWidth(30);
+            $sheetActive->getColumnDimension('H')->setWidth(20);
+            $sheetActive->getColumnDimension('I')->setWidth(20);
+            $sheetActive->getColumnDimension('J')->setWidth(10);
+            $sheetActive->getColumnDimension('K')->setWidth(20);
+            $sheetActive->getColumnDimension('L')->setWidth(20);
+            $sheetActive->getColumnDimension('M')->setWidth(15);
+            $sheetActive->getColumnDimension('N')->setWidth(20);
+            $sheetActive->getColumnDimension('O')->setWidth(20);
+            $sheetActive->getColumnDimension('P')->setWidth(30);
+            $sheetActive->getColumnDimension('Q')->setWidth(12);
+            $sheetActive->getColumnDimension('R')->setWidth(90);
+            $sheetActive->getColumnDimension('S')->setWidth(15);
+            $sheetActive->getColumnDimension('T')->setWidth(20);
+            $sheetActive->getColumnDimension('U')->setWidth(20);
+            $sheetActive->getColumnDimension('V')->setWidth(30);
+            $sheetActive->getColumnDimension('W')->setWidth(12);
+            $sheetActive->getColumnDimension('X')->setWidth(90);
+            $sheetActive->getColumnDimension('Y')->setWidth(25);
+            $sheetActive->getStyle('A:C')->getAlignment()->setHorizontal('center');
+            $sheetActive->getStyle('J')->getAlignment()->setHorizontal('center');
+            $sheetActive->getStyle('A1')->getAlignment()->setHorizontal('left');
 
-            $sheetActive->setCellValue('A3', 'MATRICULA');
+            $sheetActive->setCellValue('A3', 'N° MATRÍCULA');
             $sheetActive->setCellValue('B3', 'CURSO');
-            $sheetActive->setCellValue('C3', 'RUT ESTUDIANTE');
-            $sheetActive->setCellValue('D3', 'A_PATERNO ESTUDIANTE');
-            $sheetActive->setCellValue('E3', 'A_MATERNO ESTUDIANTE');
-            $sheetActive->setCellValue('F3', 'NOMBRES ESTUDIANTE');
-            $sheetActive->setCellValue('G3', 'NOMBRE SOCIAL');
-            $sheetActive->setCellValue('H3', 'FECHA NACIMIENTO');
-            $sheetActive->setCellValue('I3', 'SEXO');
-            $sheetActive->setCellValue('J3', 'FECHA INGRESO');
-            $sheetActive->setCellValue('K3', 'FECHA RETIRO');
-            $sheetActive->setCellValue('L3', 'RUT TITULAR');
-            $sheetActive->setCellValue('M3', 'A_PATERNO TITULAR');
-            $sheetActive->setCellValue('N3', 'A_MATERNO_TITULAR');
-            $sheetActive->setCellValue('O3', 'NOMBRE TITULAR');
-            $sheetActive->setCellValue('P3', 'TELÉFONO TITULAR');
-            $sheetActive->setCellValue('Q3', 'DIRECCIÓN TITULAR');
-            $sheetActive->setCellValue('R3', 'RUT SUPLENTE');
-            $sheetActive->setCellValue('S3', 'A_PATERNO SUPLENTE');
-            $sheetActive->setCellValue('T3', 'A_MATERNO SUPLENTE');
-            $sheetActive->setCellValue('U3', 'NOMBRES SUPLENTE');
-            $sheetActive->setCellValue('V3', 'TELÉFONO SUPLENTE');
-            $sheetActive->setCellValue('W3', 'DIRECCIÓN SUPLENTE');
-            $sheetActive->setCellValue('X3', 'ESTADO MATRÍCULA');
+            $sheetActive->setCellValue('C3', 'N° LISTA');
+            $sheetActive->setCellValue('D3', 'RUT');
+            $sheetActive->setCellValue('E3', 'PATERNO');
+            $sheetActive->setCellValue('F3', 'MATERNO');
+            $sheetActive->setCellValue('G3', 'NOMBRES');
+            $sheetActive->setCellValue('H3', 'NOMBRE SOCIAL');
+            $sheetActive->setCellValue('I3', 'FECHA NACIMIENTO');
+            $sheetActive->setCellValue('J3', 'SEXO');
+            $sheetActive->setCellValue('K3', 'FECHA MATRÍCULA');
+            $sheetActive->setCellValue('L3', 'FECHA RETIRO');
+            $sheetActive->setCellValue('M3', 'RUT TITULAR');
+            $sheetActive->setCellValue('N3', 'PATERNO TITULAR');
+            $sheetActive->setCellValue('O3', 'MATERNO TITULAR');
+            $sheetActive->setCellValue('P3', 'NOMBRES TITULAR');
+            $sheetActive->setCellValue('Q3', 'TELEFONO TITULAR');
+            $sheetActive->setCellValue('R3', 'DIRECCIÓN TITULAR');
+            $sheetActive->setCellValue('S3', 'RUT SUPLENTE');
+            $sheetActive->setCellValue('T3', 'PATERNO SUPLENTE');
+            $sheetActive->setCellValue('U3', 'MATERNO SUPLENTE');
+            $sheetActive->setCellValue('V3', 'NOMBRES SUPLENTE');
+            $sheetActive->setCellValue('W3', 'TELEFONO SUPLENTE');
+            $sheetActive->setCellValue('X3', 'DIRECCIÓN SUPLENTE');
+            $sheetActive->setCellValue('Y3', 'ESTADO MATRÍCULA');
 
             $fila = 4;
-            foreach ($estudiantes as $estudiante) {
-                $sheetActive->setCellValue('A'.$fila, $estudiante['matricula']);
-                $sheetActive->setCellValue('B'.$fila, $estudiante['curso']);
-                $sheetActive->setCellValue('C'.$fila, $estudiante['rut_estudiante']);
-                $sheetActive->setCellValue('D'.$fila, $estudiante['ap_estudiante']);
-                $sheetActive->setCellValue('E'.$fila, $estudiante['am_estudiante']);
-                $sheetActive->setCellValue('F'.$fila, $estudiante['nombres_estudiante']);
-                $sheetActive->setCellValue('G'.$fila, $estudiante['nombre_social']);
-                $sheetActive->setCellValue('H'.$fila, $estudiante['fecha_nacimiento']);
-                $sheetActive->setCellValue('I'.$fila, $estudiante['sexo']);
-                $sheetActive->setCellValue('J'.$fila, $estudiante['fecha_ingreso']);
-                $sheetActive->setCellValue('K'.$fila, $estudiante['fecha_retiro']);
-                $sheetActive->setCellValue('L'.$fila, $estudiante['rut_ap_titular']);
-                $sheetActive->setCellValue('M'.$fila, $estudiante['ap_titular']);
-                $sheetActive->setCellValue('N'.$fila, $estudiante['am_titular']);
-                $sheetActive->setCellValue('O'.$fila, $estudiante['nombres_titular']);
-                $sheetActive->setCellValue('P'.$fila, $estudiante['telefono_titular']);
-                $sheetActive->setCellValue('Q'.$fila, $estudiante['direccion_titular']);
-                $sheetActive->setCellValue('R'.$fila, $estudiante['rut_ap_suplente']);
-                $sheetActive->setCellValue('S'.$fila, $estudiante['ap_suplente']);
-                $sheetActive->setCellValue('T'.$fila, $estudiante['am_suplente']);
-                $sheetActive->setCellValue('U'.$fila, $estudiante['nombres_suplente']);
-                $sheetActive->setCellValue('V'.$fila, $estudiante['telefono_suplente']);
-                $sheetActive->setCellValue('W'.$fila, $estudiante['direccion_suplente']);
-                $sheetActive->setCellValue('X'.$fila, $estudiante['nombre_estado']);
+            foreach ($matriculas as $matricula) {
+                $sheetActive->setCellValue('A'.$fila, $matricula['matricula']);
+                $sheetActive->setCellValue('B'.$fila, $matricula['curso']);
+                $sheetActive->setCellValue('C'.$fila, $matricula['numero_lista']);
+                $sheetActive->setCellValue('D'.$fila, $matricula['rut_estudiante']);
+                $sheetActive->setCellValue('E'.$fila, $matricula['ap_estudiante']);
+                $sheetActive->setCellValue('F'.$fila, $matricula['am_estudiante']);
+                $sheetActive->setCellValue('G'.$fila, $matricula['nombres_estudiante']);
+                $sheetActive->setCellValue('H'.$fila, $matricula['nombre_social']);
+                $sheetActive->setCellValue('I'.$fila, $matricula['fecha_nacimiento']);
+                $sheetActive->setCellValue('J'.$fila, $matricula['sexo']);
+                $sheetActive->setCellValue('K'.$fila, $matricula['fecha_matricula']);
+                $sheetActive->setCellValue('L'.$fila, $matricula['fecha_retiro']);
+                $sheetActive->setCellValue('M'.$fila, $matricula['rut_ap_titular']);
+                $sheetActive->setCellValue('N'.$fila, $matricula['ap_titular']);
+                $sheetActive->setCellValue('O'.$fila, $matricula['am_titular']);
+                $sheetActive->setCellValue('P'.$fila, $matricula['nombres_titular']);
+                $sheetActive->setCellValue('Q'.$fila, $matricula['telefono_titular']);
+                $sheetActive->setCellValue('R'.$fila, $matricula['direccion_titular']);
+                $sheetActive->setCellValue('S'.$fila, $matricula['rut_ap_suplente']);
+                $sheetActive->setCellValue('T'.$fila, $matricula['ap_suplente']);
+                $sheetActive->setCellValue('U'.$fila, $matricula['am_suplente']);
+                $sheetActive->setCellValue('V'.$fila, $matricula['nombres_suplente']);
+                $sheetActive->setCellValue('W'.$fila, $matricula['telefono_suplente']);
+                $sheetActive->setCellValue('X'.$fila, $matricula['direccion_suplente']);
+                $sheetActive->setCellValue('Y'.$fila, $matricula['estado_matricula']);
                 $fila++;
             }
 

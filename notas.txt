@@ -52,4 +52,7 @@ seguir con retiros de estudiantes para descargar informes
 
 
 
+Agregar funcionarios, copiar bbdd y trabajar en local
+trabajar modulo funcionarios y cuentas de usuarios, agregar privilegios
+
 

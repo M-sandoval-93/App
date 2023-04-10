@@ -56,3 +56,15 @@ Agregar funcionarios, copiar bbdd y trabajar en local
 trabajar modulo funcionarios y cuentas de usuarios, agregar privilegios
 
 
+
+Modificaciones en la base de datos para trabajar con funcionarios::
+agregar id_departamento en la tabla funcionarios
+agregar tabla departamentos
+Trabajar en modal de funcionario
+
+
+
+
+
+
+

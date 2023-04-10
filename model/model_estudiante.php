@@ -336,7 +336,7 @@
                 $fila++;
             }
 
-            if ($ext == 'Csv') {
+            if ($ext == 'csv') {
                 $extension = 'Csv';
             } 
             

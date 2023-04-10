@@ -9,16 +9,24 @@
 
     switch ($type) {
         case "getFuncionario":
+            print $datosFuncionario->getFuncionario();
             break;
 
         case "getCantidadFuncionario":
             print $datosFuncionario->getCatidadFuncionario();
             break;
 
+        case "deleteFuncionario":
+            print $datosFuncionario->deleteFuncionario($_POST['id_funcionario']);
+            break;
+        
+        case "getReporteFuncionario":
+            print $datosFuncionario->getReporteFuncionario($_POST['ext']);
+            break;
+
 
 
     
     }
-
 
 ?>

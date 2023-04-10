@@ -55,13 +55,13 @@
                     <thead>
                         <tr>
                             <th>Id</th>
-                            <!-- <th></th> -->
+                            <th></th>
                             <th>Rut</th>
                             <th>Ap Paterno</th>
                             <th>Ap Materno</th>
                             <th>Nombres</th>
-                            <th>Departamento</th>
-                            <!-- <th>Asignación</th> -->
+                            <th>Tipo funcionario</th>
+                            <th>Estado</th>
                             <th>Edición</th>
                         </tr>
                     </thead>

@@ -324,8 +324,6 @@
                 $TBS->Show(OPENTBS_DOWNLOAD, $output_file_name); 
                 exit();
             } 
-
-            // return json_encode($this->json['rut']);
         }
 
         // Método para descargat altas de matrícula

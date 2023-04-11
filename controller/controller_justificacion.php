@@ -29,6 +29,12 @@ switch ($type) {
         break;
 
     case "getCertificadoJustificacion":
+        if ($privilege_usser == 4) { // trabajar en los privilegios que pueden descargar la informacion
+            http_response_code(404);
+            exit();
+        }
+
+        print $datosJustificacion->getCertificadoJustificacion($_POST['id_justificacion']);
         break;
 
     case "exportarJustificaciones":

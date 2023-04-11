@@ -118,7 +118,68 @@
 
         // Método para generar certificado de justificación
         public function getCertificadoJustificaicon($id_justificacion) {
-            $query  = "";
+            $query = "SELECT matricula.matricula, (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut,
+                (estudiante.nombres_estudiante || ' ' || estudiante.ap_estudiante || ' ' || estudiante.am_estudiante) AS nombres,
+                substring(curso.curso, 1, 1) AS grado, substring(curso.curso, 2, 2) AS letra,
+                CASE WHEN (substring(curso.curso, 1, 1)::int) IN (7,8) THEN 'Básica'
+                WHEN (substring(curso.curso, 1, 1)::int) BETWEEN 1 AND 4 THEN 'Media' END AS nivel,
+                EXTRACT(YEAR FROM CURRENT_DATE) AS anio, EXTRACT(DAY FROM CURRENT_DATE) AS dia
+                FROM matricula
+                INNER JOIN estudiante ON estudiante.id_estudiante = matricula.id_estudiante
+                INNER JOIN curso ON curso.id_curso = matricula.id_curso
+                WHERE matricula.id_matricula = ?;";
+
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute([intval($id_matricula)]);
+            $this->json = $sentencia->fetch(PDO::FETCH_ASSOC);
+
+            // Conseguir el mes actual en español
+            $mes = array(
+                'January' => 'Enero',
+                'February' => 'Febrero',
+                'March' => 'Marzo',
+                'April' => 'Abril',
+                'May' => 'Mayo',
+                'June' => 'Junio',
+                'July' => 'Julio',
+                'August' => 'Agosto',
+                'September' => 'Septiembre',
+                'October' => 'Octubre',
+                'November' => 'Noviembre',
+                'December' => 'Diciembre'
+            );
+            $mes_actual = date('F');
+
+            // SECCIÓN PARA GENERAR EL WORD CON BASE EN UNA PLANTILLA DE WORD
+            $TBS = new clsTinyButStrong; 
+            $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN); 
+
+            //Cargando template
+            $template = '../docs/templateCertificado.docx';
+            $TBS->LoadTemplate($template, OPENTBS_ALREADY_UTF8);
+
+            //Cargar valores
+            $TBS->MergeField('pro.nombres', $this->json['nombres']);
+            $TBS->MergeField('pro.rut', $this->json['rut']);
+            $TBS->MergeField('pro.grado', $this->json['grado']);
+            $TBS->MergeField('pro.letra', $this->json['letra']);
+            $TBS->MergeField('pro.nivel', $this->json['nivel']);
+            $TBS->MergeField('pro.anio_1', $this->json['anio']);
+            $TBS->MergeField('pro.matricula', $this->json['matricula']);
+            $TBS->MergeField('pro.mes', $mes[$mes_actual]);
+            $TBS->MergeField('pro.dia', $this->json['dia']);
+            $TBS->MergeField('pro.anio_2', $this->json['anio']);
+
+
+            $TBS->PlugIn(OPENTBS_DELETE_COMMENTS);
+
+            $save_as = (isset($_POST['save_as']) && (trim($_POST['save_as'])!=='') && ($_SERVER['SERVER_NAME']=='localhost')) ? trim($_POST['save_as']) : '';
+            $output_file_name = "Cerificado Alumno Regular_". $this->json['rut'] .".docx";
+            
+            if ($save_as==='') {
+                $TBS->Show(OPENTBS_DOWNLOAD, $output_file_name); 
+                exit();
+            } 
         }
 
         // Método para generar excel de las justificaciones

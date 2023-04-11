@@ -63,8 +63,18 @@ agregar tabla departamentos
 Trabajar en modal de funcionario
 
 
+ver tema de usuarios ?????
 
+trabajar consulta SQL
 
-
+SELECT (estudiante.nombres_estudiante || ' ' || estudiante.ap_estudiante || ' ' || estudiante.am_estudiante) AS estudiante,
+substring(curso.curso, 1, 1) AS grado, substring(curso.curso, 2, 2) AS letra,
+CASE WHEN (substring(curso.curso, 1, 1)::int) IN (7,8) THEN 'Básica'
+WHEN (substring(curso.curso, 1, 1)::int) BETWEEN 1 AND 4 THEN 'Media' END AS nivel,
+(apoderado.nombres_apoderado || ' ' || apoderado.ap_apoderado) AS apoderado
+FROM justificacion
+INNER JOIN estudiante ON estudiante.id_estudiante = justificacion.id_estudiante
+INNER JOIN matricula ON matricula.id_estudiante = estudiante.id_estudiante
+INNER JOIN curso ON curso.id_curso = matricula.id_curso
 
 

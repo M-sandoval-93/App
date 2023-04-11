@@ -341,9 +341,36 @@ function deleteRegistroJustificacion(tabla) {
 }
 
 // Función para generar un certificado de justificacion
-function getCertificadoJustificacion(table) {
+function getCertificadoJustificacion(tabla) {
     $('#tabla_justificacion_estudiante tbody').on('click', '#btn_download_justificar', function() {
         LibreriaFunciones.alertPopUp('info', 'Función en mantenimiento');
+        let data = tabla.row($(this).parents()).data();
+        let id_justificacion = data.id_justificacion;
+        let datos = "getCertificadoJustificacion";
+
+        // trabajar en funcionalidad para descargar cetificado
+        // $.ajax({
+        //     url: "./controller/controller_justificacion.php",
+        //     type: "post",
+        //     data: {datos: datos, id_justificacion: id_justificacion},
+        //     xhrFields: { responseType: 'blob' },
+        //     success: (response) => {
+        //         var url = window.URL.createObjectURL(response);
+        //         var a = document.createElement('a');
+        //         a.href = url;
+        //         a.download = 'Certificado Justificación.docx'; // nombre del archivo
+        //         document.body.appendChild(a);
+        //         a.click();
+        //         a.remove();
+        //         window.URL.revokeObjectURL(url);
+        //     }
+        // }).fail((jqXHR) => {
+        //     if (jqXHR.status == 404) {
+        //         LibreriaFunciones.alertPopUp('warning', 'Acceso restringido !!');
+        //         return false;
+        //     }
+        //     LibreriaFunciones.alertPopUp('error', 'Error de ejecución !!');
+        // });
 
     });
 }

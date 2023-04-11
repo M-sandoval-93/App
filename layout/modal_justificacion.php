@@ -81,6 +81,13 @@
 
             <div class="col-3">
               <div class="form-check">
+                <input type="checkbox" id="justificacion_informacion_verbal" class="form-check-input">
+                <label for="justificacion_informacion_verbal" class="form-check-label">Información verbal</label>
+              </div>
+            </div>
+
+            <div class="col-3">
+              <div class="form-check">
                 <input type="checkbox" id="justificacion_prueba_pendiente" class="form-check-input" disabled>
                 <label for="justificacion_prueba_pendiente" class="form-check-label">Prueba pendiente</label>
               </div>

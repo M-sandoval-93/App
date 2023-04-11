@@ -4,7 +4,10 @@
     include_once "../model/model_conexion.php";
 
     // Uso de la librería PHPSpreadsheet
-    require_once "../Pluggins/PhpOffice/vendor/autoload.php";
+    require_once "../Pluggins/PhpOffice/vendor/autoload.php";           // Uso de la librería PHPSpreadsheet
+    require_once "../Pluggins/openTBS/tbs_class.php";                   // Uso de librería para trabajar con word
+    require_once "../Pluggins/openTBS/tbs_plugin_opentbs.php";          // Uso de librería para trabajar con word
+
     use PhpOffice\PhpSpreadsheet\{Spreadsheet, IOFactory};
 
 
@@ -29,7 +32,8 @@
                 apoderado.am_apoderado) AS nombre_apoderado, justificacion.motivo_falta,
                 CASE WHEN justificacion.prueba_pendiente = true THEN string_agg(asignatura.asignatura, ' - ')
                 ELSE 'SIN PRUEBAS PENDIENTES' END AS prueba_pendiente,
-                CASE WHEN justificacion.presenta_documento = true THEN 'SI' ELSE 'NO' END AS presenta_documento 
+                CASE WHEN justificacion.presenta_documento = true THEN 'SI' ELSE 'NO' END AS presenta_documento,
+                CASE WHEN justificacion.informacion_verbal = true THEN 'SI' ELSE 'NO' END AS informacion_verbal
                 FROM justificacion
                 INNER JOIN estudiante ON estudiante.id_estudiante = justificacion.id_estudiante
                 INNER JOIN matricula ON matricula.id_estudiante = estudiante.id_estudiante
@@ -72,14 +76,14 @@
         // Método para registrar una justificacion
         public function setJustificacion($justificacion, $asignatura) {
             $query = "INSERT INTO justificacion (fecha_hora_actual, id_estudiante, fecha_inicio, 
-                fecha_termino, id_apoderado, prueba_pendiente, presenta_documento, motivo_falta)
-                SELECT CURRENT_TIMESTAMP, id_estudiante, ?, ?, ?, ?, ?, ?
+                fecha_termino, id_apoderado, prueba_pendiente, presenta_documento, motivo_falta, informacion_verbal)
+                SELECT CURRENT_TIMESTAMP, id_estudiante, ?, ?, ?, ?, ?, ?, ?
                 FROM estudiante
                 WHERE rut_estudiante = ?;";
 
             $sentencia = $this->preConsult($query);
             if ($sentencia->execute([$justificacion->fecha_inicio, $justificacion->fecha_termino, intval($justificacion->id_apoderado), 
-            $justificacion->pruebas, $justificacion->documento, $justificacion->motivo, $justificacion->rut])) {
+            $justificacion->pruebas, $justificacion->documento, $justificacion->motivo, $justificacion->info_verbal, $justificacion->rut])) {
 
                 if ($justificacion->pruebas == true) {
                     $query = "INSERT INTO prueba_pendiente (id_justificacion, id_asignatura) 
@@ -117,36 +121,49 @@
         }
 
         // Método para generar certificado de justificación
-        public function getCertificadoJustificaicon($id_justificacion) {
-            $query = "SELECT matricula.matricula, (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut,
-                (estudiante.nombres_estudiante || ' ' || estudiante.ap_estudiante || ' ' || estudiante.am_estudiante) AS nombres,
+        public function getCertificadoJustificacion($id_justificacion) {
+            $query = "SELECT (estudiante.nombres_estudiante || ' ' || estudiante.ap_estudiante || ' ' || estudiante.am_estudiante) AS estudiante,
                 substring(curso.curso, 1, 1) AS grado, substring(curso.curso, 2, 2) AS letra,
                 CASE WHEN (substring(curso.curso, 1, 1)::int) IN (7,8) THEN 'Básica'
                 WHEN (substring(curso.curso, 1, 1)::int) BETWEEN 1 AND 4 THEN 'Media' END AS nivel,
+                (apoderado.nombres_apoderado || ' ' || apoderado.ap_apoderado) AS apoderado,
+                (apoderado.rut_apoderado || '-' || apoderado.dv_rut_apoderado) AS rut_ap,
+                CASE WHEN justificacion.presenta_documento = true THEN 'SI' ELSE 'NO' END AS documento,
+                CASE WHEN justificacion.informacion_verbal = true THEN 'SI' ELSE 'NO' END AS info_verbal,
+                CASE WHEN justificacion.prueba_pendiente = true THEN string_agg(asignatura.asignatura, ' - ')
+                ELSE 'SIN PRUEBAS PENDIENTES' END AS prueba_pendiente, justificacion.motivo_falta,
+                justificacion.exigencia, to_char(justificacion.fecha_inicio, 'DD/MM/YYYY') AS fecha_inicio,
+                to_char(justificacion.fecha_termino, 'DD/MM/YYYY') AS fecha_termino,
                 EXTRACT(YEAR FROM CURRENT_DATE) AS anio, EXTRACT(DAY FROM CURRENT_DATE) AS dia
-                FROM matricula
-                INNER JOIN estudiante ON estudiante.id_estudiante = matricula.id_estudiante
+                FROM justificacion
+                INNER JOIN estudiante ON estudiante.id_estudiante = justificacion.id_estudiante
+                INNER JOIN matricula ON matricula.id_estudiante = estudiante.id_estudiante
                 INNER JOIN curso ON curso.id_curso = matricula.id_curso
-                WHERE matricula.id_matricula = ?;";
+                INNER JOIN apoderado ON apoderado.id_apoderado = justificacion.id_apoderado
+                LEFT JOIN prueba_pendiente ON prueba_pendiente.id_justificacion = justificacion.id_justificacion
+                LEFT JOIN asignatura ON asignatura.id_asignatura = prueba_pendiente.id_asignatura
+                WHERE justificacion.id_justificacion = ?
+                GROUP BY estudiante, curso, apoderado, rut_ap, documento, info_verbal, prueba_pendiente,
+                motivo_falta, exigencia, fecha_inicio, fecha_termino;";
 
             $sentencia = $this->preConsult($query);
-            $sentencia->execute([intval($id_matricula)]);
+            $sentencia->execute([intval($id_justificacion)]);
             $this->json = $sentencia->fetch(PDO::FETCH_ASSOC);
 
             // Conseguir el mes actual en español
             $mes = array(
-                'January' => 'Enero',
-                'February' => 'Febrero',
-                'March' => 'Marzo',
-                'April' => 'Abril',
-                'May' => 'Mayo',
-                'June' => 'Junio',
-                'July' => 'Julio',
-                'August' => 'Agosto',
-                'September' => 'Septiembre',
-                'October' => 'Octubre',
-                'November' => 'Noviembre',
-                'December' => 'Diciembre'
+                'January' => 'ENERO',
+                'February' => 'FEBRERO',
+                'March' => 'MARZO',
+                'April' => 'ABRIL',
+                'May' => 'MAYO',
+                'June' => 'JUNIO',
+                'July' => 'JULIO',
+                'August' => 'AGOSTO',
+                'September' => 'SEPTIEMBRE',
+                'October' => 'OCTUBRE',
+                'November' => 'NOVIEMBRE',
+                'December' => 'DICIEMBRE'
             );
             $mes_actual = date('F');
 
@@ -155,26 +172,32 @@
             $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN); 
 
             //Cargando template
-            $template = '../docs/templateCertificado.docx';
+            $template = '../docs/templateJustificacion.docx';
             $TBS->LoadTemplate($template, OPENTBS_ALREADY_UTF8);
 
             //Cargar valores
-            $TBS->MergeField('pro.nombres', $this->json['nombres']);
-            $TBS->MergeField('pro.rut', $this->json['rut']);
+            $TBS->MergeField('pro.nombres', $this->json['estudiante']);
             $TBS->MergeField('pro.grado', $this->json['grado']);
             $TBS->MergeField('pro.letra', $this->json['letra']);
             $TBS->MergeField('pro.nivel', $this->json['nivel']);
-            $TBS->MergeField('pro.anio_1', $this->json['anio']);
-            $TBS->MergeField('pro.matricula', $this->json['matricula']);
-            $TBS->MergeField('pro.mes', $mes[$mes_actual]);
+            $TBS->MergeField('pro.apoderado', $this->json['apoderado']);
+            $TBS->MergeField('pro.rut_apoderado', $this->json['rut_ap']);
+            $TBS->MergeField('pro.documento', $this->json['documento']);
+            $TBS->MergeField('pro.info_verbal', $this->json['info_verbal']);
+            $TBS->MergeField('pro.prueba', $this->json['prueba_pendiente']);
+            $TBS->MergeField('pro.motivo', $this->json['motivo_falta']);
+            $TBS->MergeField('pro.exigencia', $this->json['exigencia']);
+            $TBS->MergeField('pro.fecha_inicio', $this->json['fecha_inicio']);
+            $TBS->MergeField('pro.fecha_termino', $this->json['fecha_termino']);
             $TBS->MergeField('pro.dia', $this->json['dia']);
-            $TBS->MergeField('pro.anio_2', $this->json['anio']);
+            $TBS->MergeField('pro.mes', $mes[$mes_actual]);
+            $TBS->MergeField('pro.anio', $this->json['anio']);
 
 
             $TBS->PlugIn(OPENTBS_DELETE_COMMENTS);
 
             $save_as = (isset($_POST['save_as']) && (trim($_POST['save_as'])!=='') && ($_SERVER['SERVER_NAME']=='localhost')) ? trim($_POST['save_as']) : '';
-            $output_file_name = "Cerificado Alumno Regular_". $this->json['rut'] .".docx";
+            $output_file_name = "Cerificado Justificacion.docx";
             
             if ($save_as==='') {
                 $TBS->Show(OPENTBS_DOWNLOAD, $output_file_name); 

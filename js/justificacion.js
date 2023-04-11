@@ -23,8 +23,13 @@ function getDataSecundaria(data) {
             '</tr>' +
 
             '<tr>' +
-                '<td>Documento presentado:</td>' +
+                '<td>Presenta documento:</td>' +
                 '<td>' + data.presenta_documento + '</td>' +
+            '</tr>' +
+
+            '<tr>' +
+                '<td>Información verbal:</td>' +
+                '<td>' + data.informacion_verbal + '</td>' +
             '</tr>' +
 
             '<tr>' +
@@ -152,7 +157,8 @@ function getDataJustificacion() {
         id_apoderado: $.trim($('#justificacion_apoderado').val()),
         motivo: $.trim($('#justificacion_motivo_causa').val().toUpperCase()),
         documento: LibreriaFunciones.comprobarCheck('#justificacion_documento'),
-        pruebas: LibreriaFunciones.comprobarCheck('#justificacion_prueba_pendiente')   
+        info_verbal: LibreriaFunciones.comprobarCheck('#justificacion_informacion_verbal'),
+        pruebas: LibreriaFunciones.comprobarCheck('#justificacion_prueba_pendiente')
     }
 
     return justificacion;
@@ -343,34 +349,32 @@ function deleteRegistroJustificacion(tabla) {
 // Función para generar un certificado de justificacion
 function getCertificadoJustificacion(tabla) {
     $('#tabla_justificacion_estudiante tbody').on('click', '#btn_download_justificar', function() {
-        LibreriaFunciones.alertPopUp('info', 'Función en mantenimiento');
         let data = tabla.row($(this).parents()).data();
         let id_justificacion = data.id_justificacion;
         let datos = "getCertificadoJustificacion";
 
-        // trabajar en funcionalidad para descargar cetificado
-        // $.ajax({
-        //     url: "./controller/controller_justificacion.php",
-        //     type: "post",
-        //     data: {datos: datos, id_justificacion: id_justificacion},
-        //     xhrFields: { responseType: 'blob' },
-        //     success: (response) => {
-        //         var url = window.URL.createObjectURL(response);
-        //         var a = document.createElement('a');
-        //         a.href = url;
-        //         a.download = 'Certificado Justificación.docx'; // nombre del archivo
-        //         document.body.appendChild(a);
-        //         a.click();
-        //         a.remove();
-        //         window.URL.revokeObjectURL(url);
-        //     }
-        // }).fail((jqXHR) => {
-        //     if (jqXHR.status == 404) {
-        //         LibreriaFunciones.alertPopUp('warning', 'Acceso restringido !!');
-        //         return false;
-        //     }
-        //     LibreriaFunciones.alertPopUp('error', 'Error de ejecución !!');
-        // });
+        $.ajax({
+            url: "./controller/controller_justificacion.php",
+            type: "post",
+            data: {datos: datos, id_justificacion: id_justificacion},
+            xhrFields: { responseType: 'blob' },
+            success: (response) => {
+                var url = window.URL.createObjectURL(response);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'Certificado Justificacion.docx'; // nombre del archivo
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            }
+        }).fail((jqXHR) => {
+            if (jqXHR.status == 404) {
+                LibreriaFunciones.alertPopUp('warning', 'Acceso restringido !!');
+                return false;
+            }
+            LibreriaFunciones.alertPopUp('error', 'Error de ejecución !!');
+        });
 
     });
 }

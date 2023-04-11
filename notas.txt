@@ -67,13 +67,3 @@ ver tema de usuarios ?????
 
 
 
-
-
-TRABAJANDO EN MODULO DE JUSTIFICACIONES
-agregar columnas:
-    - informacion_verbal defautl(false)
-    - exigencia default(80)
-
-agregar informacion al modal, usando check
-
-

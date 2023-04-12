@@ -33,7 +33,7 @@
             break;
 
         case "setSuspension":
-            if ($privilege_usser == 4) {
+            if ($privilege_usser == 3 || $privilege_usser == 4) {
                 http_response_code(404);
                 exit();
             }
@@ -43,7 +43,7 @@
             break;
 
         case "setRetiroMatricula":
-            if ($privilege_usser == 4) {
+            if ($privilege_usser == 3 || $privilege_usser == 4) {
                 http_response_code(404);
                 exit();
             }
@@ -53,7 +53,7 @@
             break;
 
         case "updateMatricula":
-            if ($privilege_usser == 4) {
+            if ($privilege_usser == 3 || $privilege_usser == 4) {
                 http_response_code(404);
                 exit();
             }
@@ -64,7 +64,7 @@
             break;
         
         case "deleteMatricula":
-            if ($privilege_usser == 4) {
+            if ($privilege_usser == 3 || $privilege_usser == 4) {
                 http_response_code(404);
                 exit();
             }
@@ -73,7 +73,7 @@
             break;
 
         case "getCertificado":
-            if ($privilege_usser == 4) {
+            if ($privilege_usser == 3 || $privilege_usser == 4) {
                 http_response_code(404);
                 exit();
             }

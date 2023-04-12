@@ -61,8 +61,8 @@ inputs.forEach(input => {
                             showConfirmButton: false,
                             timer: 1500
                         }).then(result => {
-                            if (response.privilege == 3) { window.location.href = 'retraso'; return false; }
-                            if (response.privilege == 5 || response.privilege == 4) { window.location.href = 'matricula'; return false; }
+                            // if (response.privilege == 3) { window.location.href = 'retraso'; return false; }
+                            // if (response.privilege == 5 || response.privilege == 4) { window.location.href = 'matricula'; return false; }
                             window.location.href = 'home';
                         });
                     }

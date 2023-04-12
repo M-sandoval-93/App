@@ -1,7 +1,6 @@
 <?php   
-    // Controlador de acceso
-    if ($_SESSION['usser']['privilege'] == 3) { header("location: ./retraso"); }
-    include_once "./layout/header.php"; 
+    include_once "./layout/header.php";                     // Head and aside
+    include_once "./controller/controller_acceso.php";      // Controlador de acceso
 ?>
 
             <!-- titulo del layout -->
@@ -46,7 +45,7 @@
 
             <!-- main content table -->
             <div class="d-flex justify-content-between mb-4">
-<?php if ($_SESSION['usser']['id'] != 4) { ?>
+<?php if ($_SESSION['usser']['id'] != 3) { ?>
                 <button type="button" class="btn-lg btn-primary" title="Nuevo registro" id="btn_nueva_matricula" data-bs-toggle="modal" data-bs-target="#modal_matricula">
                     <i class="fas fa-user-plus icon"></i>
                 </button>

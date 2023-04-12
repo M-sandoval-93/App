@@ -69,6 +69,12 @@ FACILIDAD PARA CAMBIAR LA CLAVE DESDE EL ADMINISTRADOR
 
 NOTA !!!!!!
 Trabajar en los usuarios y los privilegios de cada uno!!!
+Modificar tabla de datos seccion privilegios
 
+
+
+
+PERSONAL !!! 
+TRABAJAR EN ACCESO AL SISTEMA INDEPENDIENTE SI ES MAYUSCULA O MINUSCULA
 
 

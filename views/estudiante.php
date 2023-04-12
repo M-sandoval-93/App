@@ -1,4 +1,8 @@
-<?php   include_once "./layout/header.php"; ?>
+<?php   
+    include_once "./layout/header.php";                     // Head and aside
+    include_once "./controller/controller_acceso.php";      // Controlador de acceso 
+
+?>
 
             <!-- titulo del layout -->
             <div class="row d-flex align-items-center">

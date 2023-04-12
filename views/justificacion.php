@@ -2,7 +2,7 @@
     include_once "./layout/header.php";
 
     // Controlador de acceso
-    if ($_SESSION['usser']['privilege'] == 5) { header("location: ./matricula"); }
+    // if ($_SESSION['usser']['privilege'] == 5) { header("location: ./matricula"); }
 ?>
 
 

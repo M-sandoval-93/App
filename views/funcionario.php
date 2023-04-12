@@ -1,7 +1,7 @@
 <?php   
-    include_once "./layout/header.php"; 
-    // Controlador de acceso
-    if ($_SESSION['usser']['privilege'] == 4 || $_SESSION['usser']['privilege'] == 5) { header("location: ./matricula"); }
+    include_once "./layout/header.php";                     // Head and aside
+    include_once "./controller/controller_acceso.php";      // Controlador de acceso
+    
 ?>
 
             <!-- titulo del layout -->

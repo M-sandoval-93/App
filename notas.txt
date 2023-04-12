@@ -1,13 +1,5 @@
 ** POR HACER, IDEAS, PENDIENTES
 
-Trabajar !!!!
-
-trabajar en descarga de altas y retiros según periodo de fecha ingresado !!!!
-
-
-
-
-trabajar el numero de lista, al mostrar, registrar y editar (agregarlo como valor al objeto que se genera !!)
 trabajar el el numero de registro hombre y mujer por curso
 generar nómina de estudiantes!!!!
 
@@ -26,7 +18,7 @@ Generador de nóminas de estudiantes !!!!!
 
 
 1.- agregar validación de solo números a campo de telefono en modulo de apoderado
-2.- Pasar función de exportar documento a función generica
+2.- Pasar función de exportar documento a función generica REVISAR LA FAVTIBILIAD DE LA MISMA
 6.- Generar certificado de justificación por pruebas pendientes
 
 
@@ -66,10 +58,17 @@ Trabajar en modal de funcionario
 ver tema de usuarios ?????
 
 
+----- PARA TRABAJAR CON EL MODULO DE USUARIOS
 
 AL CREAR UN USUARIO QUE AUTOMATICAMENTE SE GENERE LA CUENTA DE USUARIO EN BASE AL RUT
 QUE CUANDO INICIE SESIÓN POR PRIMERA VEZ, PIDA CAMBIAR LA CLAVE
 FACILIDAD PARA CAMBIAR LA CLAVE DESDE EL ADMINISTRADOR 
+
+
+
+
+NOTA !!!!!!
+Trabajar en los usuarios y los privilegios de cada uno!!!
 
 
 

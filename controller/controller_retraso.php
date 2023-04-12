@@ -3,6 +3,7 @@
     require_once '../model/model_retraso.php';
     require_once "../model/model_session.php";
 
+    // Trabajo con variables de sesión
     $session = new Session();
     $id_usser = $session->getId();
 
@@ -24,7 +25,7 @@
             break;
 
         case "setRetraso":
-            print $datosRetraso->setRetraso($_POST['rut']);
+            print $datosRetraso->setRetraso($_POST['rut'], $id_usser);
             break;
             
         case "setJustificarRetraso":

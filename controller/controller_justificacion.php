@@ -4,8 +4,10 @@
 require_once '../model/model_justificacion.php';
 require_once "../model/model_session.php";
 
+// Trabajar con las variables de sesión
 $session = new Session();
 $privilege_usser = $session->getPrivilege();
+$id_usser = $session->getId();
 
 $type = $_POST['datos'];
 $datosJustificacion = new JustificacionEstudiante();
@@ -21,7 +23,7 @@ switch ($type) {
 
     case "setJustificacion":
         $justificacion = json_decode(json_encode($_POST['justificacion'])); // Convertir un objeto js a un objeto PHP
-        print $datosJustificacion->setJustificacion($justificacion, $_POST['asignatura']);
+        print $datosJustificacion->setJustificacion($justificacion, $_POST['asignatura'], $id_usser);
         break;
         
     case "deleteJustificacion":
@@ -40,11 +42,6 @@ switch ($type) {
     case "exportarJustificaciones":
         print $datosJustificacion->exportarJustificaciones($_POST['ext']);
         break;
-
-    // case "getDocument":
-    //     print $datosJustificacion->getDocument();
-    //     break;
-
 
 
 }

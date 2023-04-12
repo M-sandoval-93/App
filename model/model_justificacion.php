@@ -1,9 +1,6 @@
 <?php
 
-    // Uso del modelo de conexión
-    include_once "../model/model_conexion.php";
-
-    // Uso de la librería PHPSpreadsheet
+    require_once "../model/model_conexion.php";                         // Uso del modelo de conexión
     require_once "../Pluggins/PhpOffice/vendor/autoload.php";           // Uso de la librería PHPSpreadsheet
     require_once "../Pluggins/openTBS/tbs_class.php";                   // Uso de librería para trabajar con word
     require_once "../Pluggins/openTBS/tbs_plugin_opentbs.php";          // Uso de librería para trabajar con word
@@ -12,7 +9,7 @@
 
 
     class JustificacionEstudiante extends Conexion {
-
+        // Método constructor
         public function __construct() {
             parent:: __construct();
         }
@@ -74,16 +71,16 @@
         }
 
         // Método para registrar una justificacion
-        public function setJustificacion($justificacion, $asignatura) {
+        public function setJustificacion($justificacion, $asignatura, $id_usser) {
             $query = "INSERT INTO justificacion (fecha_hora_actual, id_estudiante, fecha_inicio, 
-                fecha_termino, id_apoderado, prueba_pendiente, presenta_documento, motivo_falta, informacion_verbal)
-                SELECT CURRENT_TIMESTAMP, id_estudiante, ?, ?, ?, ?, ?, ?, ?
+                fecha_termino, id_apoderado, prueba_pendiente, presenta_documento, motivo_falta, informacion_verbal, id_usuario)
+                SELECT CURRENT_TIMESTAMP, id_estudiante, ?, ?, ?, ?, ?, ?, ?, ?
                 FROM estudiante
                 WHERE rut_estudiante = ?;";
 
             $sentencia = $this->preConsult($query);
             if ($sentencia->execute([$justificacion->fecha_inicio, $justificacion->fecha_termino, intval($justificacion->id_apoderado), 
-            $justificacion->pruebas, $justificacion->documento, $justificacion->motivo, $justificacion->info_verbal, $justificacion->rut])) {
+            $justificacion->pruebas, $justificacion->documento, $justificacion->motivo, $justificacion->info_verbal, $id_usser, $justificacion->rut])) {
 
                 if ($justificacion->pruebas == true) {
                     $query = "INSERT INTO prueba_pendiente (id_justificacion, id_asignatura) 
@@ -219,8 +216,10 @@
                 END || ') ' || apoderado.nombres_apoderado || ' ' || apoderado.ap_apoderado || ' ' ||
                 apoderado.am_apoderado) AS nombre_apoderado, justificacion.motivo_falta,
                 CASE WHEN justificacion.prueba_pendiente = true THEN string_agg(asignatura.asignatura, ' - ')
-                ELSE 'SIN PRUEBAS PENDIENTES' END AS prueba_pendiente,
-                CASE WHEN justificacion.presenta_documento = true THEN 'SI' ELSE 'NO' END AS presenta_documento 
+                ELSE 'SIN PRUEBAS PENDIENTES' END AS prueba_pendiente, justificacion.exigencia,
+                CASE WHEN justificacion.presenta_documento = true THEN 'SI' ELSE 'NO' END AS presenta_documento,
+                CASE WHEN justificacion.informacion_verbal = true THEN 'SI' ELSE 'NO' END AS informacion_verbal,
+                (funcionario.nombres_funcionario || ' ' || funcionario.ap_funcionario || ' ' || funcionario.am_funcionario) AS funcionario_registra
                 FROM justificacion
                 INNER JOIN estudiante ON estudiante.id_estudiante = justificacion.id_estudiante
                 INNER JOIN matricula ON matricula.id_estudiante = estudiante.id_estudiante
@@ -228,10 +227,12 @@
                 INNER JOIN apoderado ON apoderado.id_apoderado = justificacion.id_apoderado
                 LEFT JOIN prueba_pendiente ON prueba_pendiente.id_justificacion = justificacion.id_justificacion
                 LEFT JOIN asignatura ON asignatura.id_asignatura = prueba_pendiente.id_asignatura
+                LEFT JOIN usuario ON usuario.id_usuario = justificacion.id_usuario
+                LEFT JOIN funcionario ON funcionario.id_funcionario = usuario.id_funcionario
                 WHERE matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
                 GROUP BY justificacion.id_justificacion, rut, estudiante.ap_estudiante, estudiante.am_estudiante,
                 nombres_estudiante, estudiante.nombre_social, curso.curso, fecha_inicio, fecha_termino,
-                fecha_justificacion, nombre_apoderado, justificacion.motivo_falta, presenta_documento
+                fecha_justificacion, nombre_apoderado, justificacion.motivo_falta, presenta_documento, funcionario_registra
                 ORDER BY justificacion.fecha_inicio DESC;";
 
             $sentencia = $this->preConsult($query);
@@ -252,8 +253,8 @@
             $sheetActive->setTitle("Justificaciones");
             $sheetActive->setShowGridLines(false);
             $sheetActive->getStyle('A1')->getFont()->setBold(true)->setSize(18);
-            $sheetActive->getStyle('A3:K3')->getFont()->setBold(true)->setSize(12);
-            $sheetActive->setAutoFilter('A3:K3');
+            $sheetActive->getStyle('A3:N3')->getFont()->setBold(true)->setSize(12);
+            $sheetActive->setAutoFilter('A3:N3');
 
             $sheetActive->mergeCells('A1:D1');
             $sheetActive->setCellValue('A1', 'REGISTRO JUSTIFICACIÓN ESTUDIANTES');
@@ -268,8 +269,11 @@
             $sheetActive->getColumnDimension('H')->setWidth(40);
             $sheetActive->getColumnDimension('I')->setWidth(50);
             $sheetActive->getColumnDimension('J')->setWidth(25);
-            $sheetActive->getColumnDimension('K')->setWidth(35);
-            $sheetActive->getStyle('J:K')->getAlignment()->setHorizontal('left');
+            $sheetActive->getColumnDimension('K')->setWidth(25);
+            $sheetActive->getColumnDimension('L')->setWidth(40);
+            $sheetActive->getColumnDimension('M')->setWidth(15);
+            $sheetActive->getColumnDimension('N')->setWidth(40);
+            $sheetActive->getStyle('M')->getAlignment()->setHorizontal('center');
 
             $sheetActive->setCellValue('A3', 'RUT');
             $sheetActive->setCellValue('B3', 'AP PATERNO');
@@ -281,7 +285,10 @@
             $sheetActive->setCellValue('H3', 'APODERADO JUSTIFICA');
             $sheetActive->setCellValue('I3', 'MOTIVO FALTA');
             $sheetActive->setCellValue('J3', 'PRESENTA DOCUMENTO');
-            $sheetActive->setCellValue('K3', 'PRUEBA PENDIENTE');
+            $sheetActive->setCellValue('K3', 'INFORMACION VERBAL');
+            $sheetActive->setCellValue('L3', 'PRUEBA PENDIENTE');
+            $sheetActive->setCellValue('M3', 'EXIGENCIA');
+            $sheetActive->setCellValue('N3', 'FUNCIONARIO REGISTRA');
 
             $fila = 4;
             foreach ($justificaciones as $justificacion) {
@@ -295,7 +302,10 @@
                 $sheetActive->setCellValue('H'.$fila, $justificacion['nombre_apoderado']);
                 $sheetActive->setCellValue('I'.$fila, $justificacion['motivo_falta']);
                 $sheetActive->setCellValue('J'.$fila, $justificacion['presenta_documento']);
-                $sheetActive->setCellValue('K'.$fila, $justificacion['prueba_pendiente']);
+                $sheetActive->setCellValue('K'.$fila, $justificacion['informacion_verbal']);
+                $sheetActive->setCellValue('L'.$fila, $justificacion['prueba_pendiente']);
+                $sheetActive->setCellValue('M'.$fila, $justificacion['exigencia']. ' %');
+                $sheetActive->setCellValue('N'.$fila, $justificacion['funcionario_registra']);
                 $fila++;
             }
 

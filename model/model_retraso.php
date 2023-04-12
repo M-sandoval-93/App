@@ -81,13 +81,15 @@
         }
 
         // Método para registrar el retraso de un estudiante
-        public function setRetraso($rut) {
-            $query = "INSERT INTO retraso (fecha_hora_actual, fecha_retraso, hora_retraso, id_estudiante)
+        public function setRetraso($rut, $id_usuario) {
+            $query = "INSERT INTO retraso (fecha_hora_actual, fecha_retraso, hora_retraso, id_estudiante, id_usuario_registra)
                 SELECT CURRENT_TIMESTAMP AS fecha_hora_actual, CURRENT_DATE AS fecha_retraso, CURRENT_TIME AS hora_retraso,
-                id_estudiante FROM estudiante WHERE rut_estudiante = ?;";
+                id_estudiante, ?
+                FROM estudiante 
+                WHERE rut_estudiante = ?;";
 
             $sentencia = $this->preConsult($query);
-            if ($sentencia->execute([$rut])) {
+            if ($sentencia->execute([$id_usuario, $rut])) {
                 $this->res = true;
 
                 $query = "SELECT retraso.id_retraso, curso.curso,
@@ -145,16 +147,22 @@
             $query = "SELECT (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut,
                 estudiante.ap_estudiante AS ap_paterno, estudiante.am_estudiante AS ap_materno,
                 (CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante ELSE
-                '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END) AS nombre,
-                curso.curso, to_char(retraso.fecha_retraso, 'DD/MM/YYYY') AS fecha_retraso,
-                to_char(retraso.hora_retraso, 'HH:MI:SS') AS hora_retraso,
+                '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END) AS nombres,
+                curso.curso, to_char(retraso.fecha_retraso, 'DD/MM/YYYY') AS fecha_retraso, 
+                to_char(retraso.hora_retraso, 'HH:MI:SS') AS hora_retraso, 
+                (funcionario.nombres_funcionario || ' ' || funcionario.ap_funcionario || ' ' || funcionario.am_funcionario) AS usuario_registra,
+                retraso.estado_retraso, to_char(retraso.fecha_hora_justificacion, 'DD/MM/YYYY - HH:MM:SS') AS fecha_hora_justificacion,
                 (apoderado.nombres_apoderado || ' ' || apoderado.ap_apoderado || ' ' || apoderado.am_apoderado) as apoderado_justifica,
-                retraso.estado_retraso
+                (fj.nombres_funcionario || ' ' || fj.ap_funcionario || ' ' || fj.am_funcionario) AS usuario_justifica
                 FROM retraso
                 INNER JOIN estudiante ON estudiante.id_estudiante = retraso.id_estudiante
                 INNER JOIN matricula ON matricula.id_estudiante = estudiante.id_estudiante
                 INNER JOIN curso ON curso.id_curso = matricula.id_curso
                 LEFT JOIN apoderado ON apoderado.id_apoderado = retraso.id_apoderado_justifica
+                LEFT JOIN usuario AS uj ON uj.id_usuario = retraso.id_usuario_justifica
+                LEFT JOIN funcionario AS fj ON fj.id_funcionario = uj.id_funcionario
+                LEFT JOIN usuario ON usuario.id_usuario = retraso.id_usuario_registra
+                LEFT JOIN funcionario ON funcionario.id_funcionario = usuario.id_funcionario
                 WHERE EXTRACT(YEAR FROM retraso.fecha_retraso) = EXTRACT(YEAR FROM CURRENT_DATE)
                 ORDER BY retraso.fecha_retraso DESC, retraso.hora_retraso DESC;";
 
@@ -176,8 +184,8 @@
             $sheetActive->setTitle("Atrasos");
             $sheetActive->setShowGridLines(false);
             $sheetActive->getStyle('A1')->getFont()->setBold(true)->setSize(18);
-            $sheetActive->getStyle('A3:I3')->getFont()->setBold(true)->setSize(12);
-            $sheetActive->setAutoFilter('A3:I3');
+            $sheetActive->getStyle('A3:L3')->getFont()->setBold(true)->setSize(12);
+            $sheetActive->setAutoFilter('A3:L3');
 
             $sheetActive->mergeCells('A1:D1');
             $sheetActive->setCellValue('A1', 'REGISTRO ATRASO ESTUDIANTES');
@@ -189,30 +197,39 @@
             $sheetActive->getColumnDimension('E')->setWidth(10);
             $sheetActive->getColumnDimension('F')->setWidth(15);
             $sheetActive->getColumnDimension('G')->setWidth(15);
-            $sheetActive->getColumnDimension('H')->setWidth(20);
-            $sheetActive->getColumnDimension('I')->setWidth(30);
+            $sheetActive->getColumnDimension('H')->setWidth(30);
+            $sheetActive->getColumnDimension('I')->setWidth(20);
+            $sheetActive->getColumnDimension('J')->setWidth(25);
+            $sheetActive->getColumnDimension('K')->setWidth(30);
+            $sheetActive->getColumnDimension('L')->setWidth(30);
         
             $sheetActive->setCellValue('A3', 'RUT');
-            $sheetActive->setCellValue('B3', 'AP PATERNO');
-            $sheetActive->setCellValue('C3', 'AP MATERNO');
+            $sheetActive->setCellValue('B3', 'PATERNO');
+            $sheetActive->setCellValue('C3', 'MATERNO');
             $sheetActive->setCellValue('D3', 'NOMBRES');
             $sheetActive->setCellValue('E3', 'CURSO');
-            $sheetActive->setCellValue('F3', 'FECHA');
-            $sheetActive->setCellValue('G3', 'HORA');
-            $sheetActive->setCellValue('H3', 'ESTADO ATRASO');
-            $sheetActive->setCellValue('I3', 'APODERADO JUSTIFICA');
+            $sheetActive->setCellValue('F3', 'FECHA RETRASO');
+            $sheetActive->setCellValue('G3', 'HORA RETRASO');
+            $sheetActive->setCellValue('H3', 'USUARIO REGISTRA');
+            $sheetActive->setCellValue('I3', 'ESTADO RETRASO');
+            $sheetActive->setCellValue('J3', 'FECHA/HORA JUSTIFICA');
+            $sheetActive->setCellValue('K3', 'APODERADO JUSTIFICA');
+            $sheetActive->setCellValue('L3', 'USUARIO JUSTIFICA');
 
             $fila = 4;
             foreach ($atrasos as $atraso) {
                 $sheetActive->setCellValue('A'.$fila, $atraso['rut']);
                 $sheetActive->setCellValue('B'.$fila, $atraso['ap_paterno']);
                 $sheetActive->setCellValue('C'.$fila, $atraso['ap_materno']);
-                $sheetActive->setCellValue('D'.$fila, $atraso['nombre']);
+                $sheetActive->setCellValue('D'.$fila, $atraso['nombres']);
                 $sheetActive->setCellValue('E'.$fila, $atraso['curso']);
                 $sheetActive->setCellValue('F'.$fila, $atraso['fecha_retraso']);
                 $sheetActive->setCellValue('G'.$fila, $atraso['hora_retraso']);
-                $sheetActive->setCellValue('H'.$fila, $atraso['estado_retraso']);
-                $sheetActive->setCellValue('I'.$fila, $atraso['apoderado_justifica']);
+                $sheetActive->setCellValue('H'.$fila, $atraso['usuario_registra']);
+                $sheetActive->setCellValue('I'.$fila, $atraso['estado_retraso']);
+                $sheetActive->setCellValue('J'.$fila, $atraso['fecha_hora_justificacion']);
+                $sheetActive->setCellValue('K'.$fila, $atraso['apoderado_justifica']);
+                $sheetActive->setCellValue('L'.$fila, $atraso['usuario_justifica']);
                 $fila++;
             }
 

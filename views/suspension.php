@@ -1,9 +1,4 @@
-<?php   
-    include_once "./layout/header.php";
-
-    // Controlador de acceso
-    // if ($_SESSION['usser']['privilege'] == 5) { header("location: ./matricula"); }
-?>
+<?php include_once "./layout/header.php"; ?>
 
             <!-- titulo del layout -->
             <div class="row d-flex align-items-center">

@@ -403,7 +403,7 @@ li {
     -moz-border-radius: 50%;
     -ms-border-radius: 50%;
     -o-border-radius: 50%;
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 
 .logo_liceo img {
@@ -411,6 +411,13 @@ li {
     height: 42px;
     object-fit: cover;
     cursor: pointer;
+}
+
+.logo_liceo .usser_name {
+    color: var(--blue);
+    padding-right: 20px;
+    font-weight: 600;
+    user-select: none;
 }
 
 

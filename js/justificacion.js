@@ -338,7 +338,12 @@ function deleteRegistroJustificacion(tabla) {
                         // LibreriaFunciones.alertPopUp('error', 'Registro no eliminado !!');
                         LibreriaFunciones.alertToast('error', 'Registro no eliminado !!');
                     }
-                }). fail (() => {
+                }). fail ((jqXHR) => {
+                    if (jqXHR.status == 404) {
+                        LibreriaFunciones.alertPopUp('warning', 'Acceso restringido !!');
+                        return false;
+                    }
+                    
                     LibreriaFunciones.alertPopUp('error', 'Error en la operación !!');
                 });
             }
@@ -373,6 +378,7 @@ function getCertificadoJustificacion(tabla) {
                 LibreriaFunciones.alertPopUp('warning', 'Acceso restringido !!');
                 return false;
             }
+
             LibreriaFunciones.alertPopUp('error', 'Error de ejecución !!');
         });
 

@@ -2,6 +2,7 @@
      if (!isset($_SESSION['usser']['name'])) {
         header("location: ../");
     }
+    include_once "./controller/controller_acceso.php";      // Controlador de acceso
 ?>
 
 <!DOCTYPE html>
@@ -164,6 +165,9 @@ if ($_SESSION['usser']['privilege'] == 1 || $_SESSION['usser']['privilege'] == 2
 
             <!-- img usuario -->
             <div class="logo_liceo">
+                <div>
+                    <?php echo "<span class='usser_name'>".$_SESSION['usser']['name']."</span>"; ?>
+                </div>
                 <img src="./assets/logo_liceo.png" alt="logo_liceo">
                 <ul class="link_perfil">
                     <li><a href="#"><i class="fas fa-address-card icon"></i> Profile</a></li>

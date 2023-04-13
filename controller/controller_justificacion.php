@@ -27,11 +27,16 @@ switch ($type) {
         break;
         
     case "deleteJustificacion":
+        if ($privilege_usser == 4) {
+            http_response_code(404);
+            exit();
+        }
+        
         print $datosJustificacion->deleteJustificacion($_POST['id_justificacion']);
         break;
 
     case "getCertificadoJustificacion":
-        if ($privilege_usser == 4) { // trabajar en los privilegios que pueden descargar la informacion
+        if ($privilege_usser == 4) {
             http_response_code(404);
             exit();
         }

@@ -1,12 +1,4 @@
-<?php
-    if (!isset($_SESSION['usser']['name'])) {
-        header("location: ../");
-    }
-
-    /* HEADER */
-    include_once "./layout/header.php";
-
-?>
+<?php include_once "./layout/header.php"; ?>
   
    <!--  PRINCIPAL -->
         <!-- MAIN -->

@@ -1,4 +1,4 @@
-<?php   include_once "./layout/header.php"; ?>
+<?php include_once "./layout/header.php"; ?>
 
 <!-- TITULO DEL LAYOUT -->
 

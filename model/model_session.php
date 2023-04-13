@@ -36,7 +36,12 @@
         public function checkUsser($usser, $pass) {
             // VARIABLES
             $md5Pass = md5($pass); 
-            $query = "SELECT nombre_usuario, id_privilegio, id_usuario FROM usuario WHERE nombre_usuario = ? AND clave_usuario = ?;";
+            $query = "SELECT (funcionario.nombres_funcionario || ' ' || funcionario.ap_funcionario || ' ' || funcionario.am_funcionario) AS nombre_usuario, 
+                usuario.id_privilegio, usuario.id_usuario 
+                FROM usuario 
+                INNER JOIN funcionario ON funcionario.id_funcionario = usuario.id_funcionario
+                WHERE nombre_usuario = ? AND clave_usuario = ?;";
+
             $sentencia = $this->preConsult($query);
             $sentencia->execute([$usser, $md5Pass]);
 

@@ -5,6 +5,7 @@
 
     // Trabajo con variables de sesión
     $session = new Session();
+    $privilege_usser = $session->getPrivilege();
     $id_usser = $session->getId();
 
 
@@ -29,10 +30,20 @@
             break;
             
         case "setJustificarRetraso":
+            if ($privilege_usser == 4) {
+                http_response_code(404);
+                exit();
+            }
+
             print $datosRetraso->setJustificarRetraso($_POST['id_apoderado'], $_POST['retrasos'], $id_usser);
             break;
 
         case "deleteRetraso":
+            if ($privilege_usser == 4) {
+                http_response_code(404);
+                exit();
+            }
+
             print $datosRetraso->deleteRetraso($_POST['id_retraso']);
             break;
 
@@ -40,7 +51,6 @@
         case "exportarRetraso":
             print $datosRetraso->exportarRetraso($_POST['ext']);
             break;
-
 
     }
 

@@ -1,9 +1,4 @@
-<?php   
-    include_once "./layout/header.php";
-
-    // Controlador de acceso
-    // if ($_SESSION['usser']['privilege'] == 5) { header("location: ./matricula"); }
-?>
+<?php include_once "./layout/header.php"; ?>
 
             <!-- titulo del layout -->
             <div class="row d-flex align-items-center">
@@ -47,9 +42,11 @@
 
             <!-- main content table -->
             <div class="d-flex justify-content-between mb-4">
+<?php if ($_SESSION['usser']['privilege'] != 4) { ?>
                 <button type="button" class="btn-lg btn-primary" id="btn_nuevo_retraso" data-bs-toggle="modal" data-bs-target="#modal_registro_retraso">
                     <i class="fas fa-user-plus icon"></i>
                 </button>
+<?php } ?>
                 <div class="row g-2">
                     <div class="col-6">
                         <button class="btn-lg btn-success" id="btn_excel" title="Exportar Excel"><i class="fas fa-file-excel icon"></i></button>

@@ -37,7 +37,7 @@
             // VARIABLES
             $md5Pass = md5($pass); 
             $query = "SELECT (funcionario.nombres_funcionario || ' ' || funcionario.ap_funcionario || ' ' || funcionario.am_funcionario) AS nombre_usuario, 
-                usuario.id_privilegio, usuario.id_usuario 
+                usuario.id_privilegio, usuario.id_usuario, usuario.fecha_ingreso
                 FROM usuario 
                 INNER JOIN funcionario ON funcionario.id_funcionario = usuario.id_funcionario
                 WHERE nombre_usuario = ? AND clave_usuario = ?;";
@@ -51,6 +51,7 @@
                 $this->setId($usuario['id_usuario']);
                 $this->res = true;
                 $this->json['privilege'] = $this->getPrivilege();
+                $this->json['fecha_ingreso'] = $usuario['fecha_ingreso'];
             }
 
             $this->json['data'] = $this->res;

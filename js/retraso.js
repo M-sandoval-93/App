@@ -138,15 +138,6 @@ function beforeRegistro(tabla, retraso = true) {
 }
 
 
-
-// SECCIÓN FUNCIONES DE IMPRESIÓN PARA PUNTO DE TICKET
-// function getImpresoras(data) {
-//     connetor_plugin.obtenerImpresoras()
-//         .then(impresoras => {
-//             console.log(impresoras);
-//         })
-// }
-
 async function imprimir(data) {
     let nombreImpresora = "Printer";
     let api_key = "123456";

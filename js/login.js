@@ -54,18 +54,25 @@ inputs.forEach(input => {
                             showConfirmButton: false,
                             timer: 1500
                         });
-                    } else {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Ingresando al sistema .....!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        }).then(result => {
-                            // if (response.privilege == 3) { window.location.href = 'retraso'; return false; }
-                            // if (response.privilege == 5 || response.privilege == 4) { window.location.href = 'matricula'; return false; }
-                            window.location.href = 'home';
-                        });
-                    }
+                        return false;
+                    } 
+
+                        // Trabajando cambio de clave
+                        // if (response.fecha_ingreso == null) {
+                        //     console.log("Cambio automático de clave");
+                        //     return false;
+                        // }
+
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Ingresando al sistema .....!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(result => {
+                        window.location.href = 'home';
+                    });
+
                 }
             }).fail (() => {
                 Swal.fire({

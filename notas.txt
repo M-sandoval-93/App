@@ -77,4 +77,7 @@ Modificar tabla de datos seccion privilegios
 PERSONAL !!! 
 TRABAJAR EN ACCESO AL SISTEMA INDEPENDIENTE SI ES MAYUSCULA O MINUSCULA
 
+AGREGAR A LA TABLA DE USUARIO LA FECHA ULTIMA FECHA DE INICIO
+trabajas con posterioridad mostrar la última fecha en iniciar sesión!!!!
+
 

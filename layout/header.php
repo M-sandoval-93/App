@@ -53,7 +53,8 @@
 
 <!-- Restricción de acceso -->
 <?php
-if ($_SESSION['usser']['privilege'] == 1 || $_SESSION['usser']['privilege'] == 2 || $_SESSION['usser']['privilege'] == 3 || $_SESSION['usser']['privilege'] == 4) { // Privilegios; administrador, soporte, estandar
+if ($_SESSION['usser']['privilege'] == 1 || $_SESSION['usser']['privilege'] == 2 || $_SESSION['usser']['privilege'] == 3 || 
+    $_SESSION['usser']['privilege'] == 4) {
 ?>
 <!-- Restricción de acceso -->
 
@@ -73,7 +74,8 @@ if ($_SESSION['usser']['privilege'] == 1 || $_SESSION['usser']['privilege'] == 2
 <!-- Restricción de acceso -->
 <?php
 }
-if ($_SESSION['usser']['privilege'] == 1 || $_SESSION['usser']['privilege'] == 2 || $_SESSION['usser']['privilege'] == 3 || $_SESSION['usser']['privilege'] == 4) { // Privilegios; administrador, soporte
+if ($_SESSION['usser']['privilege'] == 1 || $_SESSION['usser']['privilege'] == 2 || $_SESSION['usser']['privilege'] == 3 || 
+    $_SESSION['usser']['privilege'] == 4 || $_SESSION['usser']['privilege'] == 5) {
 ?>
 <!-- Restricción de acceso -->
 
@@ -88,7 +90,7 @@ if ($_SESSION['usser']['privilege'] == 1 || $_SESSION['usser']['privilege'] == 2
 
 <!-- Restricción de acceso -->
 <?php
-    if ($_SESSION['usser']['privilege'] == 1 || $_SESSION['usser']['privilege'] == 2) { // Administrador sistema y Usuario matrícula
+    if ($_SESSION['usser']['privilege'] == 1 || $_SESSION['usser']['privilege'] == 2 || $_SESSION['usser']['privilege'] == 5) {
 ?>
 <!-- Restricción de acceso -->
 
@@ -107,7 +109,7 @@ if ($_SESSION['usser']['privilege'] == 1 || $_SESSION['usser']['privilege'] == 2
 <!-- Restricción de acceso -->
 <?php
 }
-if ($_SESSION['usser']['privilege'] == 1 || $_SESSION['usser']['privilege'] == 2) { // Privilegios; administrador, soporte
+if ($_SESSION['usser']['privilege'] == 1 || $_SESSION['usser']['privilege'] == 2) {
 ?>
 <!-- Restricción de acceso -->
 

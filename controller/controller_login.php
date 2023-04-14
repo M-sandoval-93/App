@@ -1,15 +1,27 @@
 <?php
 
-    // SE INCLUYE EL MODELO PARA SER USADO POR EL CONTROLADOR
-    require_once '../model/model_session.php';
+    require_once '../model/model_session.php';          // Se incluye el controlador de session
 
-    // NOTA: AGREGAR PROTECCIÓN ANTE CARACTERES
-    $usuario = $_POST['usuario'];
-    $clave = $_POST['clave'];
-
-    // SE INSTANCIA LA CLASE SESSION Y USA EL MÉTODO PARA COMPROBAR EL USUARIO
+    // Se instancia la variable de sesión
     $inicio_sesion = new Session();
+    $type = $_POST['datos']; // Recibimos la acción a realizar por el controlador
 
-    print $inicio_sesion->checkUsser($usuario, $clave);
+    switch ($type) {
+        case "login":
+            $cuentaUsuario = json_decode(json_encode($_POST['cuentaUsuario'])); // Convertir un objeto js a un objeto php
+            print $inicio_sesion->checkUsser($cuentaUsuario);
+            break;
+
+        case "newPassword":
+            $password = json_decode(json_encode($_POST['newPassword'])); // Convertir un objeto js a un objeto php
+            print $inicio_sesion->newPassword($password);
+            break;
+    }
+
+
+    // $usuario = $_POST['usuario'];
+    // $clave = $_POST['clave'];
+
+    // print $inicio_sesion->checkUsser($usuario, $clave);
 
 ?>

@@ -22,9 +22,10 @@ inputs.forEach(input => {
 
 /* ------------------------- Funcionaes Internas ---------------------- */
 //Función para cambio de contraseña
-async function updatePasword() {
+async function newPassword(id_usuario) {
+    let datos = "newPassword";
 
-    const { value: password1 } = Swal.fire({
+    const { value: newPassword } = await Swal.fire({
         title: 'Crea tu password personal !!',
         html:
             `<input id="password_1" class="swal2-input" type="password" placeholder="Ingrese password" maxlength="10">
@@ -33,72 +34,51 @@ async function updatePasword() {
         focusConfirm: false,
         showCancelButton: false,
         preConfirm: () => {
-          const password1 = Swal.getPopup().getElementById('password_1').value;
-          const password2 = Swal.getPopup().getElementById('password_2').value;
-          if (password1 !== password2) {
+            const password1 = $.trim($("#password_1").val());
+            const password2 = $.trim($("#password_2").val());
+            const id_usuario = id_usuario;
+            if (password1 !== password2) {
             Swal.showValidationMessage('La password ingresada no coincide !!');
-          }
-          return { password1, password2 };
+            }
+            return { password1, password2 };
         },
-        didOpen: () => {
-          document.getElementById('password_1').focus();
-        },
-      });
+        // didOpen: () => {
+        //   document.getElementById('password_1').focus();
+        // },
+        });
       
-    console.log(password1);
+    $.ajax({
+        url: './controller/controller_login.php',
+        type: 'post',
+        dataType: 'json',
+        data: {datos: datos, password: newPassword},
+        success: (response) => {
+            if (response == true) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Error de creación !!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                return false;
+            }
 
+            Swal.fire({
+                icon: 'success',
+                title: 'Clave creada con éxito !!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+    }).fail (() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error al crear password !!',
+            showConfirmButton: false,
+            timer: 1500
+        });
+    });
 
-
-
-
-    
-
-    // $.ajax ({
-    //     url: './controller/controller_login.php',
-    //     type: 'post',
-    //     dataType: 'json',
-    //     data: { datos: 'updatePassword'},
-    //     success: (response) => {
-    //         if (response.data == false) {
-    //             Swal.fire({
-    //                 icon: 'error',
-    //                 title: 'Usuario o Clave incorrectos',
-    //                 showConfirmButton: false,
-    //                 timer: 1500
-    //             });
-    //             return false;
-    //         } 
-
-    //         if (response.fecha_ingreso == null) {
-
-    //             return false;
-    //         }
-
-    //             // Trabajando cambio de clave
-    //             // if (response.fecha_ingreso == null) {
-    //             //     console.log("Cambio automático de clave");
-    //             //     return false;
-    //             // }
-
-
-    //         Swal.fire({
-    //             icon: 'success',
-    //             title: 'Ingresando al sistema .....!',
-    //             showConfirmButton: false,
-    //             timer: 1500
-    //         }).then(result => {
-    //             window.location.href = 'home';
-    //         });
-
-    //     }
-    // }).fail (() => {
-    //     Swal.fire({
-    //         icon: 'error',
-    //         title: 'Sin conexion con BBDD .....!',
-    //         showConfirmButton: false,
-    //         timer: 1500
-    //     });
-    // });
 }
 /* ------------------------- Funcionaes Internas ---------------------- */
 
@@ -108,13 +88,16 @@ async function updatePasword() {
  $(document).ready(function() {
     $('#id_form_login').submit(function(e) {
         e.preventDefault();
+        let datos = "login";
 
         // Captación de las variables
-        let usuario = $.trim($("#id_usuario").val());
-        let clave = $.trim($("#id_clave").val());
+        const cuentaUsuario = {
+            usuario: $.trim($("#id_usuario").val()),
+            clave: $.trim($("#id_clave").val())
+        }
 
         // Comprobaciones de valor
-        if (usuario.length <= 0 || clave.length <=0) {
+        if (cuentaUsuario.usuario.length <= 0 || cuentaUsuario.clave.length <=0) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Faltan datos importantes ..!!',
@@ -128,7 +111,7 @@ async function updatePasword() {
                 url: './controller/controller_login.php',
                 type: 'post',
                 dataType: 'json',
-                data: { usuario: usuario, clave: clave},
+                data: { datos: datos, cuentaUsuario: cuentaUsuario },
                 success: (response) => {
                     if (response.data == false) {
                         Swal.fire({
@@ -141,16 +124,9 @@ async function updatePasword() {
                     } 
 
                     if (response.fecha_ingreso == null) {
-                        updatePasword();
+                        newPassword(response.id_usuario);
                         return false;
                     }
-
-                        // Trabajando cambio de clave
-                        // if (response.fecha_ingreso == null) {
-                        //     console.log("Cambio automático de clave");
-                        //     return false;
-                        // }
-
 
                     Swal.fire({
                         icon: 'success',

@@ -270,6 +270,27 @@ form h2 {
     transition: .3s;
 } */
 
+.text-secundary {
+    text-align: left;
+    padding-left: 8%;
+    padding-top: 2%;
+    color: gray;
+    font-size: 15px;
+}
+
+
+
+
+/* Alerta popup cambio de clave */
+#swal2-html-container {
+    display: grid !important;
+}
+
+.swal2-popup.swal2-modal.swal2-show {
+    width: auto !important;
+}
+
+
 
 
 /* REGLAS PARA RESPONSIVE */

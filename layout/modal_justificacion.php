@@ -72,22 +72,27 @@
           </div>
 
           <div class="row mt-4" id="check">
-            <div class="col-3">
+            <div class="col-6">
               <div class="form-check">
-                <input type="checkbox" id="justificacion_documento" class="form-check-input">
-                <label for="justificacion_documento" class="form-check-label">Presenta documento</label>
+                <input type="checkbox" name="" id="justificacion_documento" class="form-check-input" style="margin-top: 12px;">
+                <div class="form-check-label">
+                  <select id="justificacion_tipo_documento" class="form-select form-check-label" disabled>
+                    <option selected value="0">Presenta documento</option>
+                    <option value="1">Certificado médico</option>
+                  </select>
+                </div>
               </div>
             </div>
 
             <div class="col-3">
-              <div class="form-check">
+              <div class="form-check mt-2">
                 <input type="checkbox" id="justificacion_informacion_verbal" class="form-check-input">
                 <label for="justificacion_informacion_verbal" class="form-check-label">Información verbal</label>
               </div>
             </div>
 
             <div class="col-3">
-              <div class="form-check">
+              <div class="form-check mt-2">
                 <input type="checkbox" id="justificacion_prueba_pendiente" class="form-check-input" disabled>
                 <label for="justificacion_prueba_pendiente" class="form-check-label">Prueba pendiente</label>
               </div>
@@ -139,3 +144,31 @@
     </div>
   </div>
 </div>
+
+
+
+
+              <!-- <label for="justificacion_documento" class="form-label">Documento</label>
+              <select class="form-select" id="justificacion_documento">
+                <option selected>Sin documento</option>
+                <option value=7> Certificado médico </option>
+              </select> -->
+              <!-- <div class="form-check">
+                <input type="checkbox" id="justificacion_documento" class="form-check-input">
+                <label for="justificacion_documento" class="form-check-label">Presenta documento</label>
+              </div> -->
+              <!-- <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="checkbox">
+                <label class="form-check-label" for="checkbox">
+                  Checkbox
+                </label>
+                <select class="form-select" aria-label="Selecciona">
+                  <option selected>Selecciona una opción</option>
+                  <option value="1">Opción 1</option>
+                  <option value="2">Opción 2</option>
+                  <option value="3">Opción 3</option>
+                </select>
+              </div> -->
+
+
+              <!-- SEGUIR TRABAJANDO DESDE AQUI .... -->

@@ -33,16 +33,19 @@
             $_SESSION['usser']['id'] = $id;
         }
 
+        // Método para verificar cuenta de usuario
         public function checkUsser($cuentaUsuario) {
             $md5Pass = md5($cuentaUsuario->clave); 
+            
             $query = "SELECT (funcionario.nombres_funcionario || ' ' || funcionario.ap_funcionario || ' ' || funcionario.am_funcionario) AS nombre_usuario, 
-                usuario.id_privilegio, usuario.id_usuario, usuario.fecha_ingreso
+                usuario.id_privilegio, usuario.id_usuario, usuario.fecha_ingreso, usuario.id_estado
                 FROM usuario 
                 INNER JOIN funcionario ON funcionario.id_funcionario = usuario.id_funcionario
                 WHERE nombre_usuario = ? AND clave_usuario = ?;";
 
             $sentencia = $this->preConsult($query);
             $sentencia->execute([$cuentaUsuario->usuario, $md5Pass]);
+
             if ($usuario = $sentencia->fetch()) {
                 if ($usuario['fecha_ingreso'] != null) {
                     $this->setUsser($usuario['nombre_usuario']);
@@ -50,9 +53,16 @@
                     $this->setId($usuario['id_usuario']);
                     $this->json['privilege'] = $this->getPrivilege();
                 }
+                $this->json['status'] = $usuario['id_estado'];
                 $this->json['id_usuario'] = $usuario['id_usuario'];
                 $this->json['fecha_ingreso'] = $usuario['fecha_ingreso'];
                 $this->res = true;
+            }
+
+            if ($this->json['fecha_ingreso'] != null) {
+                $query = "UPDATE usuario SET fecha_ingreso = CURRENT_TIMESTAMP WHERE id_usuario = ?;";
+                $sentencia = $this->preConsult($query);
+                $sentencia->execute([intval($this->getId())]);
             }
 
             $this->json['data'] = $this->res;
@@ -60,49 +70,23 @@
             return json_encode($this->json);
         }
 
+        // Método para nueva password
         public function newPassword($password) {
-            if ($password->password1 === $password->password2) {
+            if ($password->password1 == $password->password2) {
                 $md5Pass = md5($password->password1);
-                $query = "UPDATE usuario SET clave_usuario = ? WHERE id_usuario = ?;";
+                $query = "UPDATE usuario SET clave_usuario = ?, fecha_ingreso = CURRENT_TIMESTAMP WHERE id_usuario = ?;";
 
                 $sentencia = $this->preConsult($query);
-                if ($sentencia->execute([$md5Pass, $password->id_usuario])) {
+                if ($sentencia->execute([$md5Pass, intval($password->id_usuario)])) {
                     $this->res = true;
                 }
             }
 
             $this->closeConnection();
             return json_encode($this->res);
-
         }
 
-        // public function checkUsser($usser, $pass) {
-        //     // VARIABLES
-        //     $md5Pass = md5($pass); 
-        //     $query = "SELECT (funcionario.nombres_funcionario || ' ' || funcionario.ap_funcionario || ' ' || funcionario.am_funcionario) AS nombre_usuario, 
-        //         usuario.id_privilegio, usuario.id_usuario, usuario.fecha_ingreso
-        //         FROM usuario 
-        //         INNER JOIN funcionario ON funcionario.id_funcionario = usuario.id_funcionario
-        //         WHERE nombre_usuario = ? AND clave_usuario = ?;";
-
-        //     $sentencia = $this->preConsult($query);
-        //     $sentencia->execute([$usser, $md5Pass]);
-
-        //     if ($usuario = $sentencia->fetch()) {
-        //         $this->setUsser($usuario['nombre_usuario']);
-        //         $this->setPrivilege($usuario['id_privilegio']);
-        //         $this->setId($usuario['id_usuario']);
-        //         $this->res = true;
-        //         $this->json['privilege'] = $this->getPrivilege();
-        //         $this->json['fecha_ingreso'] = $usuario['fecha_ingreso'];
-        //     }
-
-        //     $this->json['data'] = $this->res;
-
-        //     return json_encode($this->json);
-        //     $this->closeConnection(); 
-        // }
-
+        // Método para cerrar conexión con la base de datos
         public function closeSession() {
             $this->closeConnection();
             session_unset();

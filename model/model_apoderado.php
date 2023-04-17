@@ -117,7 +117,7 @@
             $sentencia = $this->preConsult($query);
             $sentencia->execute([$rut]);
             $apoderados = $sentencia->fetch(PDO::FETCH_ASSOC);
-            $this->json[0] = "<option disable selected>Seleccionar apoderado</option>";
+            $this->json[0] = "<option disabled selected>Seleccionar apoderado</option>";
 
             if ($apoderados['id_titular'] != null && $apoderados['id_suplente'] != null) {
                 $this->json[] = "<option value='".$apoderados['id_titular']."'>".$apoderados['titular']."</option>";

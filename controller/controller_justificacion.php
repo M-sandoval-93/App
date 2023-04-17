@@ -21,6 +21,10 @@ switch ($type) {
         print $datosJustificacion->getCantidadJustificacion();
         break;
 
+    case "getTipoDocumento":
+        print $datosJustificacion->getTipoDocumento();
+        break;
+
     case "setJustificacion":
         $justificacion = json_decode(json_encode($_POST['justificacion'])); // Convertir un objeto js a un objeto PHP
         print $datosJustificacion->setJustificacion($justificacion, $_POST['asignatura'], $id_usser);

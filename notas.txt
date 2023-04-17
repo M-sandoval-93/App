@@ -67,22 +67,22 @@ FACILIDAD PARA CAMBIAR LA CLAVE DESDE EL ADMINISTRADOR
 
 
 
-NOTA !!!!!!
-Trabajar en los usuarios y los privilegios de cada uno!!!
-Modificar tabla de datos seccion privilegios
-
-
-
-
 PERSONAL !!! 
 TRABAJAR EN ACCESO AL SISTEMA INDEPENDIENTE SI ES MAYUSCULA O MINUSCULA
 
-AGREGAR A LA TABLA DE USUARIO LA FECHA ULTIMA FECHA DE INICIO
-trabajas con posterioridad mostrar la última fecha en iniciar sesión!!!!
+
 
 Trabajar con tipo de documento presentado en justificacion
 Ver si se agrega el motivo de la justificacion de retrasos !!! poco funcional
-
 cambiar el check por un select para elegir el tipo de documento mostrado
+
+
+REVISAR BASE DE DATOS
+AGREGAR TABLA                                   ->      tipo_documento_justificacion (id_tipo_documento, tipo_documento)
+AGREGAR A LA TABLA JUSTIFICACION LA COLUMNA     ->      id_tipo_documento
+trabajar base de datos con respectivas Modificaciones !!!!
+
+
+
 
 

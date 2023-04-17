@@ -13,15 +13,11 @@
             break;
 
         case "newPassword":
-            $password = json_decode(json_encode($_POST['newPassword'])); // Convertir un objeto js a un objeto php
+            $password = json_decode(json_encode($_POST['password'])); // Convertir un objeto js a un objeto php
             print $inicio_sesion->newPassword($password);
             break;
     }
 
 
-    // $usuario = $_POST['usuario'];
-    // $clave = $_POST['clave'];
-
-    // print $inicio_sesion->checkUsser($usuario, $clave);
 
 ?>

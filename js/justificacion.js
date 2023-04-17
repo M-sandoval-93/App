@@ -28,6 +28,11 @@ function getDataSecundaria(data) {
             '</tr>' +
 
             '<tr>' +
+                '<td>Tipo documento:</td>' +
+                '<td>' + data.tipo_documento.toUpperCase() + '</td>' +
+            '</tr>' +
+
+            '<tr>' +
                 '<td>Información verbal:</td>' +
                 '<td>' + data.informacion_verbal + '</td>' +
             '</tr>' +
@@ -148,6 +153,24 @@ function getPruebaAsignaturas() {
     });
 }
 
+// Función para obtener los tipos de documentos de una justificación
+function getTipoDocumento() {
+    let datos = "getTipoDocumento";
+
+    $.ajax({
+        url: "./controller/controller_justificacion.php",
+        type: "post",
+        dataType: "json",
+        cache: false,
+        data: {datos: datos},
+        success: function(data) {
+            $('#justificacion_tipo_documento').html(data);
+        }
+    }).fail(() => {
+        $('#justificacion_tipo_documento').html('sin datos !!');
+    });
+}
+
 // Función para obtener los datos del modal justificación
 function getDataJustificacion() {
     const justificacion = {
@@ -207,6 +230,7 @@ function prepararModalJustificacion() {
         $('#justificacion_fecha').val(fecha_actual.toLocaleDateString());
         $('#justificacion_rut_estudiante').removeClass('is-invalid');
         $('#justificacion_prueba_pendiente').prop('disabled', true);
+        $('#justificacion_tipo_documento').prop('disabled', true);
         LibreriaFunciones.autoFocus($('#modal_registro_justificacion_falta'), $('#justificacion_rut_estudiante'));
         asignatura = [];
     });
@@ -214,9 +238,13 @@ function prepararModalJustificacion() {
     $('#justificacion_documento').click(function() {
         if (LibreriaFunciones.comprobarCheck(this)) {
             $('#justificacion_prueba_pendiente').prop('disabled', false);
+            $('#justificacion_tipo_documento').prop('disabled', false);
+            getTipoDocumento();
         } else {
             $('#justificacion_prueba_pendiente').prop('disabled', true);
+            $('#justificacion_tipo_documento').prop('disabled', true);
             $('#justificacion_prueba_pendiente').prop('checked', false);
+            $('#justificacion_tipo_documento').html('<option selected value="0">Presenta documento</option>');
             asignatura = [];
         }
     });
@@ -264,6 +292,7 @@ function prepararModalAsignatura() {
             $('#modal_justificacion_asignatura').modal('show');
         } else {
             asignatura = [];
+            tipo_documento = [];
         }
     });
 }
@@ -284,6 +313,7 @@ function setModalJustificacion(tabla) {
             LibreriaFunciones.alertPopUp('info', 'Faltan datos importante !!');
             return false;
         }
+        justificacion.id_tipo_documento = $('#justificacion_tipo_documento').val();
 
         $.ajax({
             url: "./controller/controller_justificacion.php",

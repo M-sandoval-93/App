@@ -36,16 +36,16 @@ async function newPassword(id_usuario) {
         preConfirm: () => {
             const password1 = $.trim($("#password_1").val());
             const password2 = $.trim($("#password_2").val());
-            const id_usuario = id_usuario;
-            if (password1 !== password2) {
-            Swal.showValidationMessage('La password ingresada no coincide !!');
-            }
+
+            if (password1 !== password2) { Swal.showValidationMessage('La password ingresada no coincide !!'); }
+
             return { password1, password2 };
-        },
+        }
         // didOpen: () => {
         //   document.getElementById('password_1').focus();
         // },
-        });
+    });
+    newPassword.id_usuario = id_usuario;
       
     $.ajax({
         url: './controller/controller_login.php',
@@ -53,7 +53,7 @@ async function newPassword(id_usuario) {
         dataType: 'json',
         data: {datos: datos, password: newPassword},
         success: (response) => {
-            if (response == true) {
+            if (response == false) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Error de creación !!',
@@ -80,18 +80,13 @@ async function newPassword(id_usuario) {
     });
 
 }
-/* ------------------------- Funcionaes Internas ---------------------- */
 
-
-
-/* ----------------------- backend ---------------------- */
- $(document).ready(function() {
-    $('#id_form_login').submit(function(e) {
+function verifyUsser() {
+    $('#id_form_login').submit((e) => {
         e.preventDefault();
         let datos = "login";
-
-        // Captación de las variables
         const cuentaUsuario = {
+            // Captación de las variables
             usuario: $.trim($("#id_usuario").val()),
             clave: $.trim($("#id_clave").val())
         }
@@ -105,51 +100,72 @@ async function newPassword(id_usuario) {
                 showConfirmButton: false,
                 timer: 1500
             });
+            return false;
+        } 
 
-        } else {
-            $.ajax ({
-                url: './controller/controller_login.php',
-                type: 'post',
-                dataType: 'json',
-                data: { datos: datos, cuentaUsuario: cuentaUsuario },
-                success: (response) => {
-                    if (response.data == false) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Usuario o Clave incorrectos',
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                        return false;
-                    } 
-
-                    if (response.fecha_ingreso == null) {
-                        newPassword(response.id_usuario);
-                        return false;
-                    }
-
+        $.ajax ({
+            url: './controller/controller_login.php',
+            type: 'post',
+            dataType: 'json',
+            data: { datos: datos, cuentaUsuario: cuentaUsuario },
+            success: (response) => {
+                if (response.data == false) {
                     Swal.fire({
-                        icon: 'success',
-                        title: 'Ingresando al sistema .....!',
+                        icon: 'error',
+                        title: 'Usuario o Clave incorrectos',
                         showConfirmButton: false,
                         timer: 1500
-                    }).then(result => {
-                        window.location.href = 'home';
                     });
-
+                    return false;
                 }
-            }).fail (() => {
+                
+                if (response.status !== 1) {
+                    console.log(response);
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Cuenta de usuario; SUSPENDIDA !!'
+                    });
+                    return false;
+                }
+
+                if (response.fecha_ingreso == null) {
+                    newPassword(response.id_usuario);
+                    return false;
+                }
+
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Sin conexion con BBDD .....!',
+                    icon: 'success',
+                    title: 'Ingresando al sistema .....!',
                     showConfirmButton: false,
                     timer: 1500
+                }).then(result => {
+                    window.location.href = 'home';
                 });
+
+            }
+        }).fail (() => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Sin conexion con BBDD .....!',
+                showConfirmButton: false,
+                timer: 1500
             });
-            $('#id_form_login').trigger('reset');
-            $('.input-div').removeClass('focus');
-        }
+        });
+        $('#id_form_login').trigger('reset');
+        $('.input-div').removeClass('focus');
     });
+
+
+}
+/* ------------------------- Funcionaes Internas ---------------------- */
+
+
+
+/* ----------------------- backend ---------------------- */
+ $(document).ready(function() {
+
+    verifyUsser();
+
  });
 
 

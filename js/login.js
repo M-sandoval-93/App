@@ -28,8 +28,8 @@ async function newPassword(id_usuario) {
     const { value: newPassword } = await Swal.fire({
         title: 'Crea tu password personal !!',
         html:
-            `<input id="password_1" class="swal2-input" type="password" placeholder="Ingrese password" maxlength="10">
-            <input id="password_2" class="swal2-input" type="password" placeholder="Ingrese password nuevamente" maxlength="10">
+            `<input id="password_1" class="swal2-input" type="password" placeholder="Ingrese password">
+            <input id="password_2" class="swal2-input" type="password" placeholder="Ingrese password nuevamente">
             <div class="text-secundary">Contraseña no superior a 10 digitos.</div>`,
         focusConfirm: false,
         showCancelButton: false,

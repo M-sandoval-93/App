@@ -76,4 +76,8 @@ REVISAR COMO MANEJAR LA CACHE
 
 
 
+REVISAR PARA CONTROLAR LA CACHE DEL NAVEGADOR DE LA APP DEL lICEO
+https://es.stackoverflow.com/questions/63716/como-evitar-el-cach%C3%A9-de-los-archivos-css-y-js
 
+opción de trabajar el versionado de mis archivos css y javascript para manejar la cache 
+de esta forma cada vez que actualice mi sitio, será manejado de manera controlada

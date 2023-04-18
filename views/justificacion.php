@@ -80,7 +80,7 @@ i
 
 
     <!-- script layout atrasos -->
-    <script src="./js/justificacion.js" type="module"></script>
+    <script src="./js/justificacion.js?v=<?php  echo $_SESSION['version'] ?>" type="module"></script>
 
 
 </body>

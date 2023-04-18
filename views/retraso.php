@@ -90,7 +90,7 @@
 
     <!-- script layout atrasos -->
     <script src="./Pluggins/plugin_impresion/conector_impresora.js"></script>
-    <script src="./js/retraso.js" type="module"></script>
+    <script src="./js/retraso.js?v=<?php  echo $_SESSION['version'] ?>" type="module"></script>
 
 
 </body>

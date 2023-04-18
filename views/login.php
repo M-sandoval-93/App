@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="./Pluggins/Fontawesome-5.15.4/css/all.min.css">
 
     <!-- Style -->
-    <link rel="stylesheet" href="./css/loggin.css">
+    <link rel="stylesheet" href="./css/loggin.css?v=<?php  echo $_SESSION['version']; ?>">
     <link rel="stylesheet" href="./css/normalize.css">
     <link rel="stylesheet" href="./Pluggins/SweetAlert2/sweetalert2.min.css">
 
@@ -69,7 +69,8 @@
 
     <script src="./Pluggins/jQuery/jquery-3.6.0.min.js"></script>
     <script src="./Pluggins/SweetAlert2/sweetalert2.all.min.js"></script>
-    <script src="./js/login.js"></script> 
+    <script src="./js/login.js?v=<?php  echo $_SESSION['version']; ?>"></script>
+    <!-- <script src="./js/login.js></script>  -->
     
 </body>
 </html>

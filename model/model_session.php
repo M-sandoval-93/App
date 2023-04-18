@@ -52,6 +52,7 @@
                     $this->setPrivilege($usuario['id_privilegio']);
                     $this->setId($usuario['id_usuario']);
                     $this->json['privilege'] = $this->getPrivilege();
+                    // $_SESSION['version'] = VERSION;
                 }
                 $this->json['status'] = $usuario['id_estado'];
                 $this->json['id_usuario'] = $usuario['id_usuario'];

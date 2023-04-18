@@ -229,7 +229,7 @@
 <?php   include_once "./layout/footer.php"; ?>
 
     <!-- script módulo home -->
-    <script src="./js/home.js" type="module"></script>
+    <script src="./js/home.js?v=<?php  echo $_SESSION['version'] ?>" type="module"></script>
 
 </body>
 </html>

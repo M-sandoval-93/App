@@ -166,7 +166,7 @@ $(document).ready(function() {
             {
                 data: null,
                 bSortable: false,
-                defaultContent:`<button class="btn btn-primary btn-justify px-3" id="btn_editar_funcionario" title="Editar matricula" type="button" data-bs-toggle="modal" data-bs-target="#modal_matricula"><i class="fas fa-edit"></i></button>
+                defaultContent:`<button class="btn btn-primary btn-justify px-3" id="btn_editar_funcionario" title="Editar funcionario" type="button" data-bs-toggle="modal" data-bs-target="#"><i class="fas fa-edit"></i></button>
                                 <button class="btn btn-warning px-3" id="btn_generar_usuario" title="Generar cuenta usuario" type="button"><i class="fas fa-user-cog"></i></button>
                                 <button class="btn btn-danger btn-delete px-3" id="btn_delete_funcionario" title="Eliminar funcionario" type="button"><i class="fas fa-trash-alt"></i></button>`,
                 className: "text-center"

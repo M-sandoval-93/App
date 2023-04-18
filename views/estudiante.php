@@ -72,7 +72,7 @@
 <?php   include_once "./layout/footer.php"; ?>
 
     <!-- script layout estudiante -->
-    <script src="./js/estudiante.js" type="module"></script>
+    <script src="./js/estudiante.js?v=<?php  echo $_SESSION['version'] ?>" type="module"></script>
 
 </body>
 </html>

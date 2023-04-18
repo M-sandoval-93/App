@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="./Pluggins/DataTables/datatables.min.css">
     
     <!-- main style -->
-    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/main.css?v=<?php  echo $_SESSION['version'] ?>">
 
     <title>Liceo Valentín Letelier</title>
 </head>

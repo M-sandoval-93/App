@@ -73,7 +73,7 @@
 <?php   include_once "./layout/footer.php"; ?>
 
     <!-- script layout apoderado -->
-    <script src="./js/apoderado.js" type="module"></script>
+    <script src="./js/apoderado.js?v=<?php  echo $_SESSION['version'] ?>" type="module"></script>
 
 </body>
 </html>

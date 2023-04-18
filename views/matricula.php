@@ -86,7 +86,7 @@
 
 
     <!-- script layout matriculas -->
-    <script src="./js/matricula.js" type="module"></script>
+    <script src="./js/matricula.js?v=<?php  echo $_SESSION['version'] ?>" type="module"></script>
 
 
 </body>

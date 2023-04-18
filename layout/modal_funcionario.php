@@ -1,6 +1,5 @@
-
-<!-- Modal justificacion falta -->
-<div class="modal fade" id="modal_registro_justificacion_falta" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<!-- Modal funcionario -->
+<div class="modal fade" id="modal_funcionario" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
 
@@ -109,40 +108,3 @@
     </div>
   </div>
 </div>
-
-<!-- Modal pruebas pendientes por asignatura -->
-<div class="modal fade" id="modal_justificacion_asignatura" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="modal_justificacion_asignatura_title">ASIGNATURAS</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" id="close_modal_justificacion_asignatura"></button>
-      </div>
-
-      <form id="form_justificacion_asignatura">
-        <div class="modal-body">
-          <div class="row mb-3">
-            <div class="col-md-10 col-sm-9">
-              <label for="justificacion_asignatura_nombre" class="form-label">Nombre estudiante</label>
-              <input type="text" class="form-control" id="justificacion_asignatura_nombre" disabled>
-            </div>
-            <div class="col-md-2 col-sm-3">
-              <label for="justificacion_asignatura_curso" class="form-label">Curso</label>
-              <input type="text" class="form-control" id="justificacion_asignatura_curso" disabled>
-            </div>
-          </div>
-          <div class="row mb-3" id="group_of_the_check">
-            <label class="form-label">Seleccionar asignatura <span class="text-danger fs-5">*</span></label>
-          </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary btn-lg" id="btn_seleccion_asignatura">Seleccionar</button>
-        </div> 
-
-      </form>
-    </div>
-  </div>
-</div>
-
-

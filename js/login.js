@@ -27,12 +27,19 @@ async function newPassword(id_usuario) {
 
     const { value: newPassword } = await Swal.fire({
         title: 'Crea tu password personal !!',
+        // customClass: 'titulo_cambio_clave',
+        customClass: {
+            title: 'titulo_cambio_clave',
+        },
         html:
             `<input id="password_1" class="swal2-input" type="password" placeholder="Ingrese password">
             <input id="password_2" class="swal2-input" type="password" placeholder="Ingrese password nuevamente">
             <div class="text-secundary">Contraseña no superior a 10 digitos.</div>`,
         focusConfirm: false,
         showCancelButton: false,
+        allowOutsideClick: false,
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#2c6cff',
         preConfirm: () => {
             const password1 = $.trim($("#password_1").val());
             const password2 = $.trim($("#password_2").val());

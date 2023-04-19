@@ -67,7 +67,7 @@
             </div>
 
 <!-- modal -->
-<?php   //include_once "./layout/modal_apoderado.php";   ?>
+<?php   include_once "./layout/modal_funcionario.php";   ?>
 
 <!-- script generales del proyecto -->
 <?php   include_once "./layout/footer.php"; ?>

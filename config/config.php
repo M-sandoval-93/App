@@ -7,22 +7,19 @@
 // const DB_PASSWORD = '@dm1npgLVL';
 
 // Configuración para la conexión con la base de datos LOCAL lICEO
-const DB_HOST = 'localhost';
-const DB_USSER = 'postgres';
-const DB_DATA = 'db_liceo_sistema_local';
-const DB_PASSWORD = 'user2019';
-
-// Configuración para la conexión con la base de datos LOCAL CASA
 // const DB_HOST = 'localhost';
 // const DB_USSER = 'postgres';
-// const DB_DATA = 'db_liceo';
-// const DB_PASSWORD = 'admin';
+// const DB_DATA = 'db_liceo_sistema_local';
+// const DB_PASSWORD = 'user2019';
 
+// Configuración para la conexión con la base de datos LOCAL CASA
+const DB_HOST = 'localhost';
+const DB_USSER = 'postgres';
+const DB_DATA = 'db_liceo';
+const DB_PASSWORD = 'admin';
 
 const DB_CHARSET = 'utf8';
 const DB_PORT = '5432';
-
-const VERSION = 1.0;
 
 ?>
 

@@ -86,3 +86,5 @@ de esta forma cada vez que actualice mi sitio, será manejado de manera controla
 
 trabajar en modulo funcionarios
 revisar el orden para generar nominas de estudiante por curso
+
+ver y usar replit.com

@@ -93,7 +93,9 @@
                 $this->res = true;
 
                 $query = "SELECT retraso.id_retraso, curso.curso,
-                    (e.nombres_estudiante || ' ' || e.ap_estudiante || ' ' || e.am_estudiante) AS nombres,
+                    (CASE WHEN e.nombre_social IS NULL THEN e.nombres_estudiante || ' ' || e.ap_estudiante 
+                    || ' ' || e.am_estudiante ELSE '(' || e.nombre_social || ') ' || e.nombres_estudiante 
+                    || ' ' || e.ap_estudiante || ' ' || e.am_estudiante END) AS nombres,
                     to_char(retraso.fecha_retraso, 'DD/MM/YYYY') AS fecha_retraso,
                     to_char(retraso.hora_retraso, 'HH:MI:SS') AS hora_retraso
                     FROM estudiante e

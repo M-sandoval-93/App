@@ -47,7 +47,7 @@
 
           <div class="row g-3 mt-4">
             <div class="col-md-4">
-              <label for="nombre_funcionario" class="form-label">Nombres funcionario <span class="text-danger fs-5">*</span></label>
+              <label for="nombre_funcionario" class="form-label">Nombres <span class="text-danger fs-5">*</span></label>
               <input type="text" class="form-control" id="nombre_funcionario">
             </div>
             <div class="col-md-4">

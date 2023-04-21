@@ -55,6 +55,44 @@ function getCantidadFuncionario() {
     });
 }
 
+function loadTipoFuncionario() {
+    let datos = 'loadTipoFuncionario';
+
+    $.ajax({
+        url: "./controller/controller_funcionario.php",
+        type: "post",
+        dataType: "json",
+        data: {datos: datos},
+        success: (response) => {
+            // $('#cantidad_funcionario').text(response.cantidad_funcionario);
+        }
+    }).fail(() => {
+        // $('#cantidad_funcionario').text('Error !!');
+    });
+}
+
+function loadDepartamento() {
+    let datos = 'loadDepartamento';
+
+    $.ajax({
+        url: "./controller/controller_funcionario.php",
+        type: "post",
+        dataType: "json",
+        data: {datos: datos},
+        success: (response) => {
+            // $('#cantidad_funcionario').text(response.cantidad_funcionario);
+        }
+    }).fail(() => {
+        // $('#cantidad_funcionario').text('Error !!');
+    });
+}
+
+
+
+// ================== MANEJO DE MODAL ================== //
+function showModalNewFuncionario() {
+
+}
 
 
 // ================== MANEJO DE INFORMARCIÓN ================== //

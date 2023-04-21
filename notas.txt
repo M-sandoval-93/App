@@ -89,4 +89,3 @@ revisar el orden para generar nominas de estudiante por curso
 
 ver y usar replit.com
 
-actualizacion de contenido

@@ -220,19 +220,28 @@
 
 
             // Consulta cambio de curso
-            $query_curso = "SELECT id_estudiante, id_curso FROM matricula WHERE id_matricula = ?;";
+            $query_curso = "SELECT id_estudiante, id_curso, id_ap_titular, id_ap_suplente
+                FROM matricula WHERE id_matricula = ?;";
+
             $sentencia = $this->preConsult($query_curso);
             $sentencia->execute([intval($m->id_matricula)]);
-            $curso_actual = $sentencia->fetch(PDO::FETCH_ASSOC);
+            $matricula = $sentencia->fetch(PDO::FETCH_ASSOC);
 
             // Condición para registrar el histórico de los cambios de curso
-            if ($curso_actual['id_curso'] != intval($m->id_curso)) {
+            if ($matricula['id_curso'] != intval($m->id_curso)) {
                 $query_historico_cambio_curso = "INSERT INTO historico_cambio_curso (fecha_cambio, id_estudiante, id_curso_actual, id_curso_nuevo, periodo, id_usuario, fecha_registro)
                     VALUES (?, ?, ?, ?, EXTRACT(YEAR FROM CURRENT_DATE), ?, CURRENT_TIMESTAMP);";
 
                 $sentencia = $this->preConsult($query_historico_cambio_curso);
-                $sentencia->execute([$m->fecha_cambio_curso, intval($curso_actual['id_estudiante']), intval($curso_actual['id_curso']), intval($m->id_curso), intval($m->id_usuario)]);
+                $sentencia->execute([$m->fecha_cambio_curso, intval($matricula['id_estudiante']), intval($matricula['id_curso']), intval($m->id_curso), intval($m->id_usuario)]);
             }
+
+            // Condición para registrar cambio de apoderado titula
+            // if ($matricula['id_ap_titular'] != $titular) {
+            //     $query_log_cambio_apoderado = "";
+            // }
+
+            // Condición para registrar cambio de apoderado suplente
 
             // Actualización de la matrícula
             $query = "UPDATE matricula

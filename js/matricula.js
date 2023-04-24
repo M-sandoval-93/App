@@ -342,6 +342,38 @@ function getApoderadosTS(id_matricula) {
 
 }
 
+function newCurso(letra) {
+    $('#grado_curso').change(() => {
+        preLoadLetra(letra);
+    });
+
+    $('#letra_curso').change(() => {
+        fecha_cambio_curso = '';
+        $('#fecha_cambio_curso').val('');
+        $('#modal_matricula_fecha_cambio_curso').modal('show');
+    });
+
+    $('#btn_guardar_fecha_cambio_curso').click(() => {
+        if ( $('#fecha_cambio_curso').val() == '') {
+            LibreriaFunciones.alertPopUp('info', 'Ingresar fecha !!');
+            return false;
+        }
+
+        fecha_cambio_curso = $('#fecha_cambio_curso').val();
+        $('#modal_matricula_fecha_cambio_curso').modal('hide');
+    });
+
+    $('#modal_matricula_fecha_cambio_curso').on('hidden.bs.modal', function() {
+        if ($('#fecha_cambio_curso').val() == '') {
+            preLoadLetra(letra);
+        }
+    });
+}
+
+function newApoderado() {
+
+}
+
 
 
 // ================== FUNCÓN PARA TRABAJAR CON MODALES ================== //
@@ -422,20 +454,10 @@ function lanzarModalActualizarMatricula(tabla) {
         $('#grado_curso').change(() => {
             preLoadLetra(letra);
         });
+        
+        newCurso(letra);
+        // newApoderado(); FUNCIÓN PARA MANEJAR EL REGISTRO DEL CAMBIO DE APODERADO
 
-        $('#letra_curso').change(() => {
-            $('#modal_matricula_fecha_cambio_curso').modal('show');
-        });
-
-        $('#btn_guardar_fecha_cambio_curso').click(() => {
-            if ( $('#fecha_cambio_curso').val() == '') {
-                LibreriaFunciones.alertPopUp('info', 'Ingresar fecha !!');
-                return false;
-            }
-
-            fecha_cambio_curso = $('#fecha_cambio_curso').val();
-            $('#modal_matricula_fecha_cambio_curso').modal('hide');
-        });
     });
 }
 
@@ -629,6 +651,7 @@ function setRetiroMatricula(tabla) {
 function updateMatricula(tabla) {
     $('#btn_registrar_matricula').click((e) => {
         e.preventDefault(); 
+
         if ($('#modal_matricula_tittle').text() != 'ACTUALIZAR MATRÍCULA') { return false; }
         if (LibreriaFunciones.comprobarLongitud($('#rut_ap_titular').val(), 7, 9, 'RUT', 'Apoderado titular') == false) { return false; }
         if (LibreriaFunciones.comprobarLongitud($('#rut_ap_suplente').val(), 7, 9, 'RUT', 'Apoderado suplente') == false) { return false; }

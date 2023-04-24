@@ -87,5 +87,27 @@ de esta forma cada vez que actualice mi sitio, será manejado de manera controla
 trabajar en modulo funcionarios
 revisar el orden para generar nominas de estudiante por curso
 
-ver y usar replit.com
+trabajar en registro de cambio de apoderados
+al momento del actualizar los datos del apoderado, que me registre los datos anteriores y los nuevos datos
+agregar tipo de informe para descargar los cambios de apoderados
 
+
+
+TRABAJO DE LOG CAMBIO DE APODERADOS
+- Crear la base de datos de nombre (log_cambio_apoderado)
+    - crear las tablas de la base de datos
+    (id_cambio) -> (serial)
+    (fecha_hora_cambio) -> (timestamp with time zone)
+    (id_old_apoderado) -> (integer)
+    (id_new_apdoerado) -> (integer)
+    (id_usuario) -> (integer)
+
+preparar función para trabajar con los datos del cambio de apoderado
+preparar metodo del objeto matricula
+
+NOTA
+manejar que cuando se cambie el curso, si o si se pida la fecha del cambio
+manejar fecha que queda tomada en modal de fecha de cambio de curso
+
+trabajando en registro de cambio de apoderado
+trabajar en modulo de funcionarios y modulo de cuentas de usuario para la defensa

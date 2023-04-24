@@ -93,14 +93,39 @@ agregar tipo de informe para descargar los cambios de apoderados
 
 
 
-TRABAJO DE LOG CAMBIO DE APODERADOS
-- Crear la base de datos de nombre (log_cambio_apoderado)
-    - crear las tablas de la base de datos
-    (id_cambio) -> (serial)
-    (fecha_hora_cambio) -> (timestamp with time zone)
-    (id_old_apoderado) -> (integer)
-    (id_new_apdoerado) -> (integer)
-    (id_usuario) -> (integer)
+TRABAJO DE LOG CAMBIO DE APODERADOS ========================================================
+- crear tabla; log_cambio_apoderado
+columnas:
+    - id_cambio_apoderado (serial)
+    - fecha_cambio (timestamp with time zone)
+    - id_estudiante (integer)
+    - id_old_apoderado (integer)
+    - id_new_apoderado (integer)
+    - tipo_apoderado (character varing)
+    - periodo (integer)
+    - id_usuario (integer)
+
+manejar la fecha de ingreso al curso para los cambios de curso
+
+============================================================================================
+
+para generar nomina de cursos
+lista adquirida desde tabla matricula
+según estado marcar retirados
+si adicionalmente se encuentra un cambio de curso ingresar según log de cambio de curso
+marcar como fecha de retiro la salida del curso y el ingreso al mismo como fecha de ingreso
+
+VER SI AGREGO A LA TABLA MATRICULA LA COLUMNA "fecha_ingreso_curso" de tipo date
+VER POR QUE NO GUARDA CUANDO NO VA NINGÚN RUT DE APODERADO !!!!!
+
+
+
+
+
+
+
+
+
 
 preparar función para trabajar con los datos del cambio de apoderado
 preparar metodo del objeto matricula
@@ -111,3 +136,8 @@ manejar fecha que queda tomada en modal de fecha de cambio de curso
 
 trabajando en registro de cambio de apoderado
 trabajar en modulo de funcionarios y modulo de cuentas de usuario para la defensa
+
+
+
+TRABAJANDO EN EL CAMBIO DE CURSO PARA AGREGAR 
+mejorar la función de get matricula, para evitar utilizarla 2 veces

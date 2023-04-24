@@ -118,7 +118,6 @@ function getNumeroMatricula(inicial, final) {
     }).fail(() => {
         $('#numero_matricula').val('Sin datos !!');
     });
-
 }
 
 // Función para validar el rut del estudiante ingresado para matricular
@@ -342,7 +341,8 @@ function getApoderadosTS(id_matricula) {
 
 }
 
-function newCurso(letra) {
+// Función que permite manejar los eventos durante un cambio de curso
+function newCurso(letra, n_lista) {
     $('#grado_curso').change(() => {
         preLoadLetra(letra);
     });
@@ -366,12 +366,28 @@ function newCurso(letra) {
     $('#modal_matricula_fecha_cambio_curso').on('hidden.bs.modal', function() {
         if ($('#fecha_cambio_curso').val() == '') {
             preLoadLetra(letra);
+            $('#numero_lista').val(n_lista);
         }
     });
 }
 
-function newApoderado() {
+// Función para obtener el numero de lista correlativo según el curso al cual se asigna el estudiante
+function getNumeroLista(id_curso) {
+    let datos = 'getNumeroLista';
 
+    $.ajax({
+        url: "./controller/controller_matricula.php",
+        type: "post",
+        dataType: "json",
+        cache: false,
+        data: {datos: datos, id_curso: id_curso},
+        success: function(response) {
+            $('#numero_lista').val(response);
+        }
+
+    }).fail(() => {
+        $('#numero_matricula').val('Error !!');
+    });
 }
 
 
@@ -401,6 +417,10 @@ function prepararModalMatricula(modal) {
     validarRutApoderadoMatricula('#rut_ap_titular', '#dv_rut_ap_titular', '#informacion_titular', 'Asignar apoderado titular');
     validarRutApoderadoMatricula('#rut_ap_suplente', '#dv_rut_ap_suplente', '#informacion_suplente', 'Asignar apoderado suplente');
     (modal == 'registrar') ? loadLetra() : '';
+
+    $('#letra_curso').change(function() {
+        getNumeroLista($('#letra_curso').val());
+    });
 }
 
 // Función para lanzar el modal matrícula para nuevo registro
@@ -455,7 +475,7 @@ function lanzarModalActualizarMatricula(tabla) {
             preLoadLetra(letra);
         });
         
-        newCurso(letra);
+        newCurso(letra, data.numero_lista);
         // newApoderado(); FUNCIÓN PARA MANEJAR EL REGISTRO DEL CAMBIO DE APODERADO
 
     });
@@ -508,6 +528,7 @@ function lanzarModalRetiro(tabla) {
     });
 }
 
+// Función para lanzar modal de de exportar reportes
 function lanzarModalExportar() {
     $('#btn_excel').click(() => {
         $('#modal_descargar_excel_matricula').modal('show');

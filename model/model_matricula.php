@@ -60,12 +60,31 @@
                 FROM matricula
                 INNER JOIN curso ON curso.id_curso = matricula.id_curso
                 WHERE substr(curso.curso, 1,1)::integer >= ? AND substr(curso.curso, 1,1)::integer <= ?;";
+
             $sentencia = $this->preConsult($query);
             $sentencia->execute([intval($inicial), intval($final)]);
             $matricula = $sentencia->fetch();
 
             $this->closeConnection();
             return json_encode($matricula['matricula']);
+        }
+
+        // Método para obtener el número de lista correlativo por letra del curso
+        public function getNumeroLista($id_curso) {
+            $query = "SELECT (MAX(matricula.numero_lista) + 1) AS numero_lista
+                FROM matricula
+                INNER JOIN curso ON curso.id_curso = matricula.id_curso
+                WHERE curso.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
+                AND matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
+                AND curso.id_curso = ?
+                GROUP BY curso.curso;";
+
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute([$id_curso]);
+            $numero_lista = $sentencia->fetch();
+
+            $this->closeConnection();
+            return json_encode($numero_lista['numero_lista']);
         }
 
         // Método para obtener cantidad
@@ -213,14 +232,14 @@
  
         // Método para actualizar una matrícula
         public function updateMatricula($m) {
-            $matricula = ($m->matricula == '0' or $m->matricula == '') ? null : intval($m->matricula);
+            $n_matricula = ($m->matricula == '0' or $m->matricula == '') ? null : intval($m->matricula);
             $n_lista = ($m->n_lista == '0' or $m->n_lista == '') ? null : intval($m->n_lista);
             $titular = ($m->id_titular == '0') ? null : intval($m->id_titular);
             $suplente = ($m->id_suplente == '0') ? null : intval($m->id_suplente);
 
 
             // Consulta cambio de curso
-            $query_curso = "SELECT id_estudiante, id_curso, id_ap_titular, id_ap_suplente
+            $query_curso = "SELECT id_estudiante, id_curso, id_ap_titular, id_ap_suplente, numero_lista
                 FROM matricula WHERE id_matricula = ?;";
 
             $sentencia = $this->preConsult($query_curso);
@@ -229,26 +248,36 @@
 
             // Condición para registrar el histórico de los cambios de curso
             if ($matricula['id_curso'] != intval($m->id_curso)) {
-                $query_historico_cambio_curso = "INSERT INTO historico_cambio_curso (fecha_cambio, id_estudiante, id_curso_actual, id_curso_nuevo, periodo, id_usuario, fecha_registro)
-                    VALUES (?, ?, ?, ?, EXTRACT(YEAR FROM CURRENT_DATE), ?, CURRENT_TIMESTAMP);";
+                $query_log_cambio_curso = "INSERT INTO log_cambio_curso (fecha_cambio, id_estudiante, id_curso_actual, id_curso_nuevo, periodo, id_usuario, fecha_registro, 
+                    old_num_lista, new_num_lista) VALUES (?, ?, ?, ?, EXTRACT(YEAR FROM CURRENT_DATE), ?, CURRENT_TIMESTAMP, ?, ?);";
 
-                $sentencia = $this->preConsult($query_historico_cambio_curso);
-                $sentencia->execute([$m->fecha_cambio_curso, intval($matricula['id_estudiante']), intval($matricula['id_curso']), intval($m->id_curso), intval($m->id_usuario)]);
+                $sentencia = $this->preConsult($query_log_cambio_curso);
+                $sentencia->execute([$m->fecha_cambio_curso, intval($matricula['id_estudiante']), intval($matricula['id_curso']), intval($m->id_curso), intval($m->id_usuario),
+                                    intval($matricula['numero_lista']), $n_lista]);
             }
 
             // Condición para registrar cambio de apoderado titula
-            // if ($matricula['id_ap_titular'] != $titular) {
-            //     $query_log_cambio_apoderado = "";
-            // }
+            if ($matricula['id_ap_titular'] != $titular) {
+                $query_log_cambio_apoderado = "INSERT INTO log_cambio_apoderado (fecha_cambio, id_estudiante, id_old_apoderado, id_new_apoderado,
+                    tipo_apoderado, periodo, id_usuario) VALUES (CURRENT_TIMESTAMP, ?, ?, ?, 'TITULAR', EXTRACT(YEAR FROM CURRENT_DATE), ?);";
+
+                $sentencia = $this->preConsult($query_log_cambio_apoderado);
+                $sentencia->execute([intval($matricula['id_estudiante']), intval($matricula['id_ap_titular']), $titular, $m->id_usuario]);
+            }
 
             // Condición para registrar cambio de apoderado suplente
+
+
+
+
+
 
             // Actualización de la matrícula
             $query = "UPDATE matricula
                 SET matricula = ?, id_ap_titular = ?, id_ap_suplente = ?, id_curso = ?, fecha_matricula = ?, numero_lista = ?
                 WHERE id_matricula = ?;";
             $sentencia = $this->preConsult($query);
-            if ($sentencia->execute([$matricula, $titular, $suplente, intval($m->id_curso), $m->fecha_matricula, $n_lista, intval($m->id_matricula)])) {
+            if ($sentencia->execute([$n_matricula, $titular, $suplente, intval($m->id_curso), $m->fecha_matricula, $n_lista, intval($m->id_matricula)])) {
                 $this->res = true;
             }
 
@@ -429,18 +458,18 @@
             $f_inicio = ($fechas->f_inicio == '') ? date('Y').'-01-01' : $fechas->f_inicio;
             $f_termino = ($fechas->f_termino == '') ? date('Y').'-12-31' : $fechas->f_termino;
 
-            $query = "SELECT to_char(historico_cambio_curso.fecha_cambio, 'DD/MM/YYYY') AS fecha_cambio,
+            $query = "SELECT to_char(log_cambio_curso.fecha_cambio, 'DD/MM/YYYY') AS fecha_cambio,
                 (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut_estudiante,
                 estudiante.ap_estudiante, estudiante.am_estudiante,
                 (CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante ELSE
                 '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END) AS nombres_estudiante,
                 cursoActual.curso AS curso_antiguo, cursoNuevo.curso AS curso_nuevo
-                FROM historico_cambio_curso
-                INNER JOIN estudiante ON estudiante.id_estudiante = historico_cambio_curso.id_estudiante
-                INNER JOIN curso AS cursoActual ON cursoActual.id_curso = historico_cambio_curso.id_curso_actual
-                INNER JOIN curso AS cursoNuevo ON cursoNuevo.id_curso = historico_cambio_curso.id_curso_nuevo
-                WHERE historico_cambio_curso.fecha_cambio >= ? 
-                AND historico_cambio_curso.fecha_cambio <= ?;";
+                FROM log_cambio_curso
+                INNER JOIN estudiante ON estudiante.id_estudiante = log_cambio_curso.id_estudiante
+                INNER JOIN curso AS cursoActual ON cursoActual.id_curso = log_cambio_curso.id_curso_actual
+                INNER JOIN curso AS cursoNuevo ON cursoNuevo.id_curso = log_cambio_curso.id_curso_nuevo
+                WHERE log_cambio_curso.fecha_cambio >= ? 
+                AND log_cambio_curso.fecha_cambio <= ?;";
 
             $sentencia = $this->preConsult($query);
             $sentencia->execute([$f_inicio, $f_termino]);

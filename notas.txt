@@ -118,6 +118,8 @@ marcar como fecha de retiro la salida del curso y el ingreso al mismo como fecha
 VER SI AGREGO A LA TABLA MATRICULA LA COLUMNA "fecha_ingreso_curso" de tipo date
 VER POR QUE NO GUARDA CUANDO NO VA NINGÚN RUT DE APODERADO !!!!!
 
+trabajar campos que deben soportar campos numero_listacomo id de apoderados en log del cambio
+
 
 
 

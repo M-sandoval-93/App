@@ -40,7 +40,7 @@ function getApoderado(rut, campo) {
 function getEstudiante(rut, input_nombre, input_curso) {
     let datos = 'getEstudianteRetraso';
 
-    if (rut != '' && rut.length > 7 && rut.length < 9) {
+    if (rut != '' && rut.length > 7 && rut.length <= 9) {
         $.ajax({
             url: "./controller/controller_estudiante.php",
             type: "post",

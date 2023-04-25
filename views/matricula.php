@@ -63,6 +63,7 @@
                         <tr>
                             <th>id</th>
                             <th></th>
+                            <th>Matricula</th>
                             <th>Rut</th>
                             <th>Ap. Paterno</th>
                             <th>Ap. Materno</th>

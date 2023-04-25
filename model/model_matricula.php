@@ -17,22 +17,46 @@
         }
 
         // Método para obtener datos de las matrículas
-        public function getMatricula() { // agregar en la consulta el número de lista del estudiante en la nómina del curso
+        public function getMatricula() {
+            // $query = "SELECT matricula.id_matricula, matricula.matricula,
+            //     (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut,
+            //     estudiante.ap_estudiante AS ap_paterno, estudiante.am_estudiante AS ap_materno,
+            //     (CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante ELSE
+            //     '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END) AS nombre,
+            //     to_char(estudiante.fecha_nacimiento, 'DD / MM / YYYY') AS fecha_nacimiento,
+            //     to_char(estudiante.fecha_ingreso, 'DD / MM / YYYY') AS fecha_ingreso,
+            //     to_char(estudiante.fecha_retiro, 'DD / MM / YYYY') AS fecha_retiro,
+            //     to_char(matricula.fecha_matricula, 'DD / MM / YYYY') AS fecha_matricula,
+            //     CASE WHEN estudiante.sexo = 'M' THEN 'Masculimo' ELSE 'Femenina' END AS sexo,
+            //     estado.nombre_estado, curso.curso, matricula.numero_lista,
+            //     ('(' || apt.rut_apoderado || '-' || apt.dv_rut_apoderado || ') ' || '/ ' || apt.nombres_apoderado || ' ' || apt.ap_apoderado || ' ' || apt.am_apoderado
+            //     || ' / Celular: +569-' || apt.telefono) AS apoderado_titular,
+            //     ('(' || aps.rut_apoderado || '-' || aps.dv_rut_apoderado || ') ' || '/ ' || aps.nombres_apoderado || ' ' || aps.ap_apoderado || ' ' || aps.am_apoderado
+            //     || ' / Celular: +569-' || aps.telefono) AS apoderado_suplente
+            //     FROM matricula
+            //     INNER JOIN estudiante ON estudiante.id_estudiante = matricula.id_estudiante
+            //     LEFT JOIN curso ON curso.id_curso = matricula.id_curso
+            //     LEFT JOIN estado ON estado.id_estado = matricula.id_estado
+            //     LEFT JOIN apoderado AS apt ON apt.id_apoderado = matricula.id_ap_titular
+            //     LEFT JOIN apoderado AS aps ON aps.id_apoderado = matricula.id_ap_suplente
+            //     WHERE matricula.anio_lectivo = EXTRACT (YEAR FROM now())
+            //     ORDER BY matricula.matricula DESC;";
+
             $query = "SELECT matricula.id_matricula, matricula.matricula,
                 (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut,
                 estudiante.ap_estudiante AS ap_paterno, estudiante.am_estudiante AS ap_materno,
                 (CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante ELSE
                 '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END) AS nombre,
-                to_char(estudiante.fecha_nacimiento, 'DD / MM / YYYY') AS fecha_nacimiento,
+                COALESCE(to_char(estudiante.fecha_nacimiento, 'DD / MM / YYYY'), 'Sin registro') AS fecha_nacimiento,
                 to_char(estudiante.fecha_ingreso, 'DD / MM / YYYY') AS fecha_ingreso,
-                to_char(estudiante.fecha_retiro, 'DD / MM / YYYY') AS fecha_retiro,
+                COALESCE(to_char(estudiante.fecha_retiro, 'DD / MM / YYYY'), 'Estudiante matriculado') AS fecha_retiro,
                 to_char(matricula.fecha_matricula, 'DD / MM / YYYY') AS fecha_matricula,
                 CASE WHEN estudiante.sexo = 'M' THEN 'Masculimo' ELSE 'Femenina' END AS sexo,
                 estado.nombre_estado, curso.curso, matricula.numero_lista,
-                ('(' || apt.rut_apoderado || '-' || apt.dv_rut_apoderado || ') ' || '/ ' || apt.nombres_apoderado || ' ' || apt.ap_apoderado || ' ' || apt.am_apoderado
-                || ' / Celular: +569-' || apt.telefono) AS apoderado_titular,
-                ('(' || aps.rut_apoderado || '-' || aps.dv_rut_apoderado || ') ' || '/ ' || aps.nombres_apoderado || ' ' || aps.ap_apoderado || ' ' || aps.am_apoderado
-                || ' / Celular: +569-' || aps.telefono) AS apoderado_suplente
+                (apt.rut_apoderado || '-' || apt.dv_rut_apoderado || '/ ' || apt.nombres_apoderado || ' ' || apt.ap_apoderado
+                || ' ' || apt.am_apoderado) AS apoderado_titular, COALESCE('+569-' || apt.telefono, 'Sin registros') AS telefono_titular,
+                (aps.rut_apoderado || '-' || aps.dv_rut_apoderado || '/ ' || aps.nombres_apoderado || ' ' || aps.ap_apoderado
+                || ' ' || aps.am_apoderado) AS apoderado_suplente, COALESCE('+569-' || aps.telefono, 'Sin registros') AS telefono_suplente
                 FROM matricula
                 INNER JOIN estudiante ON estudiante.id_estudiante = matricula.id_estudiante
                 LEFT JOIN curso ON curso.id_curso = matricula.id_curso
@@ -40,7 +64,7 @@
                 LEFT JOIN apoderado AS apt ON apt.id_apoderado = matricula.id_ap_titular
                 LEFT JOIN apoderado AS aps ON aps.id_apoderado = matricula.id_ap_suplente
                 WHERE matricula.anio_lectivo = EXTRACT (YEAR FROM now())
-                ORDER BY matricula.matricula DESC;";
+                ORDER BY curso.curso ASC, matricula.numero_lista ASC;";
 
             $sentencia = $this->preConsult($query);
             $sentencia->execute();
@@ -238,7 +262,7 @@
             $suplente = ($m->id_suplente == '0') ? null : intval($m->id_suplente);
 
 
-            // Consulta cambio de curso
+            // Consulta para log cambio de curso y apoderado
             $query_curso = "SELECT id_estudiante, id_curso, id_ap_titular, id_ap_suplente, numero_lista
                 FROM matricula WHERE id_matricula = ?;";
 
@@ -246,7 +270,7 @@
             $sentencia->execute([intval($m->id_matricula)]);
             $matricula = $sentencia->fetch(PDO::FETCH_ASSOC);
 
-            // Condición para registrar el histórico de los cambios de curso
+            // -> Condición para registrar el histórico de los cambios de curso
             if ($matricula['id_curso'] != intval($m->id_curso)) {
                 $query_log_cambio_curso = "INSERT INTO log_cambio_curso (fecha_cambio, id_estudiante, id_curso_actual, id_curso_nuevo, periodo, id_usuario, fecha_registro, 
                     old_num_lista, new_num_lista) VALUES (?, ?, ?, ?, EXTRACT(YEAR FROM CURRENT_DATE), ?, CURRENT_TIMESTAMP, ?, ?);";
@@ -256,21 +280,23 @@
                                     intval($matricula['numero_lista']), $n_lista]);
             }
 
-            // Condición para registrar cambio de apoderado titula
+            // -> Condición para registrar cambio de apoderado titula
             if ($matricula['id_ap_titular'] != $titular) {
-                $query_log_cambio_apoderado = "INSERT INTO log_cambio_apoderado (fecha_cambio, id_estudiante, id_old_apoderado, id_new_apoderado,
+                $query_log_cambio_apoderado_titular = "INSERT INTO log_cambio_apoderado (fecha_cambio, id_estudiante, id_old_apoderado, id_new_apoderado,
                     tipo_apoderado, periodo, id_usuario) VALUES (CURRENT_TIMESTAMP, ?, ?, ?, 'TITULAR', EXTRACT(YEAR FROM CURRENT_DATE), ?);";
 
-                $sentencia = $this->preConsult($query_log_cambio_apoderado);
-                $sentencia->execute([intval($matricula['id_estudiante']), intval($matricula['id_ap_titular']), $titular, $m->id_usuario]);
+                $sentencia = $this->preConsult($query_log_cambio_apoderado_titular);
+                $sentencia->execute([intval($matricula['id_estudiante']), ($matricula['id_ap_titular'] == 0) ? null : intval($matricula['id_ap_titular']), $titular, $m->id_usuario]);
             }
 
-            // Condición para registrar cambio de apoderado suplente
+            // -> Condición para registrar cambio de apoderado suplente
+            if ($matricula['id_ap_suplente'] != $suplente) {
+                $query_log_cambio_apoderado_suplente = "INSERT INTO log_cambio_apoderado (fecha_cambio, id_estudiante, id_old_apoderado, id_new_apoderado,
+                    tipo_apoderado, periodo, id_usuario) VALUES (CURRENT_TIMESTAMP, ?, ?, ?, 'SUPLENTE', EXTRACT(YEAR FROM CURRENT_DATE), ?);";
 
-
-
-
-
+                $sentencia = $this->preConsult($query_log_cambio_apoderado_suplente);
+                $sentencia->execute([intval($matricula['id_estudiante']), ($matricula['id_ap_suplente'] == 0) ? null : intval($matricula['id_ap_suplente']), $suplente, $m->id_usuario]);
+            }
 
             // Actualización de la matrícula
             $query = "UPDATE matricula

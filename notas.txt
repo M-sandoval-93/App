@@ -141,3 +141,8 @@ trabajar en modulo de funcionarios y modulo de cuentas de usuario para la defens
 
 TRABAJANDO EN EL CAMBIO DE CURSO PARA AGREGAR 
 mejorar la función de get matricula, para evitar utilizarla 2 veces
+
+
+DATOS ADICIONALES DE LA MATRICULA
+- fecha_matricula
+- 

@@ -18,23 +18,8 @@ function getData(data) {
     return (
         '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
             '<tr>' +
-                '<td>Fecha de nacimiento:</td>' +
-                '<td>' + data.fecha_nacimiento + '</td>' +
-            '</tr>' +
-
-            '<tr>' +
-                '<td>Sexo estudiante:</td>' +
-                '<td>' + data.sexo + '</td>' +
-            '</tr>' +
-
-            '<tr>' +
                 '<td>Fecha matrícula:</td>' +
                 '<td>' + data.fecha_matricula + '</td>' +
-            '</tr>' +
-
-            '<tr>' +
-                '<td>Número matrícula:</td>' +
-                '<td> N° ' + data.matricula + '</td>' +
             '</tr>' +
 
             '<tr>' +
@@ -42,14 +27,25 @@ function getData(data) {
                 '<td> N° ' + data.numero_lista + '</td>' +
             '</tr>' +
 
-            '<tr>' +
+            '<tr>' + // TRABAJAR EN COMO MOSTRAR LA INFORMACIÓN DEL APDERADO
                 '<td>Apoderado titular:</td>' +
                 '<td>' + apoderado(data.apoderado_titular) + '</td>' +
+                '<td>Telefono: ' + data.telefono_titular + '</td>' +
             '</tr>' +
 
             '<tr>' +
                 '<td>Apoderado suplente:</td>' +
                 '<td>' + apoderado(data.apoderado_suplente) + '</td>' +
+            '</tr>' +
+
+            '<tr>' +
+                '<td>Fecha de nacimiento:</td>' +
+                '<td>' + data.fecha_nacimiento + '</td>' +
+            '</tr>' +
+
+            '<tr>' +
+                '<td>Sexo estudiante:</td>' +
+                '<td>' + data.sexo + '</td>' +
             '</tr>' +
 
             '<tr>' +
@@ -61,9 +57,46 @@ function getData(data) {
                 '<td>Fecha retiro:</td>' +
                 '<td>' + data.fecha_retiro + '</td>' +
             '</tr>' +
+
+            // '<tr>' +
+            //     '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+            //         '<tr>' +
+            //             '<td>Apoderados del estudiante</td>' +
+            //             '<td class="dt-control"></td>' +
+            //         '</tr>' +
+            //     '</table>' +
+            // '</tr>' +
+
+
+            // '<tr>' +
+            //     '<td>Número matrícula:</td>' +
+            //     '<td> N° ' + data.matricula + '</td>' +
+            // '</tr>' +
+
+            // '<tr>' +
+            //     '<td>Apoderado titular:</td>' +
+            //     '<td>' + apoderado(data.apoderado_titular) + '</td>' +
+            // '</tr>' +
+
+            // '<tr>' +
+            //     '<td>Apoderado suplente:</td>' +
+            //     '<td>' + apoderado(data.apoderado_suplente) + '</td>' +
+            // '</tr>' +
+
         '</table>'
     );
 }
+
+// function getSubData(data) {
+//     return (
+//         '<table id="sub_tabla_matricula" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+//             '<tr>' +
+//                 '<td>Prueba de contenido:</td>' +
+//                 '<td>' + data.fecha_matricula + '</td>' +
+//             '</tr>' +
+//         '</table>'
+//     );
+// }
 
 // Función para expandir información secundaria // PASAR A FUNCION GENERICA
 function expadirData(tabla) {
@@ -80,6 +113,25 @@ function expadirData(tabla) {
         }
     });
 }
+
+// function subExpandirData(table) {
+//     // $('#tabla_matricula_estudiante tbody').on('click', 'td.dt-control', function () {
+//     //     let tr = $(this).closest('tr');
+//     //     let row = tabla.row(tr);
+
+//     //     if (row.child.isShown()) {
+//     //         row.child.hide();
+//     //         tr.removeClass('shown');
+//     //     } else {
+//     //         row.child(getData(row.data())).show();
+//     //         tr.addClass('shown');
+//     //     }
+//     // });
+
+//     $('#sub_tabla_matricula tr').on('click', 'td.dt-control', function() {
+//         console.log(prueba);
+//     });
+// }
 
 // Función para obtener cantidad de registros
 function getCantidadMatricula() {
@@ -905,7 +957,8 @@ function exportarInfoMatricula() {
 // ==================== FUNCIONES INTERNAS ===============================//
 $(document).ready(function() {
     getCantidadMatricula();
-
+    
+    // trabajar el orden de la informacion mostrada
     let tabla_matricula = $('#tabla_matricula_estudiante').DataTable({
         ajax: {
             url: "./controller/controller_matricula.php",
@@ -923,6 +976,10 @@ $(document).ready(function() {
                 bSortable: false,
                 data: null,
                 defaultContent: ""
+            },
+            {
+                data: "matricula",
+                className: "text-center"
             },
             {data: "rut"},
             {data: "ap_paterno"},
@@ -973,16 +1030,6 @@ $(document).ready(function() {
     getCertificado(tabla_matricula);
     exportarInfoMatricula();
     exportarMatriculas('#btn_csv', 'csv');
-
-
-
-    // exportarMatriculas('#btn_excel', 'xlsx');
-
-    // $('#btn_excel').click((e) => {
-    //     e.preventDefault();
-    //     LibreriaFunciones.alertPopUp('info','Mantenimiento');
-    //     $('#modal_matricula_fecha_cambio_curso').modal('hide');
-    // });
 
 });
 

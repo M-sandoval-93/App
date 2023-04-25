@@ -68,26 +68,9 @@ function getData(data) {
             //     '</table>' +
             // '</tr>' +
 
-
-            // '<tr>' +
-            //     '<td>Número matrícula:</td>' +
-            //     '<td> N° ' + data.matricula + '</td>' +
-            // '</tr>' +
-
-            // '<tr>' +
-            //     '<td>Apoderado titular:</td>' +
-            //     '<td>' + apoderado(data.apoderado_titular) + '</td>' +
-            // '</tr>' +
-
-            // '<tr>' +
-            //     '<td>Apoderado suplente:</td>' +
-            //     '<td>' + apoderado(data.apoderado_suplente) + '</td>' +
-            // '</tr>' +
-
         '</table>'
     );
 }
-
 
 // Función para expandir información secundaria // PASAR A FUNCION GENERICA
 function expadirData(tabla) {
@@ -104,7 +87,6 @@ function expadirData(tabla) {
         }
     });
 }
-
 
 // Función para obtener cantidad de registros
 function getCantidadMatricula() {

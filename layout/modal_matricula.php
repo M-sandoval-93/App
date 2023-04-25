@@ -132,25 +132,6 @@
 </div>
 
 
-<!-- MODAL PARA TRABAJAR LA SUSPENSIÓN DE UNA MATRÍCULA -->
-<!-- <div class="modal fade" id="modal_matricula_estado" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-sm">
-    <div class="modal-content">
-
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="modal_estudiante_tittle">Cambiar estado</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-
-      <div class="d-grid gap-2 py-4 col-10 mx-auto">
-        <button class="btn btn-primary" title="Activar" id="btn_activar_matricula">Activar matrícula</button>
-        <button class="btn btn-warning" title="Suspender" id="btn_suspender_matricula">Suspender matrícula</button>
-      </div>
-
-    </div>
-  </div>
-</div> -->
-
 <!-- MODAL PARA TRABAJAR LA FECHA DEL CAMBIO DE CURSO -->
 <div class="modal fade" id="modal_matricula_fecha_cambio_curso" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-sm">
@@ -236,7 +217,6 @@
     </div>
   </div>
 </div>
-
 
 
 <!-- MODAL PARA REGISTRAR EL RETIRO DE UNA MATRICULA -->

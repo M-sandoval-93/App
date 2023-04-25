@@ -57,6 +57,7 @@
             </div>
           </div>
 
+          <!-- SECCIÓN APODERADO QUE JUSTIFICA -->
           <div class="row mt-4">
             <div class="col-sm-12">
               <label for="justificacion_apoderado" class="form-label">Apoderado(a) <span class="text-danger fs-5">*</span></label>
@@ -64,6 +65,7 @@
             </div>
           </div>
 
+          <!-- SECCIÓN MOTIVO -->
           <div class="row mt-4">
             <div class="col-lg-12">
               <label for="justificacion_motivo_causa" class="form-label">Motivo/Causa inasistencia</label>
@@ -71,14 +73,14 @@
             </div>
           </div>
 
+          <!-- SECCIÓN TIPO DE DOCUMENTO E INFORMACIÓN VERBAL -->
           <div class="row mt-4" id="check">
             <div class="col-6">
               <div class="form-check">
-                <input type="checkbox" name="" id="justificacion_documento" class="form-check-input" style="margin-top: 12px;">
+                <input type="checkbox" id="justificacion_documento" class="form-check-input" style="margin-top: 12px;">
                 <div class="form-check-label">
                   <select id="justificacion_tipo_documento" class="form-select form-check-label" disabled>
                     <option selected value="0">Presenta documento</option>
-                    <option value="1">Certificado médico</option>
                   </select>
                 </div>
               </div>
@@ -93,7 +95,7 @@
 
             <div class="col-3">
               <div class="form-check mt-2">
-                <input type="checkbox" id="justificacion_prueba_pendiente" class="form-check-input" disabled>
+                <input type="checkbox" id="justificacion_prueba_pendiente" class="form-check-input">
                 <label for="justificacion_prueba_pendiente" class="form-check-label">Prueba pendiente</label>
               </div>
             </div>
@@ -135,6 +137,7 @@
           <div class="row mb-3" id="group_of_the_check">
             <label class="form-label">Seleccionar asignatura <span class="text-danger fs-5">*</span></label>
           </div>
+        </div>
 
         <div class="modal-footer">
           <button type="button" class="btn btn-primary btn-lg" id="btn_seleccion_asignatura">Seleccionar</button>
@@ -144,5 +147,47 @@
     </div>
   </div>
 </div>
+
+
+
+
+
+<!-- MODAL PARA TRABAJAR EL PORCENTAJE DE EXIGENCIA -->
+<div class="modal fade" id="modal_justificacion_porcentaje_exigencia" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content">
+
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="modal_justificacion_porcentaje_exigencia_tittle">PORCENTAJE DE EXIGENCIA EN PRUEBAS</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <form id="form_justificacion_porcentaje_exigencia">
+        <div class="modal-body">
+          <div class="row mt-2">
+            <div class="col-sm-12">
+              <label for="select_justificacion_porcentaje_exigencia" class="form-label">Asignar porcentaje de exigencia: <span class="text-danger fs-5">*</span></label>
+              <select id="select_justificacion_porcentaje_exigencia" class="form-select">
+                <option selected disabled>Seleccionar porcentaje</option>
+                <option value="80">80 % de exigencia para rendir pruebas pendientes</option>
+                <option value="60">60 % de exigencia para rendir pruebas pendientes</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger btn-lg" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-success btn-lg" id="btn_registro_porcentaje_exigencia">Registrar</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+
+
 
 

@@ -1,6 +1,7 @@
 import {LibreriaFunciones, generar_dv, spanish } from './librerias/librerias.js';
 let asignatura = new Array();
 let datos = 'getJustificaciones';
+let porcentaje;
 
 // ==================== FUNCIONES INTERNAS ===============================//
 // Estructura de la tabla con información adicional
@@ -229,7 +230,7 @@ function prepararModalJustificacion() {
         $('#form_registro_justificacion_falta').trigger('reset');
         $('#justificacion_fecha').val(fecha_actual.toLocaleDateString());
         $('#justificacion_rut_estudiante').removeClass('is-invalid');
-        $('#justificacion_prueba_pendiente').prop('disabled', true);
+        // $('#justificacion_prueba_pendiente').prop('disabled', true);
         $('#justificacion_tipo_documento').prop('disabled', true);
         LibreriaFunciones.autoFocus($('#modal_registro_justificacion_falta'), $('#justificacion_rut_estudiante'));
         asignatura = [];
@@ -237,15 +238,15 @@ function prepararModalJustificacion() {
 
     $('#justificacion_documento').click(function() {
         if (LibreriaFunciones.comprobarCheck(this)) {
-            $('#justificacion_prueba_pendiente').prop('disabled', false);
+            // $('#justificacion_prueba_pendiente').prop('disabled', false);
             $('#justificacion_tipo_documento').prop('disabled', false);
             getTipoDocumento();
         } else {
-            $('#justificacion_prueba_pendiente').prop('disabled', true);
+            // $('#justificacion_prueba_pendiente').prop('disabled', true);
             $('#justificacion_tipo_documento').prop('disabled', true);
             $('#justificacion_prueba_pendiente').prop('checked', false);
             $('#justificacion_tipo_documento').html('<option selected value="0">Presenta documento</option>');
-            asignatura = [];
+            // asignatura = [];
         }
     });
 
@@ -292,10 +293,15 @@ function prepararModalAsignatura() {
             $('#modal_justificacion_asignatura').modal('show');
         } else {
             asignatura = [];
-            tipo_documento = [];
+            // tipo_documento = [];
         }
     });
 }
+
+// Función para trabajar con modal de porcentaje de exigencia
+// function prepararModalPorcentajeExigencia() {
+//     $('#modal_justificacion_porcentaje_exigencia').modal('show');
+// }
 
 
 
@@ -501,7 +507,7 @@ $(document).ready(function() {
     exportarJustificaciones('#btn_excel', 'xlsx');
     exportarJustificaciones('#btn_csv', 'csv');
 
-
+    $('#modal_justificacion_porcentaje_exigencia').modal('show');
 
 
     // Generar PDF con información o DOC

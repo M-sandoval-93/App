@@ -36,6 +36,7 @@ function getData(data) {
             '<tr>' +
                 '<td>Apoderado suplente:</td>' +
                 '<td>' + apoderado(data.apoderado_suplente) + '</td>' +
+                '<td>Telefono: ' + data.telefono_suplente + '</td>' +
             '</tr>' +
 
             '<tr>' +
@@ -87,16 +88,6 @@ function getData(data) {
     );
 }
 
-// function getSubData(data) {
-//     return (
-//         '<table id="sub_tabla_matricula" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-//             '<tr>' +
-//                 '<td>Prueba de contenido:</td>' +
-//                 '<td>' + data.fecha_matricula + '</td>' +
-//             '</tr>' +
-//         '</table>'
-//     );
-// }
 
 // Función para expandir información secundaria // PASAR A FUNCION GENERICA
 function expadirData(tabla) {
@@ -114,24 +105,6 @@ function expadirData(tabla) {
     });
 }
 
-// function subExpandirData(table) {
-//     // $('#tabla_matricula_estudiante tbody').on('click', 'td.dt-control', function () {
-//     //     let tr = $(this).closest('tr');
-//     //     let row = tabla.row(tr);
-
-//     //     if (row.child.isShown()) {
-//     //         row.child.hide();
-//     //         tr.removeClass('shown');
-//     //     } else {
-//     //         row.child(getData(row.data())).show();
-//     //         tr.addClass('shown');
-//     //     }
-//     // });
-
-//     $('#sub_tabla_matricula tr').on('click', 'td.dt-control', function() {
-//         console.log(prueba);
-//     });
-// }
 
 // Función para obtener cantidad de registros
 function getCantidadMatricula() {

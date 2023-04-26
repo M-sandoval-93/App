@@ -18,30 +18,6 @@
 
         // Método para obtener datos de las matrículas
         public function getMatricula() {
-            // $query = "SELECT matricula.id_matricula, matricula.matricula,
-            //     (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut,
-            //     estudiante.ap_estudiante AS ap_paterno, estudiante.am_estudiante AS ap_materno,
-            //     (CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante ELSE
-            //     '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END) AS nombre,
-            //     to_char(estudiante.fecha_nacimiento, 'DD / MM / YYYY') AS fecha_nacimiento,
-            //     to_char(estudiante.fecha_ingreso, 'DD / MM / YYYY') AS fecha_ingreso,
-            //     to_char(estudiante.fecha_retiro, 'DD / MM / YYYY') AS fecha_retiro,
-            //     to_char(matricula.fecha_matricula, 'DD / MM / YYYY') AS fecha_matricula,
-            //     CASE WHEN estudiante.sexo = 'M' THEN 'Masculimo' ELSE 'Femenina' END AS sexo,
-            //     estado.nombre_estado, curso.curso, matricula.numero_lista,
-            //     ('(' || apt.rut_apoderado || '-' || apt.dv_rut_apoderado || ') ' || '/ ' || apt.nombres_apoderado || ' ' || apt.ap_apoderado || ' ' || apt.am_apoderado
-            //     || ' / Celular: +569-' || apt.telefono) AS apoderado_titular,
-            //     ('(' || aps.rut_apoderado || '-' || aps.dv_rut_apoderado || ') ' || '/ ' || aps.nombres_apoderado || ' ' || aps.ap_apoderado || ' ' || aps.am_apoderado
-            //     || ' / Celular: +569-' || aps.telefono) AS apoderado_suplente
-            //     FROM matricula
-            //     INNER JOIN estudiante ON estudiante.id_estudiante = matricula.id_estudiante
-            //     LEFT JOIN curso ON curso.id_curso = matricula.id_curso
-            //     LEFT JOIN estado ON estado.id_estado = matricula.id_estado
-            //     LEFT JOIN apoderado AS apt ON apt.id_apoderado = matricula.id_ap_titular
-            //     LEFT JOIN apoderado AS aps ON aps.id_apoderado = matricula.id_ap_suplente
-            //     WHERE matricula.anio_lectivo = EXTRACT (YEAR FROM now())
-            //     ORDER BY matricula.matricula DESC;";
-
             $query = "SELECT matricula.id_matricula, matricula.matricula,
                 (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut,
                 estudiante.ap_estudiante AS ap_paterno, estudiante.am_estudiante AS ap_materno,

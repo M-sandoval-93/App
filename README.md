@@ -1,4 +1,4 @@
 # App
 
-Actualización del manejo de datos de cache para el navegador de los clienetes
-Modificación del estilo del popup del cambio de clave
+Actualización de porcentaje en las exigencias de las pruebas
+Incorporación de promesas y funciones async await

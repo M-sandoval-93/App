@@ -32,7 +32,7 @@
                 CASE WHEN justificacion.presenta_documento = true THEN 'PRESENTA DOCUMENTO' ELSE 'NO PRESENTA DOCUMENTO' END AS presenta_documento,
                 CASE WHEN justificacion.informacion_verbal = true THEN 'SI' ELSE 'NO' END AS informacion_verbal,
                 CASE WHEN tipo_documento_justificacion.tipo_documento IS NULL THEN 'SIN TIPO DE DOCUMENTO'
-                ELSE tipo_documento_justificacion.tipo_documento END AS tipo_documento
+                ELSE tipo_documento_justificacion.tipo_documento END AS tipo_documento, justificacion.exigencia
                 FROM justificacion
                 INNER JOIN estudiante ON estudiante.id_estudiante = justificacion.id_estudiante
                 INNER JOIN matricula ON matricula.id_estudiante = estudiante.id_estudiante
@@ -93,15 +93,15 @@
         // Método para registrar una justificacion
         public function setJustificacion($justificacion, $asignatura, $id_usser) {
             $query = "INSERT INTO justificacion (fecha_hora_actual, id_estudiante, fecha_inicio, 
-                fecha_termino, id_apoderado, prueba_pendiente, presenta_documento, motivo_falta, informacion_verbal, id_usuario, id_tipo_documento)
-                SELECT CURRENT_TIMESTAMP, id_estudiante, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                fecha_termino, id_apoderado, prueba_pendiente, presenta_documento, motivo_falta, informacion_verbal, id_usuario, id_tipo_documento, exigencia)
+                SELECT CURRENT_TIMESTAMP, id_estudiante, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
                 FROM estudiante
                 WHERE rut_estudiante = ?;";
 
             $sentencia = $this->preConsult($query);
             if ($sentencia->execute([$justificacion->fecha_inicio, $justificacion->fecha_termino, intval($justificacion->id_apoderado), 
                 $justificacion->pruebas, $justificacion->documento, $justificacion->motivo, $justificacion->info_verbal, $id_usser, 
-                ($justificacion->id_tipo_documento == 0) ? null : $justificacion->id_tipo_documento, $justificacion->rut])) {
+                ($justificacion->id_tipo_documento == 0) ? null : $justificacion->id_tipo_documento, intval($justificacion->porcentaje_exigencia), $justificacion->rut])) {
 
                 if ($justificacion->pruebas == true) {
                     $query = "INSERT INTO prueba_pendiente (id_justificacion, id_asignatura) 

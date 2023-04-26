@@ -27,7 +27,7 @@ switch ($type) {
 
     case "setJustificacion":
         $justificacion = json_decode(json_encode($_POST['justificacion'])); // Convertir un objeto js a un objeto PHP
-        print $datosJustificacion->setJustificacion($justificacion, $_POST['asignatura'], $id_usser);
+        print $datosJustificacion->setJustificacion($justificacion, isset($_POST['asignatura']) ? $_POST['asignatura'] : null, $id_usser);
         break;
         
     case "deleteJustificacion":

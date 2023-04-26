@@ -1,7 +1,7 @@
 import {LibreriaFunciones, generar_dv, spanish } from './librerias/librerias.js';
 let asignatura = new Array();
 let datos = 'getJustificaciones';
-let porcentaje;
+let porcentaje = 0;
 
 // ==================== FUNCIONES INTERNAS ===============================//
 // Estructura de la tabla con información adicional
@@ -41,6 +41,11 @@ function getDataSecundaria(data) {
             '<tr>' +
                 '<td>Pruebas por asignatura:</td>' +
                 '<td>' + data.prueba_pendiente + '</td>' +
+            '</tr>' +
+
+            '<tr>' +
+                '<td>Porcentaje de exigencia</td>' +
+                '<td>' + data.exigencia + ' %</td>' +
             '</tr>' +
         '</table>'
     );
@@ -127,8 +132,25 @@ function getApoderadoTS(rut, campo) {
     });
 }
 
+// Función que utiliza promesas para manejar el porcentaje de exigencia de las pruebas
+function getPorcentajeExigencia() {
+    return new Promise(resolve => {
+        $('#form_justificacion_porcentaje_exigencia').trigger('reset');
+        $('#modal_justificacion_porcentaje_exigencia').modal('show');
+
+        $('#btn_registro_porcentaje_exigencia').click(() => {
+            if ($('#select_justificacion_porcentaje_exigencia').val() == null) {
+                LibreriaFunciones.alertPopUp('warning', 'Debe seleccionar el porcentaje a aplicar');
+                return false;
+            }
+            porcentaje = $('#select_justificacion_porcentaje_exigencia').val()
+            resolve();
+        });
+    });
+}
+
 // Función para obtener las asignaturas en las que se deben pruebas
-function getPruebaAsignaturas() {
+async function getPruebaAsignaturas() {
     $('#close_modal_justificacion_asignatura').click(() => {
         $('#justificacion_prueba_pendiente').prop('checked', false);
         $('#group_of_the_check').empty();
@@ -136,7 +158,7 @@ function getPruebaAsignaturas() {
         asignatura = [];
     });
 
-    $('#btn_seleccion_asignatura').click(() => {
+    $('#btn_seleccion_asignatura').click(async () => {
         $('#group_of_the_check input[type=checkbox]').each(function() {
             if (LibreriaFunciones.comprobarCheck(this)) {
                 asignatura.push($(this).val());
@@ -148,7 +170,10 @@ function getPruebaAsignaturas() {
             return false;
         }
 
+        await getPorcentajeExigencia();
+
         $('#modal_justificacion_asignatura').modal('hide');
+        $('#modal_justificacion_porcentaje_exigencia').modal('hide');
         $('#group_of_the_check').empty();
         $('#modal_registro_justificacion_falta').modal('show');
     });
@@ -230,23 +255,20 @@ function prepararModalJustificacion() {
         $('#form_registro_justificacion_falta').trigger('reset');
         $('#justificacion_fecha').val(fecha_actual.toLocaleDateString());
         $('#justificacion_rut_estudiante').removeClass('is-invalid');
-        // $('#justificacion_prueba_pendiente').prop('disabled', true);
         $('#justificacion_tipo_documento').prop('disabled', true);
         LibreriaFunciones.autoFocus($('#modal_registro_justificacion_falta'), $('#justificacion_rut_estudiante'));
         asignatura = [];
+        porcentaje = 0;
     });
 
     $('#justificacion_documento').click(function() {
         if (LibreriaFunciones.comprobarCheck(this)) {
-            // $('#justificacion_prueba_pendiente').prop('disabled', false);
             $('#justificacion_tipo_documento').prop('disabled', false);
             getTipoDocumento();
         } else {
-            // $('#justificacion_prueba_pendiente').prop('disabled', true);
             $('#justificacion_tipo_documento').prop('disabled', true);
             $('#justificacion_prueba_pendiente').prop('checked', false);
             $('#justificacion_tipo_documento').html('<option selected value="0">Presenta documento</option>');
-            // asignatura = [];
         }
     });
 
@@ -293,21 +315,16 @@ function prepararModalAsignatura() {
             $('#modal_justificacion_asignatura').modal('show');
         } else {
             asignatura = [];
-            // tipo_documento = [];
+            porcentaje = 0;
         }
     });
 }
-
-// Función para trabajar con modal de porcentaje de exigencia
-// function prepararModalPorcentajeExigencia() {
-//     $('#modal_justificacion_porcentaje_exigencia').modal('show');
-// }
 
 
 
 // ================== MANEJO DE INFORMARCIÓN ================== //
 // Función para registrar la justificación de un estudiante
-function setModalJustificacion(tabla) {
+function setJustificacion(tabla) {
     $('#btn_registrar_justificacion').click((e) => {
         e.preventDefault();
         if (LibreriaFunciones.comprobarLongitud($('#justificacion_rut_estudiante').val(), 7, 9, 'RUT', 'Apoderado') == false) { return false; }
@@ -320,6 +337,8 @@ function setModalJustificacion(tabla) {
             return false;
         }
         justificacion.id_tipo_documento = $('#justificacion_tipo_documento').val();
+        justificacion.porcentaje_exigencia = porcentaje;
+        let prueba = [];
 
         $.ajax({
             url: "./controller/controller_justificacion.php",
@@ -500,14 +519,14 @@ $(document).ready(function() {
 
     prepararModalJustificacion();
     getPruebaAsignaturas();
-    setModalJustificacion(tabla_justificacion_estudiante);
+    setJustificacion(tabla_justificacion_estudiante);
     deleteRegistroJustificacion(tabla_justificacion_estudiante);
 
     getCertificadoJustificacion(tabla_justificacion_estudiante);
     exportarJustificaciones('#btn_excel', 'xlsx');
     exportarJustificaciones('#btn_csv', 'csv');
 
-    $('#modal_justificacion_porcentaje_exigencia').modal('show');
+    // $('#modal_justificacion_porcentaje_exigencia').modal('show');
 
 
     // Generar PDF con información o DOC

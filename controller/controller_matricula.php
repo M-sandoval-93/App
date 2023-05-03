@@ -108,6 +108,7 @@
         case "exportarMatriculas":
             print $datosMatricula->exportarMatriculas($_POST['ext']);
             break;
+
     }
 
 

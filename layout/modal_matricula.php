@@ -318,55 +318,52 @@
             </div>
           </div>
 
-          <div class="d-grid gap-2 py-4 col-md-10 col-sm-10 mx-auto" id="botones_descarga_info_matricula">
-            <button class="btn btn-primary" title="Exportar_altas" id="btn_exportar_altas"> { <i class="fas fa-file-excel icon"></i> } Exportar > Altas de matrícula</button>
-            <button class="btn btn-success" title="Exportar_cambios_curso" id="btn_exportar_cambios"> { <i class="fas fa-file-excel icon"></i> } Exportar > Cambios de curso</button>
-            <button class="btn btn-danger" title="Exportar_retiros" id="btn_exportar_retiros"> { <i class="fas fa-file-excel icon"></i> } Exportar > Retiros de matrícula</button>
-            <button class="btn btn-secondary" title="Exportar_matrícula" id="btn_exportar_matriculas"> { <i class="fas fa-file-excel icon"></i> } Exportar > Datos matrícula</button>
-          </div>
-
-          <!-- <div class="row mb-4">
-            <div class="col-12">
-              <label for="nombre_estudiante_suspencion" class="form-label">Nombre completo estudiante </label>
-              <input type="text" class="form-control" id="nombre_estudiante_suspencion" disabled>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-sm-12 col-md-6 d-grid gap-3 mb-4">
-              <div class="col-sm-6 col-md-12">
-                <label for="fecha_inicio_suspencion" class="form-label">Fecha inicio suspención <span class="text-danger fs-5">*</span></label>
-                <input type="date" id="fecha_inicio_suspencion" class="form-control">
+          <div class="d-grid gap-2 py-4 col-md-11 col-sm-11 mx-auto" id="botones_descarga_info_matricula">
+            <div class="row align-items-center gap-1">
+              <div class="col-3 d-grid">
+                <button class="btn-lg btn-primary" title="Exportar alta de estudiante" id="btn_exportar_altas"><i class="fas fa-file-excel icon"></i></button>
+              </div>
+              <div class="col-8 d-grid bg-primary rounded-3">
+                <span class="p-2 text-white">Exportar -> Altas de matrículas</span>
               </div>
 
-              <div class="col-sm-6 col-md-12">
-                <label for="fecha_termino_suspencion" class="form-label">Fecha término suspención <span class="text-danger fs-5">*</span></label>
-                <input type="date" id="fecha_termino_suspencion" class="form-control">
+              <div class="col-3 d-grid">
+                <button class="btn-lg btn-success" title="Exportar cambio curso" id="btn_exportar_cambios_curso"><i class="fas fa-file-excel icon"></i></button>
+              </div>
+              <div class="col-8 d-grid bg-success rounded-3">
+                <span class="p-2 text-white">Exportar -> Cambios de curso</span>
+              </div>
+
+              <div class="col-3 d-grid">
+                <button class="btn-lg btn-secondary" title="Exportar cambio apoderado" id="btn_exportar_cambios_apoderado"><i class="fas fa-file-excel icon"></i></button>
+              </div>
+              <div class="col-8 d-grid bg-secondary rounded-3">
+                <span class="p-2 text-white">Exportar -> Cambios de apoderado</span>
+              </div>
+
+              <div class="col-3 d-grid">
+                <button class="btn-lg btn-danger" title="Exportar retiro de estudianteante" id="btn_exportar_retiros"><i class="fas fa-file-excel icon"></i></button>
+              </div>
+              <div class="col-8 d-grid bg-danger rounded-3">
+                <span class="p-2 text-white">Exportar -> Retiros de matrícula</span>
+              </div>
+
+              <div class="col-3 d-grid">
+                <button class="btn-lg btn-warning" title="Exportar datos de matrícula" id="btn_exportar_matriculas"><i class="fas fa-file-excel icon"></i></button>
+              </div>
+              <div class="col-8 d-grid bg-warning rounded-3">
+                <span class="p-2 text-dark">Exportar -> Datos de matrícula</span>
               </div>
             </div>
 
-            <div class="col-sm-12 col-md-6 mb-4 d-flex align-items-center justify-content-center">
-              <div class="text-center">
-                <div class="text-secondary h3 text-center">Días de suspención</div>
-                <div id="numero_dias_suspencion" class="text-primary h2"></div>
-              </div>
-            </div>
+            <!-- <button class="btn btn-primary" title="Exportar alta de estudiante" id="btn_exportar_altas"> { <i class="fas fa-file-excel icon"></i> } Exportar > Altas de matrícula</button>
+            <button class="btn btn-success" title="Exportar cambio curso" id="btn_exportar_cambios"> { <i class="fas fa-file-excel icon"></i> } Exportar > Cambios de curso</button>
+            <button class="btn btn-secondary" title="Exportar cambio apoderado" id="btn_exportar_log_apoderados"> { <i class="fas fa-file-excel icon"></i> } Exportar > Cambios de apoderado</button>
+            <button class="btn btn-danger" title="Exportar retiro de estudiante" id="btn_exportar_retiros"> { <i class="fas fa-file-excel icon"></i> } Exportar > Retiros de matrícula</button>
+            <button class="btn btn-warning" title="Exportar datos de matrícula" id="btn_exportar_matriculas"> { <i class="fas fa-file-excel icon"></i> } Exportar > Datos matrícula</button> -->
           </div>
-
-          <div class="row">
-            <div class="col-12">
-              <label for="motivo_suspencion" class="form-label">Nombre completo estudiante </label>
-              <textarea class="form-control" id="motivo_suspencion"></textarea>
-            </div>
-          </div> -->
 
         </div>
-
-        <!-- <div class="modal-footer">
-          <button type="button" class="btn btn-danger btn-lg" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-success btn-lg" id="btn_descargar_excel_matricula">Descargar</button>
-        </div>
-      </form> -->
     </div>
   </div>
 </div>

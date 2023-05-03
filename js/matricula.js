@@ -58,16 +58,6 @@ function getData(data) {
                 '<td>Fecha retiro:</td>' +
                 '<td>' + data.fecha_retiro + '</td>' +
             '</tr>' +
-
-            // '<tr>' +
-            //     '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-            //         '<tr>' +
-            //             '<td>Apoderados del estudiante</td>' +
-            //             '<td class="dt-control"></td>' +
-            //         '</tr>' +
-            //     '</table>' +
-            // '</tr>' +
-
         '</table>'
     );
 }
@@ -483,7 +473,6 @@ function lanzarModalActualizarMatricula(tabla) {
         });
         
         newCurso(letra, data.numero_lista);
-        // newApoderado(); FUNCIÓN PARA MANEJAR EL REGISTRO DEL CAMBIO DE APODERADO
 
     });
 }
@@ -745,13 +734,11 @@ function deleteRegistroMatricula(tabla) {
                     data: {datos: datos, id_matricula: id_matricula},
                     success: (response) => {
                         if (response == true) {
-                            // LibreriaFunciones.alertPopUp('success', 'Registro eliminado !!');
                             LibreriaFunciones.alertToast('success', 'Registro eliminado !!');
                             beforeRegistroMatricula(tabla);
                             return false;
                         } 
                         
-                        // LibreriaFunciones.alertPopUp('warning', 'La matrícula no puede ser eliminada !!');
                         LibreriaFunciones.alertToast('warning', 'La matrícula no puede ser eliminada !!');
                     }
                 }).fail((jqXHR) => {
@@ -861,13 +848,18 @@ function exportarReporte(datos, fechas, fileName) {
     });
 }
 
+// function exportarReporte(data, date, fileName) {
+//     return new Promise(resolve => {
+
+//     });
+// }
+
 // función para exportar datos de matricula en excel por fecha
 function exportarInfoMatricula() {
     lanzarModalExportar();
 
-    $('#botones_descarga_info_matricula .btn').click(function() {
+    $('#botones_descarga_info_matricula .btn-lg').click(function() {
         let check = LibreriaFunciones.comprobarCheck('#check_info_matricula_completa');
-        let fileName;
         let fechaExportar = {
             f_inicio: $('#fecha_inicio_descarga_matricula').val(),
             f_termino: $('#fecha_termino_descarga_matricula').val(),
@@ -878,30 +870,16 @@ function exportarInfoMatricula() {
             return false;
         }
 
-        switch (this.id) {
-            case "btn_exportar_altas":
-                datos = 'getAlta';
-                fileName = 'Reporte atlas matrícula';
-                break;
-
-            case "btn_exportar_cambios":
-                datos = 'getCambioCurso';
-                fileName = 'Reporte cambios curso';
-                break;
-
-            case "btn_exportar_retiros":
-                datos = 'getRetiro';
-                fileName = 'Reporte retiros matrícula';
-                break;
-
-            case "btn_exportar_matriculas":
-                datos = 'getReporteMatricula';
-                fileName = 'Reporte matricula';
-                break;
+        const btn_download = {
+            btn_exportar_altas: ['getAlta', 'Reporte atlas matrícula'],
+            btn_exportar_cambios_curso: ['getCambioCurso', 'Reporte cambios curso'],
+            // btn_exportar_cambios_apoderado: ['getCambioApoderado', 'Reporte cambios apoderado'],
+            btn_exportar_retiros: ['getRetiro', 'Reporte retiros matrícula'],
+            btn_exportar_matriculas: ['getReporteMatricula', 'Reporte matricula']
         }
 
         // Función generica para descargar documentos
-        exportarReporte(datos, fechaExportar, fileName);
+        exportarReporte(btn_download[this.id][0], fechaExportar, btn_download[this.id][1]);
 
     });
 }

@@ -527,6 +527,9 @@ function lanzarModalRetiro(tabla) {
 // Función para lanzar modal de de exportar reportes
 function lanzarModalExportar() {
     $('#btn_excel').click(() => {
+        $('#fecha_descarga_matricula').prop('checked', false);
+        $('#fecha_inicio_descarga_matricula').val('');
+        $('#fecha_termino_descarga_matricula').val('');
         $('#modal_descargar_excel_matricula').modal('show');
     });
 

@@ -754,7 +754,7 @@
 
             $file->setActiveSheetIndex(0);
             $sheetActive = $file->getActiveSheet();
-            $sheetActive->setTitle("Retiros de matrículas");
+            $sheetActive->setTitle("Registro de matrículas");
             $sheetActive->setShowGridLines(false);
             $sheetActive->getStyle('A1')->getFont()->setBold(true)->setSize(18);
             $sheetActive->getStyle('A3:Y3')->getFont()->setBold(true)->setSize(12);

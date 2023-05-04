@@ -355,12 +355,6 @@
                 <span class="p-2 text-dark">Exportar -> Datos de matrícula</span>
               </div>
             </div>
-
-            <!-- <button class="btn btn-primary" title="Exportar alta de estudiante" id="btn_exportar_altas"> { <i class="fas fa-file-excel icon"></i> } Exportar > Altas de matrícula</button>
-            <button class="btn btn-success" title="Exportar cambio curso" id="btn_exportar_cambios"> { <i class="fas fa-file-excel icon"></i> } Exportar > Cambios de curso</button>
-            <button class="btn btn-secondary" title="Exportar cambio apoderado" id="btn_exportar_log_apoderados"> { <i class="fas fa-file-excel icon"></i> } Exportar > Cambios de apoderado</button>
-            <button class="btn btn-danger" title="Exportar retiro de estudiante" id="btn_exportar_retiros"> { <i class="fas fa-file-excel icon"></i> } Exportar > Retiros de matrícula</button>
-            <button class="btn btn-warning" title="Exportar datos de matrícula" id="btn_exportar_matriculas"> { <i class="fas fa-file-excel icon"></i> } Exportar > Datos matrícula</button> -->
           </div>
 
         </div>

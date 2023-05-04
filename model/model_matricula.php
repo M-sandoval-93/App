@@ -538,6 +538,95 @@
             return json_encode($file);
         }
 
+        // Método para descargar reporte de cambio de apoderado
+        public function getCambioApoderado($fechas) {
+            $f_inicio = ($fechas->f_inicio == '') ? date('Y').'-01-01' : $fechas->f_inicio;
+            $f_termino = ($fechas->f_termino == '') ? date('Y').'-12-31' : $fechas->f_termino;
+
+            $query = "SELECT to_char(log_cambio_apoderado.fecha_cambio, 'DD/MM/YYYY') AS fecha_cambio,
+                (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) AS rut_estudiante,
+                (CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante || ' ' || 
+                estudiante.ap_estudiante || ' ' || estudiante.am_estudiante ELSE '(' || estudiante.nombre_social || ') ' || 
+                estudiante.nombres_estudiante || ' ' || estudiante.ap_estudiante || ' ' || estudiante.am_estudiante END) AS nombres_estudiante,
+                (old_ap.rut_apoderado || '-' || old_ap.dv_rut_apoderado) AS rut_old_ap,
+                (old_ap.nombres_apoderado || ' ' || old_ap.ap_apoderado || ' ' || old_ap.am_apoderado) AS nombre_old_ap,
+                (new_ap.rut_apoderado || '-' || new_ap.dv_rut_apoderado) AS rut_new_ap,
+                (new_ap.nombres_apoderado || ' ' || new_ap.ap_apoderado || ' ' || new_ap.am_apoderado) AS nombre_new_ap,
+                log_cambio_apoderado.tipo_apoderado
+                FROM log_cambio_apoderado
+                INNER JOIN estudiante ON estudiante.id_estudiante = log_cambio_apoderado.id_estudiante
+                INNER JOIN apoderado AS old_ap ON old_ap.id_apoderado = log_cambio_apoderado.id_old_apoderado
+                INNER JOIN apoderado AS new_ap ON new_ap.id_apoderado = log_cambio_apoderado.id_new_apoderado
+                WHERE log_cambio_apoderado.fecha_cambio >= ?
+                AND log_cambio_apoderado.fecha_cambio <= ?;";
+
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute([$f_inicio, $f_termino]);
+            $cambiosCurso = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+
+            // Preparar archivo
+            $file = new Spreadsheet();
+            $file
+                ->getProperties()
+                ->setCreator("Dpto. Informática")
+                ->setLastModifiedBy('Informática')
+                ->setTitle('Registro cambios apoderado');
+            
+            $file->setActiveSheetIndex(0);
+            $sheetActive = $file->getActiveSheet();
+            $sheetActive->setTitle("Cambios de apoderado");
+            $sheetActive->setShowGridLines(false);
+            $sheetActive->getStyle('A1')->getFont()->setBold(true)->setSize(18);
+            $sheetActive->getStyle('A3:H3')->getFont()->setBold(true)->setSize(12);
+            $sheetActive->setAutoFilter('A3:H3');
+
+            $sheetActive->mergeCells('A1:D1');
+            $sheetActive->setCellValue('A1', 'CAMBIOS DE APODERADO ESTUDIANTES PERIODO '. date('Y'));
+             
+            $sheetActive->getColumnDimension('A')->setWidth(20);
+            $sheetActive->getColumnDimension('B')->setWidth(20);
+            $sheetActive->getColumnDimension('C')->setWidth(40);
+            $sheetActive->getColumnDimension('D')->setWidth(20);
+            $sheetActive->getColumnDimension('E')->setWidth(40);
+            $sheetActive->getColumnDimension('F')->setWidth(20);
+            $sheetActive->getColumnDimension('G')->setWidth(40);
+            $sheetActive->getColumnDimension('H')->setWidth(20);
+ 
+            $sheetActive->setCellValue('A3', 'FECHA CAMBIO');
+            $sheetActive->setCellValue('B3', 'RUT');
+            $sheetActive->setCellValue('C3', 'NOMBRE ESTUDIANTE');
+            $sheetActive->setCellValue('D3', 'RUT APODERADO ANTIGUO');
+            $sheetActive->setCellValue('E3', 'NOMBRES APODERADO ANTIGUO');
+            $sheetActive->setCellValue('F3', 'RUT APODERADO NUEVO');
+            $sheetActive->setCellValue('G3', 'NOMBRES APODERADO NUEVO');
+            $sheetActive->setCellValue('H3', 'TIPO APODERADO');
+ 
+            $fila = 4;
+            foreach ($cambiosCurso as $cambioCurso) {
+                $sheetActive->setCellValue('A'.$fila, $cambioCurso['fecha_cambio']);
+                $sheetActive->setCellValue('B'.$fila, $cambioCurso['rut_estudiante']);
+                $sheetActive->setCellValue('C'.$fila, $cambioCurso['nombres_estudiante']);
+                $sheetActive->setCellValue('D'.$fila, $cambioCurso['rut_old_ap']);
+                $sheetActive->setCellValue('E'.$fila, $cambioCurso['nombre_old_ap']);
+                $sheetActive->setCellValue('F'.$fila, $cambioCurso['rut_new_ap']);
+                $sheetActive->setCellValue('G'.$fila, $cambioCurso['nombre_new_ap']);
+                $sheetActive->setCellValue('H'.$fila, $cambioCurso['tipo_apoderado']);
+                $fila++;
+            }
+            
+            $writer = IOFactory::createWriter($file, 'Xlsx');
+
+            ob_start();
+            $writer->save('php://output');
+            $documentData = ob_get_contents();
+            ob_end_clean();
+
+            $file = array ( "data" => 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; base64,'.base64_encode($documentData));
+
+            $this->closeConnection();
+            return json_encode($file); 
+        }
+
         // Método para descargar reporte de retiros de matrícula
         public function getRetiroMatricula($fechas) {
             $f_inicio = ($fechas->f_inicio == '') ? date('Y').'-01-01' : $fechas->f_inicio;

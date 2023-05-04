@@ -848,12 +848,6 @@ function exportarReporte(datos, fechas, fileName) {
     });
 }
 
-// function exportarReporte(data, date, fileName) {
-//     return new Promise(resolve => {
-
-//     });
-// }
-
 // función para exportar datos de matricula en excel por fecha
 function exportarInfoMatricula() {
     lanzarModalExportar();
@@ -873,7 +867,7 @@ function exportarInfoMatricula() {
         const btn_download = {
             btn_exportar_altas: ['getAlta', 'Reporte atlas matrícula'],
             btn_exportar_cambios_curso: ['getCambioCurso', 'Reporte cambios curso'],
-            // btn_exportar_cambios_apoderado: ['getCambioApoderado', 'Reporte cambios apoderado'],
+            btn_exportar_cambios_apoderado: ['getCambioApoderado', 'Reporte cambios apoderado'],
             btn_exportar_retiros: ['getRetiro', 'Reporte retiros matrícula'],
             btn_exportar_matriculas: ['getReporteMatricula', 'Reporte matricula']
         }

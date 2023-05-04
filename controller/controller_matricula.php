@@ -95,6 +95,11 @@
             print $datosMatricula->getCambioCurso($fechas);
             break;
 
+        case "getCambioApoderado":
+            $fechas = json_decode(json_encode($_POST['fechas']));
+            print $datosMatricula->getCambioApoderado($fechas);
+            break;
+
         case "getRetiro":
             $fechas = json_decode(json_encode($_POST['fechas']));
             print $datosMatricula->getRetiroMatricula($fechas);

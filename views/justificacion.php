@@ -73,7 +73,6 @@
 
 <!-- modal -->
 <?php   include_once "./layout/modal_justificacion.php";   ?>
-i
 
 <!-- script generales del proyecto -->
 <?php   include_once "./layout/footer.php"; ?>

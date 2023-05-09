@@ -36,14 +36,24 @@
         }
 
         // Método para obtener los cursos por grado y la cantidad de estudiantes
-        public function getLetraPorGrado($grado) {
+        public function getDatosCurso($grado) {
             $query = "SELECT substr(curso.curso, 2, 2) AS letra_grado,
-                COUNT(matricula.id_estudiante) AS cantidad_estudiante
+                COUNT(matricula.id_estudiante) AS cantidad_estudiante,
+                COALESCE(INITCAP(split_part(docente.nombres_funcionario, ' ', 1) || ' ' || docente.ap_funcionario
+                || ' ' || docente.am_funcionario), 'Sin datos') AS docente,
+                COALESCE(INITCAP(split_part(paradocente.nombres_funcionario, ' ', 1) || ' ' || paradocente.ap_funcionario
+                || ' ' || paradocente.am_funcionario), 'Sin datos') AS paradocente,
+                COALESCE(INITCAP(split_part(inspectorGeneral.nombres_funcionario, ' ', 1) || ' ' || inspectorGeneral.ap_funcionario
+                || ' ' || inspectorGeneral.am_funcionario), 'Sin datos') AS inspectorGeneral
                 FROM curso
-                INNER JOIN matricula ON matricula.id_curso = curso.id_curso
+                LEFT JOIN matricula ON matricula.id_curso = curso.id_curso
+                LEFT JOIN funcionario AS docente ON docente.id_funcionario = curso.id_docente_jefe
+                LEFT JOIN funcionario AS paradocente ON paradocente.id_funcionario = curso.id_paradocente
+                LEFT JOIN funcionario AS inspectorGeneral ON inspectorGeneral.id_funcionario = curso.id_inspector_general
                 WHERE curso.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
                 AND matricula.id_estado = 1 AND (substr(curso.curso, 1, 1)::int) = ?
-                GROUP BY letra_grado ORDER BY letra_grado;";
+                GROUP BY letra_grado, docente, paradocente, inspectorGeneral
+                ORDER BY letra_grado;";
 
             $sentencia = $this->preConsult($query);
             $sentencia->execute([intval($grado)]);

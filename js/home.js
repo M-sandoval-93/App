@@ -63,12 +63,18 @@ function digitalClock() {
 function getDataCursos(grado, data) {
     let table = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' + 
                     '<th>Curso</th>' +
-                    '<th>Cantidad</th>';
+                    '<th>Cantidad</th>' +
+                    '<th>Profesor(a) jefe</th>' +
+                    '<th>Paradocente</th>' +
+                    '<th>Inspector(a) general</th>';
 
     for (let i = 0; i < data.length; i++) {
         table += '<tr>' +
                     '<td>' + grado + ' ' + data[i].letra_grado + '</td>' +
-                    '<td>' + data[i].cantidad_estudiante + ' estudiantes</td>' +
+                    '<td>' + data[i].cantidad_estudiante + '</td>' +
+                    '<td>' + data[i].docente + '</td>' +
+                    '<td>' + data[i].paradocente + '</td>' +
+                    '<td>' + data[i].inspectorGeneral + '</td>' +
                 '</tr>';
     }
     table += '</table>';
@@ -81,7 +87,7 @@ function expandirGrado(tabla) {
         let dataRow = tabla.row($(this).parents()).data();
         let tr = $(this).closest('tr');
         let row = tabla.row(tr);
-        let datos = 'getLetraPorGrado';
+        let datos = 'getDatosCurso';
 
         if (row.child.isShown()) {
             row.child.hide();

@@ -13,8 +13,8 @@
             print $datosCurso->getGrado();
             break;
 
-        case "getLetraPorGrado":
-            print $datosCurso->getLetraPorGrado($_POST['grado']);
+        case "getDatosCurso":
+            print $datosCurso->getDatosCurso($_POST['grado']);
             break;
 
         case "loadLetra":

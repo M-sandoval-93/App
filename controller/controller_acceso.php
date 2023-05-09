@@ -2,10 +2,10 @@
 
     if (
         // Retraso
-        $_GET['ruta'] == 'retraso' && $_SESSION['usser']['privilege'] == 5 ||
+        // $_GET['ruta'] == 'retraso' && $_SESSION['usser']['privilege'] == 5 ||
 
         // Justificación
-        $_GET['ruta'] == 'justificacion' && $_SESSION['usser']['privilege'] == 5 ||
+        // $_GET['ruta'] == 'justificacion' && $_SESSION['usser']['privilege'] == 5 ||
 
         // Suspensión
         $_GET['ruta'] == 'suspension' && $_SESSION['usser']['privilege'] == 5 ||

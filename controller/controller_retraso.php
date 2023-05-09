@@ -30,7 +30,7 @@
             break;
             
         case "setJustificarRetraso":
-            if ($privilege_usser == 4) {
+            if ($privilege_usser == 4 || $privilege_usser == 5) {
                 http_response_code(404);
                 exit();
             }
@@ -39,7 +39,7 @@
             break;
 
         case "deleteRetraso":
-            if ($privilege_usser == 4) {
+            if ($privilege_usser == 4 || $privilege_usser == 5) {
                 http_response_code(404);
                 exit();
             }

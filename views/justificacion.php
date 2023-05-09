@@ -33,7 +33,7 @@
 
             <!-- Tabla de contenido principal -->
             <div class="d-flex justify-content-between mb-4">
-<?php if ($_SESSION['usser']['privilege'] != 4) { ?>
+<?php if ($_SESSION['usser']['privilege'] != 4 && $_SESSION['usser']['privilege'] != 5) { ?>
                 <button type="button" class="btn-lg btn-primary" id="btn_nueva_justificacion" data-bs-toggle="modal" data-bs-target="#modal_registro_justificacion_falta">
                     <i class="fas fa-user-plus icon"></i>
                 </button>

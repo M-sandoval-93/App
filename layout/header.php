@@ -54,7 +54,7 @@
 <!-- Restricción de acceso -->
 <?php
 if ($_SESSION['usser']['privilege'] == 1 || $_SESSION['usser']['privilege'] == 2 || $_SESSION['usser']['privilege'] == 3 || 
-    $_SESSION['usser']['privilege'] == 4) {
+    $_SESSION['usser']['privilege'] == 4 || $_SESSION['usser']['privilege'] == 5) {
 ?>
 <!-- Restricción de acceso -->
 
@@ -67,7 +67,13 @@ if ($_SESSION['usser']['privilege'] == 1 || $_SESSION['usser']['privilege'] == 2
                 <ul class="sub_grupo">
                     <li><a href="retraso"><span class="titulo">Retraso</span></a></li>
                     <li><a href="justificacion"><span class="titulo">Justificacion</span></a></li>
+<?php
+    if ($_SESSION['usser']['privilege'] != 5) {
+?>
                     <li><a href="suspension"><span class="titulo">Suspension</span></a></li>
+<?php
+    }
+?>
                 </ul>
             </li>
 

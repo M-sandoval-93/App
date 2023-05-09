@@ -42,7 +42,7 @@
 
             <!-- main content table -->
             <div class="d-flex justify-content-between mb-4">
-<?php if ($_SESSION['usser']['privilege'] != 4) { ?>
+<?php if ($_SESSION['usser']['privilege'] != 4 && $_SESSION['usser']['privilege'] != 5) { ?>
                 <button type="button" class="btn-lg btn-primary" id="btn_nuevo_retraso" data-bs-toggle="modal" data-bs-target="#modal_registro_retraso">
                     <i class="fas fa-user-plus icon"></i>
                 </button>
@@ -54,9 +54,6 @@
                     <div class="col-6">
                         <button class="btn-lg btn-secondary" id="btn_csv" title="Exportar CSV"><i class="fas fa-file-csv icon"></i></button>
                     </div>
-                    <!-- <div class="col-4">
-                        <button class="btn-lg btn-danger" id="btn_pdf" title="Exportar PDF"><i class="fas fa-file-pdf icon"></i></button>
-                    </div> -->
                 </div>
             </div>
 

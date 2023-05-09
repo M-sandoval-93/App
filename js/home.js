@@ -74,7 +74,7 @@ function getDataCursos(grado, data) {
                     '<td>' + data[i].cantidad_estudiante + '</td>' +
                     '<td>' + data[i].docente + '</td>' +
                     '<td>' + data[i].paradocente + '</td>' +
-                    '<td>' + data[i].inspectorGeneral + '</td>' +
+                    '<td>' + data[i].inspectorgeneral + '</td>' +
                 '</tr>';
     }
     table += '</table>';

@@ -44,7 +44,7 @@
                 COALESCE(INITCAP(split_part(paradocente.nombres_funcionario, ' ', 1) || ' ' || paradocente.ap_funcionario
                 || ' ' || paradocente.am_funcionario), 'Sin datos') AS paradocente,
                 COALESCE(INITCAP(split_part(inspectorGeneral.nombres_funcionario, ' ', 1) || ' ' || inspectorGeneral.ap_funcionario
-                || ' ' || inspectorGeneral.am_funcionario), 'Sin datos') AS inspectorGeneral
+                || ' ' || inspectorGeneral.am_funcionario), 'Sin datos') AS inspectorgeneral
                 FROM curso
                 LEFT JOIN matricula ON matricula.id_curso = curso.id_curso
                 LEFT JOIN funcionario AS docente ON docente.id_funcionario = curso.id_docente_jefe

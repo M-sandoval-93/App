@@ -402,12 +402,14 @@ $(document).ready(function() {
             {data: "nombres_estudiante"},
             {data: "fecha_ingreso"},
             {
-                data: "anio_lectivo",
+                data: "estado",
                 mRender: function(data) {
                     let estilo;
-                    if (data == 'Matriculado') { estilo = 'bg-success'; }
-                    if (data == 'No matriculado') { estilo = 'bg-danger'; }
-                    if (data == 'Año anterior') { estilo = 'bg-secondary'; }
+                    if (data == 'MATRICULADO') { estilo = 'bg-success'; }
+                    if (data == 'RETIRADO') { estilo = 'bg-warning'; }
+                    if (data == 'RETIRADO') { estilo = 'bg-danger'; }
+                    if (data == 'NO MATRICULADO') { estilo = 'bg-danger'; }
+                    if (data == 'AÑO ANTERIOR') { estilo = 'bg-secondary'; }
                     return '<p class="text-center text-white rounded-3 mb-0 py-1 ' + estilo + '">' + data + '</p>';
                 }
             },

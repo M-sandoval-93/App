@@ -15,17 +15,17 @@
 
         // Método para listar todos los estudiantes
         public function getEstudiantes() {
-            $query = "SELECT estudiante.id_estudiante, estudiante.sexo,
+            $query = "SELECT estudiante.id_estudiante,
                 (estudiante.rut_estudiante || '-' || estudiante.dv_rut_estudiante) as rut_estudiante,
                 estudiante.ap_estudiante, estudiante.am_estudiante, 
                 (CASE WHEN estudiante.nombre_social IS NULL THEN estudiante.nombres_estudiante ELSE
                 '(' || estudiante.nombre_social || ') ' || estudiante.nombres_estudiante END) AS nombres_estudiante,
-                estudiante.junaeb, estudiante.fecha_retiro,
+                estudiante.junaeb, estudiante.fecha_retiro, estudiante.sexo,
                 to_char(estudiante.fecha_ingreso, 'DD / MM / YYYY') AS fecha_ingreso,
                 to_char(estudiante.fecha_nacimiento, 'DD / MM / YYYY') AS fecha_nacimiento,
-                CASE WHEN matricula.anio_lectivo = EXTRACT(YEAR FROM now()) THEN 'Matriculado'
-                WHEN matricula.anio_lectivo < EXTRACT(YEAR FROM now()) AND matricula.anio_lectivo >= 2000 THEN 'Año anterior'
-                ELSE 'No matriculado' END AS anio_lectivo
+                CASE WHEN matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE) AND matricula.id_estado = 1 THEN 'MATRICULADO'
+                WHEN matricula.anio_lectivo < EXTRACT(YEAR FROM now()) AND matricula.anio_lectivo >= 2000 AND matricula.id_estado = 1 THEN 'AÑO ANTERIOR'
+                WHEN matricula.id_estado = 4 THEN 'RETIRADO' WHEN matricula.id_estado = 5 THEN 'SUSPENDIDO' ELSE 'NO MATRICULADO' END AS estado
                 FROM estudiante
                 LEFT JOIN matricula ON matricula.id_estudiante = estudiante.id_estudiante
                 ORDER BY estudiante.ap_estudiante;";

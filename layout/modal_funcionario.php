@@ -15,7 +15,7 @@
             <div class="col-sm-7 col-md-8">
                 <div class="col-sm-12 col-md-10 text-center">
                   <div class="text-secondary h3" id="texto_secundario">Nuevo registro N°</div>
-                  <div class="text-primary h3" id="cantidad_nuevo_registro">97</div>
+                  <div class="text-primary h3" id="cantidad_nuevo_registro"></div>
                 </div>
             </div>
 

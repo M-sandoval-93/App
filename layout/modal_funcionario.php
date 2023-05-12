@@ -64,29 +64,29 @@
             <div class="col-md-4"> <!-- llenar con ajax -->
               <label for="tipo_funcionario" class="form-label">Tipo funcionario <span class="text-danger fs-5">*</span></label>
               <select class="form-select" id="tipo_funcionario">
-                <option selected> -------------- </option>
-                <option value=7> Asistente </option>
+                <!-- <option selected> -------------- </option> -->
+                <!-- <option value=7> Asistente </option>
                 <option value=8> Docente </option>
                 <option value=8> Docente directivo </option>
-                <option value=1> Paradocente </option>
+                <option value=1> Paradocente </option> -->
               </select>
             </div>
 
             <div class="col-md-5"> <!-- llenar con ajax -->
               <label for="departamento_funcionario" class="form-label">Departamento <span class="text-danger fs-5">*</span></label>
               <select class="form-select" id="departamento_funcionario">
-                <option selected> -------------- </option>
+                <!-- <option selected> -------------- </option>
                 <option value=7> Informática </option>
                 <option value=8> UTP </option>
                 <option value=8> Inspectoría general </option>
-                <option value=1> Orientación </option>
+                <option value=1> Orientación </option> -->
               </select>
             </div>
 
             <div class="col-md-3">
               <label for="sexo_funcionario" class="form-label">Sexo <span class="text-danger fs-5">*</span></label>
               <select class="form-select" id="sexo_funcionario">
-                <option selected disabled> ------- </option>
+                <option selected disabled> -------------- </option>
                 <option value="M">Masculino</option>
                 <option value="F">Femenina</option>
               </select>

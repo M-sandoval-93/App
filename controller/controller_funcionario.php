@@ -8,12 +8,29 @@
     $datosFuncionario = new Funcionario(); // Creamos el objeto para trabajar con datatable
 
     switch ($type) {
+        case "getFuncionarios":
+            print $datosFuncionario->getFuncionarios();
+            break;
+
         case "getFuncionario":
-            print $datosFuncionario->getFuncionario();
+            print $datosFuncionario->getFuncionario($_POST['rut'], $_POST['tipo']);
             break;
 
         case "getCantidadFuncionario":
             print $datosFuncionario->getCatidadFuncionario();
+            break;
+
+        case "loadTipoFuncionario":
+            print $datosFuncionario->loadTipoFuncionario();
+            break;
+
+        case "loadDepartamento":
+            print $datosFuncionario->loadDepartamento();
+            break;
+
+        case "setFuncionario":
+            $funcionario = json_decode(json_encode($_POST['funcionario'])); // Convertir un objeto js a un objeto PHP
+            print $datosFuncionario->setFuncionario($funcionario);
             break;
 
         case "deleteFuncionario":

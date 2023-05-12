@@ -15,11 +15,11 @@
         }
 
         // Método para obtener datos de los funcionarios
-        public function getFuncionario() {
+        public function getFuncionarios() {
             $query = "SELECT funcionario.id_funcionario, (funcionario.rut_funcionario || '-' || funcionario.dv_rut_funcionario) AS rut_funcionario,
                 funcionario.ap_funcionario, funcionario.am_funcionario, funcionario.nombres_funcionario, 
                 CASE WHEN funcionario.sexo = 'M' THEN 'Masculino' ELSE 'Femenino' END AS sexo,
-                to_char(funcionario.fecha_nacimiento, 'DD/MM/YYYY') AS fecha_nacimiento, estado.nombre_estado AS estado,
+                to_char(funcionario.fecha_nacimiento, 'DD / MM / YYYY') AS fecha_nacimiento, estado.nombre_estado AS estado,
                 tipo_funcionario.tipo_funcionario, departamento.departamento
                 FROM funcionario
                 LEFT JOIN estado ON estado.id_estado = funcionario.id_estado
@@ -39,6 +39,28 @@
             return json_encode($this->json);
         }
 
+        // Método para comprobar la existencia del rut de un funcionario
+        public function comprobarFuncionario($rut) {
+            $query = "SELECT id_funcionario FROM funcionario WHERE rut_funcionario = ?;";
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute([$rut]);
+
+            if ($sentencia->fetchColumn() > 0) {
+                $this->res = true;
+            }
+
+            $this->closeConnection();
+            return $this->res;
+        }
+
+        // Metodo para trabajar con los datos del estudiante
+        public function getFuncionario($rut, $tipo) {
+            if ($tipo == 'existe') {
+                $this->res = $this->comprobarFuncionario($rut);
+                return json_encode($this->res);
+            }
+        }
+
         // Método para obtener la cantidad de funcionarios
         public function getCatidadFuncionario() {
             $query = "SELECT COUNT(id_funcionario) AS cantidad_funcionario FROM funcionario";
@@ -50,6 +72,63 @@
 
             $this->closeConnection();
             return json_encode($this->json);
+        }
+
+
+        // Método para cargar el tipo de funcionario
+        public function loadTipoFuncionario() {
+            $query = "SELECT * FROM tipo_funcionario;";
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute();
+            $tiposFuncionario = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+
+            $this->json[] = "<option value='0' selected> -------------- </option>";
+            foreach($tiposFuncionario as $tipoFuncionario) {
+                $this->json[] = "<option value='".$tipoFuncionario['id_tipo_funcionario']."' >".$tipoFuncionario['tipo_funcionario']."</option>";
+            }
+
+            $this->closeConnection();
+            return json_encode($this->json);
+        }
+
+        // Método para cargar los departamentos
+        public function loadDepartamento() {
+            $query = "SELECT * FROM departamento;";
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute();
+            $departamentos = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+
+            $this->json[] = "<option value='0' selected> -------------- </option>";
+            foreach($departamentos as $departamento) {
+                $this->json[] = "<option value='".$departamento['id_departamento']."' >".$departamento['departamento']."</option>";
+            }
+
+            $this->closeConnection();
+            return json_encode($this->json);
+        }
+
+        // Método para agregar un nuevo funcionario
+        public function setFuncionario($f) {
+            $query = "SELECT id_funcionario FROM funcionario WHERE rut_funcionario = ?;";
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute([$f->rut]);
+
+            if ($sentencia->fetchColumn() > 0) {
+                $this->closeConnection();
+                return json_encode('existe');
+            }
+
+            $query = "INSERT INTO funcionario (rut_funcionario, dv_rut_funcionario, ap_funcionario, am_funcionario, nombres_funcionario, 
+                sexo, fecha_nacimiento, id_estado, id_tipo_funcionario, id_departamento)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+            $sentencia = $this->preConsult($query);
+            if ($sentencia->execute([$f->rut, $f->dv_rut, $f->ap, $f->am, $f->nombre, $f->sexo, $f->fecha_nacimiento, 1, intval($f->tipo_funcionario), intval($f->departamento)])) {
+                $this->res = true;
+            }
+
+            $this->closeConnection();
+            return json_encode($this->res);
         }
 
         // Método para eliminar el registro de un funcionario

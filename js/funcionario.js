@@ -232,44 +232,44 @@ function showModalUpdateFuncionario(tabla) {
         $('#sexo_funcionario').val(data.sexo.slice(0, 1));
         $('#fecha_nacimiento_funcionario').val(LibreriaFunciones.textFecha(data.fecha_nacimiento));
 
-        // let texto = data.tipo_funcionario;    //revisar
+
+
+        // trabajar en esta función ya que no esta dando resultado
+        let texto = data.tipo_funcionario;
+        let options = $('#tipo_funcionario option');
+
+        options.each(function() {
+            if ($(this).text() === texto) {
+                $(this).prop('selected', true);
+                return false;
+            }
+        });
+
+
 
         // let option = $('#tipo_funcionario option').filter(function() {
         //     return $(this).text() == texto;
         // });
 
+        // console.log(option);
+
         // option.prop('selected', true);
 
-        // console.log(texto);
-
-
-
-
-        // let seleccion = $('#tipo_funcionario option:contains(' + data.tipo_funcionario + ')');
-        // seleccion.prop('selected', true);
-
-        // $('#tipo_funcionario option:contains("' + data.tipo_funcionario + '")').prop('selected', true);
-        // $('#tipo_funcionario option:contains("Asistente")').prop('selected', true);
-        // $('#tipo_funcionario').val($('#tipo_funcionario option:contains("' + data.tipo_funcionario + '")').val());
-
-        // console.log(data.tipo_funcionario);
-        // console.log($('#tipo_funcionario option:contains("' + data.tipo_funcionario + '")').text());
-
-        // $('#letra_curso').val($('#letra_curso option:contains("' + letra + '")').val());
-
-
     });
-
-    // $('#btn_editar_funcionario').click(() => {
-    //     prepararModal();
-    //     $('#modal_funcionario_title').text('REGISTRAR NUEVO FUNCIONARIO');
-    //     $('#btn_funcionario_registrar').text('Registrar');
-    //     $('#texto_secundario').text('Nuevo registro N°');
-
-    // });
-
-
 }
+
+
+// let seleccion = $('#tipo_funcionario option:contains(' + data.tipo_funcionario + ')');
+// seleccion.prop('selected', true);
+
+// $('#tipo_funcionario option:contains("' + data.tipo_funcionario + '")').prop('selected', true);
+// $('#tipo_funcionario option:contains("Asistente")').prop('selected', true);
+// $('#tipo_funcionario').val($('#tipo_funcionario option:contains("' + data.tipo_funcionario + '")').val());
+
+// console.log(data.tipo_funcionario);
+// console.log($('#tipo_funcionario option:contains("' + data.tipo_funcionario + '")').text());
+
+// $('#letra_curso').val($('#letra_curso option:contains("' + letra + '")').val());
 
 
 // ================== MANEJO DE INFORMARCIÓN ================== //

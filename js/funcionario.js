@@ -66,7 +66,7 @@ function getCantidadFuncionario(contexto = false) {
 }
 
 // Función para cargar lista de tipos de funcionario
-function loadTipoFuncionario() {
+function loadTipoFuncionario(funcionario = false) {
     let datos = 'loadTipoFuncionario';
 
     $.ajax({
@@ -76,10 +76,10 @@ function loadTipoFuncionario() {
         data: {datos: datos},
         success: (response) => {
             $('#tipo_funcionario').html(response);
-
-            //Trabajar para utilizar en update
-            // $('#letra_curso').html(data);
-            // $('#letra_curso').val($('#letra_curso option:contains("' + letra + '")').val());
+            
+            if (funcionario != false) {
+                $('#tipo_funcionario').val($('#tipo_funcionario option:contains("'+ funcionario + '")').val());
+            }
         }
     }).fail(() => {
         $('#tipo_funcionario').html('Error !!');
@@ -87,7 +87,7 @@ function loadTipoFuncionario() {
 }
 
 // Función para cargar los departamentos
-function loadDepartamento() {
+function loadDepartamento(departamento = false) {
     let datos = 'loadDepartamento';
 
     $.ajax({
@@ -98,9 +98,9 @@ function loadDepartamento() {
         success: (response) => {
             $('#departamento_funcionario').html(response);
 
-            //Trabajar para utilizar en update
-            // $('#letra_curso').html(data);
-            // $('#letra_curso').val($('#letra_curso option:contains("' + letra + '")').val());
+            if (departamento != false) {
+                $('#departamento_funcionario').val($('#departamento_funcionario option:contains("'+ departamento + '")').val());
+            }
         }
     }).fail(() => {
         $('#departamento_funcionario').html('Error !!');
@@ -192,20 +192,21 @@ function prepararModal() {
     $('#informacion_rut').addClass('form-text');
     LibreriaFunciones.autoFocus($('#modal_funcionario'), $('#rut_funcionario'));
     validarRutFuncionario();
-    loadTipoFuncionario();
-    loadDepartamento();
+    // loadTipoFuncionario();
+    // loadDepartamento();
 }
 
 // Función para mostar el modal para un nuevo funcionario
 function showModalNewFuncionario() {
     $('#btn_nuevo_funcionario').click(() => {
         prepararModal();
+        loadTipoFuncionario();
+        loadDepartamento();
         $('#modal_funcionario_title').text('REGISTRAR NUEVO FUNCIONARIO');
         $('#btn_funcionario_registrar').text('Registrar');
         $('#texto_secundario').text('Nuevo registro N°');
         getCantidadFuncionario(true);
     });
-
 }
 
 // Función para mostrar un modal para actualizar los datos de un funcionario
@@ -213,6 +214,8 @@ function showModalUpdateFuncionario(tabla) {
     $('#tabla_funcionario tbody').on('click', '#btn_editar_funcionario', function() {
         let data = tabla.row($(this).parents()).data();
         prepararModal();
+        loadTipoFuncionario(data.tipo_funcionario);
+        loadDepartamento(data.departamento);
 
         // Trabajar datos principales para asignar al formulario
         let rut = data.rut_funcionario.slice(0, data.rut_funcionario.length - 2);
@@ -232,44 +235,8 @@ function showModalUpdateFuncionario(tabla) {
         $('#sexo_funcionario').val(data.sexo.slice(0, 1));
         $('#fecha_nacimiento_funcionario').val(LibreriaFunciones.textFecha(data.fecha_nacimiento));
 
-
-
-        // trabajar en esta función ya que no esta dando resultado
-        let texto = data.tipo_funcionario;
-        let options = $('#tipo_funcionario option');
-
-        options.each(function() {
-            if ($(this).text() === texto) {
-                $(this).prop('selected', true);
-                return false;
-            }
-        });
-
-
-
-        // let option = $('#tipo_funcionario option').filter(function() {
-        //     return $(this).text() == texto;
-        // });
-
-        // console.log(option);
-
-        // option.prop('selected', true);
-
     });
 }
-
-
-// let seleccion = $('#tipo_funcionario option:contains(' + data.tipo_funcionario + ')');
-// seleccion.prop('selected', true);
-
-// $('#tipo_funcionario option:contains("' + data.tipo_funcionario + '")').prop('selected', true);
-// $('#tipo_funcionario option:contains("Asistente")').prop('selected', true);
-// $('#tipo_funcionario').val($('#tipo_funcionario option:contains("' + data.tipo_funcionario + '")').val());
-
-// console.log(data.tipo_funcionario);
-// console.log($('#tipo_funcionario option:contains("' + data.tipo_funcionario + '")').text());
-
-// $('#letra_curso').val($('#letra_curso option:contains("' + letra + '")').val());
 
 
 // ================== MANEJO DE INFORMARCIÓN ================== //

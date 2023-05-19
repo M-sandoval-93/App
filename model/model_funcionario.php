@@ -74,7 +74,6 @@
             return json_encode($this->json);
         }
 
-
         // Método para cargar el tipo de funcionario
         public function loadTipoFuncionario() {
             $query = "SELECT * FROM tipo_funcionario;";
@@ -124,6 +123,23 @@
 
             $sentencia = $this->preConsult($query);
             if ($sentencia->execute([$f->rut, $f->dv_rut, $f->ap, $f->am, $f->nombre, $f->sexo, $f->fecha_nacimiento, 1, intval($f->tipo_funcionario), intval($f->departamento)])) {
+                $this->res = true;
+            }
+
+            $this->closeConnection();
+            return json_encode($this->res);
+        }
+
+        // Método para actualizar datos de un funcionario
+        public function updateFuncionario($f) {
+            $query = "UPDATE funcionario
+                SET rut_funcionario = ?, dv_rut_funcionario = ?, ap_funcionario = ?, am_funcionario = ?, nombres_funcionario = ?, sexo = ?,
+                fecha_nacimiento = ?, id_tipo_funcionario = ?, id_departamento = ?
+                WHERE id_funcionario = ?;";
+            $sentencia = $this->preConsult($query);
+
+            if ($sentencia->execute([$f->rut, $f->dv_rut, $f->ap, $f->am, $f->nombre, $f->sexo, 
+            $f->fecha_nacimiento, intval($f->tipo_funcionario), intval($f->departamento), intval($f->id_funcionario)])) {
                 $this->res = true;
             }
 

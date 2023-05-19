@@ -28,6 +28,8 @@
     <!-- style pluggins -->
     <link rel="stylesheet" href="./Pluggins/Bootstrap-5.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="./Pluggins/DataTables/datatables.min.css">
+
+    <link rel="stylesheet" href="./css/btn-datatable.css">
     
     <!-- main style -->
     <link rel="stylesheet" href="./css/main.css?v=<?php  echo $_SESSION['version'] ?>">

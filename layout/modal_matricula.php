@@ -298,7 +298,6 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
-      <!-- <form id="form_descargar_excel_matricula"> -->
         <div class="modal-body">
 
           <div class="col-12 form-check mb-4" id="check">

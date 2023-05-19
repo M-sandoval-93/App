@@ -105,3 +105,74 @@
     </div>
   </div>
 </div>
+
+<!-- MODAL PARA GENERAR CUENTAS DE USUARIO A FUNCIONARIOS REGISTRADOS -->
+<div class="modal fade" id="modal_generar_usuario" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content">
+
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="modal_generar_usuario_tittle">GENERAR CUENTA DE USUARIO</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <form id="form_generar_usuario">
+        <div class="modal-body">
+
+          <div class="row mb-4">
+            <div class="col-6">
+              <label for="rut_funcionario_usuario" class="form-label">Rut funcionario</label>
+              <input type="text" id="rut_funcionario_usuario" class="form-control" disabled>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-12">
+              <label for="nombre_funcionario_usuario" class="form-label">Nombre completo funcionario</label>
+              <input type="text" class="form-control" id="nombre_funcionario_usuario" disabled>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-6">
+              <label for="departamento_funcionario_usuario" class="form-label">Departamento</label>
+              <input type="text" class="form-control" id="departamento_funcionario_usuario" disabled>
+            </div>
+
+            <div class="col-6">
+              <label for="privilegio_cuenta_usuario" class="form-label">Privilegio <span class="text-danger fs-5">*</span></label>
+              <select class="form-select" id="privilegio_cuenta_usuario">
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <label for="descripcion_privilegio_usuario" class="form-label">Descripción del privilegio</label>
+              <textarea class="form-control" id="descripcion_privilegio_usuario" rows="2" disabled></textarea>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger btn-lg" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-success btn-lg" id="btn_generar_usuario">Generar</button>
+        </div>
+      </form>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+Se debe solicitar la seleccion de:
+  - Privilegio
+  - Mostrar una descripción con el detalle del Privilegio

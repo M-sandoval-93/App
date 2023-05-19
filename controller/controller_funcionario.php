@@ -32,6 +32,11 @@
             $funcionario = json_decode(json_encode($_POST['funcionario'])); // Convertir un objeto js a un objeto PHP
             print $datosFuncionario->setFuncionario($funcionario);
             break;
+        
+        case "updateFuncionario":
+            $funcionario = json_decode(json_encode($_POST['funcionario'])); // Convertir un objeto js a un objeto PHP
+            print $datosFuncionario->updateFuncionario($funcionario);
+            break;
 
         case "deleteFuncionario":
             print $datosFuncionario->deleteFuncionario($_POST['id_funcionario']);
@@ -40,10 +45,6 @@
         case "getReporteFuncionario":
             print $datosFuncionario->getReporteFuncionario($_POST['ext']);
             break;
-
-
-
-    
     }
 
 ?>

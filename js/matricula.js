@@ -22,10 +22,10 @@ function getData(data) {
                 '<td>' + data.fecha_matricula + '</td>' +
             '</tr>' +
 
-            '<tr>' +
-                '<td>Número lista:</td>' +
-                '<td> N° ' + data.numero_lista + '</td>' +
-            '</tr>' +
+            // '<tr>' +
+            //     '<td>Número lista:</td>' +
+            //     '<td> N° ' + data.numero_lista + '</td>' +
+            // '</tr>' +
 
             '<tr>' + // TRABAJAR EN COMO MOSTRAR LA INFORMACIÓN DEL APDERADO
                 '<td>Apoderado titular:</td>' +
@@ -915,10 +915,16 @@ $(document).ready(function() {
             {data: "ap_paterno"},
             {data: "ap_materno"},
             {data: "nombre"},
-            {data: "curso"},
+            {
+                data: "numero_lista",
+                className: "text-center"
+            },
+            {
+                data: "curso",
+                className: "text-center"
+            },
             {
                 data: "nombre_estado",
-                // bSortable: false,
                 mRender: function(data) {
                     let estilo;
                     let modal = 'data-bs-toggle="modal" data-bs-target="#modal_suspender_matricula"';
@@ -941,6 +947,7 @@ $(document).ready(function() {
                 className: "text-center"
             }
         ],
+        order: ([]), // para quitar el orden automatico que incluye datatable
         language: spanish
     });
 

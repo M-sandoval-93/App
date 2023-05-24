@@ -205,14 +205,14 @@ function checkUserAccount(id_user) {
     });
 }
 
-async function statusBtnUser(row, idFuncionario) {
-    const btnUser = $(row).find('#btn_cuenta_usuario');
-    const response = await checkUserAccount(idFuncionario);
+// async function statusBtnUser(row, idFuncionario) {
+//     const btnUser = $(row).find('#btn_cuenta_usuario');
+//     const response = await checkUserAccount(idFuncionario);
 
-    if (response) {
-        btnUser.addClass('user-created');
-    }
-}
+//     if (response) {
+//         btnUser.addClass('user-created');
+//     }
+// }
 
 // async function statusBtnUser(rows) {
 //     const id_funcionario = rows.map(row => row.data().id_funcionario);
@@ -311,6 +311,7 @@ function showModalCreateUsuario(tabla) {
         $('#rut_funcionario_usuario').val(data.rut_funcionario);
         $('#nombre_funcionario_usuario').val(data.nombres_funcionario + ' ' + data.ap_funcionario);
         $('#departamento_funcionario_usuario').val(data.departamento);
+        $('#modal_generar_usuario_tittle').val(data.id_funcionario);
 
         loadPrivilegio()
 
@@ -359,8 +360,6 @@ function setFuncionario(tabla) {
         }).fail(() => {
             LibreriaFunciones.alertPopUp('error', 'Error en la consulta !!');
         });
-
-
     });
 }
 
@@ -401,7 +400,6 @@ function updateFuncionario(tabla) {
     });
     
 }
-
 
 // Función para eliminar el registro de un funcionario
 function deleteRegistroFuncionario(tabla) {
@@ -444,17 +442,41 @@ function deleteRegistroFuncionario(tabla) {
     });
 }
 
-function createUsuario(tabla) { // seguir trabajando !!
+// Función para crear cuenta de usuario
+function setUserAccount(tabla) { // seguir trabajando !!
     $('#btn_generar_usuario').click(() => {
+        let datos = "setUserAccount";
+        const userAccount = {
+            id_funcionario: $('#modal_generar_usuario_tittle').val(),
+            usuario: $('#rut_funcionario_usuario').val(),
+            clave: $('#rut_funcionario_usuario').val().slice(0, $('#rut_funcionario_usuario').val().length -2),
+            id_privilegio:$('#privilegio_cuenta_usuario').val()
+        }
+
         if ($('#privilegio_cuenta_usuario').val() == 0) { 
             LibreriaFunciones.alertPopUp('info', 'Seleccionar privilegio');
             return false;
         }
-        console.log('prueba');
-        console.log($('#privilegio_cuenta_usuario').val());
-    })
-}
 
+        $.ajax({
+            url: "./controller/controller_usuario.php",
+            type: "post",
+            dataType: "json",
+            data: {datos: datos, userAccount: userAccount},
+            success: (response) => {
+                if (response == true) {
+                    LibreriaFunciones.alertPopUp('success', 'Cuenta de usuario creada !!');
+                    beforeRecord(tabla)
+                    return false;
+                }
+
+                LibreriaFunciones.alertPopUp('warning', 'Cuenta no creada !!');
+            }
+        }).fail(() => {
+            LibreriaFunciones.alertPopUp('error', 'Error al crear cuenta !!');
+        });
+    });
+}
 
 // Función para generar documento
 function getReporteFuncionario(btn, ext) {
@@ -528,22 +550,23 @@ $(document).ready(function() {
                 }
             },
             {
-                data: null,
-                bSortable: false,  // modificar el color del boton de cuenta de usuario en caso de que el usuario si tenga cuenta, ver si es factible 
-                defaultContent:`<button class="btn btn-primary btn-justify px-3" id="btn_editar_funcionario" title="Editar funcionario" type="button" data-bs-toggle="modal" data-bs-target="#modal_funcionario"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-warning px-3" id="btn_cuenta_usuario" title="Generar cuenta usuario" type="button"><i class="fas fa-user-cog"></i></button>
-                                <button class="btn btn-danger btn-delete px-3" id="btn_delete_funcionario" title="Eliminar funcionario" type="button"><i class="fas fa-trash-alt"></i></button>`,
+                data: "cuenta_creada",
+                bSortable: false,
+                mRender: (data) => {
+                    let estilo = 'btn-warning';
+                    if (data == 1) { estilo = 'btn-success'; }
+                    return `<button class="btn btn-primary btn-justify px-3" id="btn_editar_funcionario" title="Editar funcionario" type="button" data-bs-toggle="modal" data-bs-target="#modal_funcionario"><i class="fas fa-edit"></i></button>
+                            <button class="btn ` + estilo + ` px-3" id="btn_cuenta_usuario" title="Generar cuenta usuario" type="button"><i class="fas fa-user-cog"></i></button>
+                            <button class="btn btn-danger btn-delete px-3" id="btn_delete_funcionario" title="Eliminar funcionario" type="button"><i class="fas fa-trash-alt"></i></button>`
+                    },
                 className: "text-center"
             }
         ],
-        language: spanish,
-        createdRow: function(row, data, dataIndex) {
-            let id_funcionario = data.id_funcionario;
-            statusBtnUser(row, id_funcionario);
-
-            // const rows = tabla_funcionario.rows().nodes();
-            // statusBtnUser(rows);
-        }
+        language: spanish
+        // createdRow: function(row, data, dataIndex) {
+        //     let id_funcionario = data.id_funcionario;
+        //     statusBtnUser(row, id_funcionario);
+        // }
 
     });
 
@@ -556,7 +579,7 @@ $(document).ready(function() {
 
     setFuncionario(tabla_funcionario);
     updateFuncionario(tabla_funcionario);
-    createUsuario(tabla_funcionario);
+    setUserAccount(tabla_funcionario);
     deleteRegistroFuncionario(tabla_funcionario);
 
 

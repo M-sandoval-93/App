@@ -28,8 +28,6 @@
     <!-- style pluggins -->
     <link rel="stylesheet" href="./Pluggins/Bootstrap-5.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="./Pluggins/DataTables/datatables.min.css">
-
-    <link rel="stylesheet" href="./css/btn-datatable.css">
     
     <!-- main style -->
     <link rel="stylesheet" href="./css/main.css?v=<?php  echo $_SESSION['version'] ?>">
@@ -141,7 +139,9 @@ if ($_SESSION['usser']['privilege'] == 1 || $_SESSION['usser']['privilege'] == 2
                     <i class="fas fa-angle-right icon icon-right"></i>
                 </a>
                 <ul class="sub_grupo">
-                    <li><a href=""><span class="titulo">Usuarios</span></a></li>
+                    <li><a href="usuario"><span class="titulo">Usuario</span></a></li>
+                    <li><a href="home"><span class="titulo">Privilegio</span></a></li>
+                    <li><a href="home"><span class="titulo">Departamento</span></a></li>
                 </ul>
             </li>
 

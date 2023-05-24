@@ -20,11 +20,13 @@
                 funcionario.ap_funcionario, funcionario.am_funcionario, funcionario.nombres_funcionario, 
                 CASE WHEN funcionario.sexo = 'M' THEN 'Masculino' ELSE 'Femenino' END AS sexo,
                 to_char(funcionario.fecha_nacimiento, 'DD / MM / YYYY') AS fecha_nacimiento, estado.nombre_estado AS estado,
-                tipo_funcionario.tipo_funcionario, departamento.departamento
+                tipo_funcionario.tipo_funcionario, departamento.departamento,
+                CASE WHEN usuario.id_funcionario IS NOT NULL THEN 1 ELSE 0 END AS cuenta_creada
                 FROM funcionario
                 LEFT JOIN estado ON estado.id_estado = funcionario.id_estado
                 LEFT JOIN tipo_funcionario ON tipo_funcionario.id_tipo_funcionario = funcionario.id_tipo_funcionario
                 LEFT JOIN departamento ON departamento.id_departamento = funcionario.id_departamento
+                LEFT JOIN usuario ON usuario.id_funcionario = funcionario.id_funcionario
                 ORDER BY funcionario.ap_funcionario ASC;";
 
             $sentencia = $this->preConsult($query);

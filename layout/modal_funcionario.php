@@ -166,13 +166,3 @@
   </div>
 </div>
 
-
-
-
-
-
-
-
-Se debe solicitar la seleccion de:
-  - Privilegio
-  - Mostrar una descripción con el detalle del Privilegio

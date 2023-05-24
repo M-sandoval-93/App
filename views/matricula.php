@@ -68,6 +68,7 @@
                             <th>Ap. Paterno</th>
                             <th>Ap. Materno</th>
                             <th>Nombres</th>
+                            <th>N° lista</th>
                             <th>Curso</th>
                             <th>Estado</th>
                             <th>Edición</th>

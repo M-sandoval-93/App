@@ -20,22 +20,29 @@ function getUserAccountAmount() {
 }
 
 // Function to load privileges
-function loadPrivilegio() {
-    let datos = 'loadPrivilegio';
+function loadPrivilege(privelege) {
+    return new Promise((resolve, reject) => {
+        let datos = 'loadPrivilegio';
 
-    $.ajax({
-        url: "./controller/controller_usuario.php",
-        type: "post",
-        dataType: "json",
-        data: {datos: datos},
-        success: (response) => {
-            $('#privilegio_cuenta_usuario').html(response);
-        }
-    }).fail(() => {
-        $('#privilegio_cuenta_usuario').html('Sin datos');
+        $.ajax({
+            url: "./controller/controller_usuario.php",
+            type: "post",
+            dataType: "json",
+            data: {datos: datos},
+            success: (response) => {
+                $('#user_account_privilege').html(response);
+                $('#user_account_privilege').val($('#user_account_privilege option:contains("' + privelege + '")').val());
+                resolve();
+
+
+            },
+            error: () => {
+                $('#user_account_privilege').html('Sin datos');
+                reject();
+            }
+        });
     });
 }
-
 
  // Function to generate an action at the end of some  data editing process
  function beforeRecord(tabla, modal = true) {
@@ -48,16 +55,56 @@ function loadPrivilegio() {
 
 // ================== MODAL HANDLING ================== //
 
-function showUpdateUserAccount() {
+function showUpdateUserAccount(tabla) {
+    $('#tabla_usuario tbody').on('click', '#btn_edit_user', function() {
+        let data = tabla.row($(this).parents()).data();
 
+        $('#form_update_user_account').trigger('reset');
+        $('#name_user_account').val(data.funcionario);
+        $('#user_departament').val(data.departamento);
+        
+        loadPrivilege(data.privilegio).then(() => {
+            $('#privilege_descripcion').val($('#user_account_privilege option:selected').data("description"));
+
+        }).catch(() => {
+            $('#privilege_descripcion').val('Error al cargar la descripción !!');
+        });
+
+
+        $('#user_account_privilege').change(function() {
+            let selectOption = $(this).find("option:selected");
+            $('#privilege_descripcion').val(selectOption.data("description"));
+        });
+    });
 }
 
 
 
 // ================== INFORMATION MAGEMENT ================== //
-
+// Function to update user account privilege
 function updateUserAccount(tabla) {
+    $('#btn_update_user_account').click(() => {
+        let datos = "updatePrivilegeAccount";
+        let id_privilege = $('#user_account_privilege').val();
 
+        $.ajax({
+            url: "./controller/controller_usuario.php",
+            type: "post",
+            dataType: "json",
+            data: {datos: datos, id_privilege: id_privilege},
+            success: (response) => {
+                if (response == true) {
+                    LibreriaFunciones.alertToast('success', 'Privilegio de la cuenta actualizado !!');
+                    beforeRecord(tabla, false);
+                    return false;
+                }
+
+                LibreriaFunciones.alertPopUp('warning', 'Privilegio no actualizado !!');
+            }
+        }).fail(() => {
+            LibreriaFunciones.alertPopUp('error', 'Error en la operación !!');
+        });
+    });
 }
 
 // Function to modify the status of a user account
@@ -239,6 +286,10 @@ $(document).ready(function() {
         language: spanish
     });
 
+
+    showUpdateUserAccount(tabla_usuario);
+
+    updateUserAccount(tabla_usuario);
     modifyUserAccount(tabla_usuario);
     restKeyAccount(tabla_usuario);
     deleteRegistroFuncionario(tabla_usuario);

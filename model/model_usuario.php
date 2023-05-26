@@ -101,6 +101,10 @@
             return json_encode($this->res);
         }
 
+        public function updatePrivilegeAccount($idPrivilege) {
+            
+        }
+
         // Method to modify user Account
         public function modifyUserAccount($id_account) {
             $query = "UPDATE usuario SET id_estado =  CASE

@@ -29,8 +29,8 @@
             print $datosUsuario->setUserAccount($userAccount);
             break;
 
-        case "updatePrivilegeAccount":
-            print $datosUsuario->updatePrivilegeAccount($_POST['id_privilege']);
+        case "updatePrivilegeUserAccount":
+            print $datosUsuario->updatePrivilegeUserAccount($_POST['id_account'], $_POST['id_privilege']);
             break;
 
         case "modifyUserAccount":

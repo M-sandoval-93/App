@@ -49,7 +49,7 @@ function loadPrivilege(privelege) {
     tabla.ajax.reload(null, false);
     getUserAccountAmount();
     if (modal == true) {
-        // $('#modal_funcionario').modal('hide');
+        $('#modal_update_account').modal('hide');
     }
 }
 
@@ -62,6 +62,7 @@ function showUpdateUserAccount(tabla) {
         $('#form_update_user_account').trigger('reset');
         $('#name_user_account').val(data.funcionario);
         $('#user_departament').val(data.departamento);
+        $('#modal_update_account_tittle').val(data.id_usuario);
         
         loadPrivilege(data.privilegio).then(() => {
             $('#privilege_descripcion').val($('#user_account_privilege option:selected').data("description"));
@@ -82,20 +83,21 @@ function showUpdateUserAccount(tabla) {
 
 // ================== INFORMATION MAGEMENT ================== //
 // Function to update user account privilege
-function updateUserAccount(tabla) {
+function updatePrivilegeUserAccount(tabla) {
     $('#btn_update_user_account').click(() => {
-        let datos = "updatePrivilegeAccount";
+        let datos = "updatePrivilegeUserAccount";
+        let id_account = $('#modal_update_account_tittle').val();
         let id_privilege = $('#user_account_privilege').val();
 
         $.ajax({
             url: "./controller/controller_usuario.php",
             type: "post",
             dataType: "json",
-            data: {datos: datos, id_privilege: id_privilege},
+            data: {datos: datos, id_account: id_account, id_privilege: id_privilege},
             success: (response) => {
                 if (response == true) {
                     LibreriaFunciones.alertToast('success', 'Privilegio de la cuenta actualizado !!');
-                    beforeRecord(tabla, false);
+                    beforeRecord(tabla);
                     return false;
                 }
 
@@ -289,7 +291,7 @@ $(document).ready(function() {
 
     showUpdateUserAccount(tabla_usuario);
 
-    updateUserAccount(tabla_usuario);
+    updatePrivilegeUserAccount(tabla_usuario);
     modifyUserAccount(tabla_usuario);
     restKeyAccount(tabla_usuario);
     deleteRegistroFuncionario(tabla_usuario);

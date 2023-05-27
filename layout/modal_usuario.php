@@ -11,13 +11,6 @@
       <form id="form_update_user_account">
         <div class="modal-body">
 
-          <!-- <div class="row mb-4">
-            <div class="col-6">
-              <label for="rut_funcionario_usuario" class="form-label">Rut funcionario</label>
-              <input type="text" id="rut_funcionario_usuario" class="form-control" disabled>
-            </div>
-          </div> -->
-
           <div class="row mb-3">
             <div class="col-12">
               <label for="name_user_account" class="form-label">Nombre funcionario</label>

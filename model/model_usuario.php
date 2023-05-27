@@ -101,8 +101,17 @@
             return json_encode($this->res);
         }
 
-        public function updatePrivilegeAccount($idPrivilege) {
+        public function updatePrivilegeUserAccount($idAccount, $idPrivilege) {
+            $query = "UPDATE usuario SET id_privilegio = ?
+                WHERE id_usuario = ?;";
+
+            $statement = $this->preConsult($query);
+            if ($statement->execute([intval($idPrivilege), intval($idAccount)])) {
+                $this->res = true;
+            }
             
+            $this->closeConnection();
+            return json_encode($this->res);
         }
 
         // Method to modify user Account

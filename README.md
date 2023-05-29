@@ -1,4 +1,4 @@
 # App
 
-Actualización de porcentaje en las exigencias de las pruebas
-Incorporación de promesas y funciones async await
+# End of the user account section
+# Starting to work on functional data section for the system

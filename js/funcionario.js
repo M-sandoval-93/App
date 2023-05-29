@@ -466,7 +466,8 @@ function setUserAccount(tabla) { // seguir trabajando !!
             success: (response) => {
                 if (response == true) {
                     LibreriaFunciones.alertPopUp('success', 'Cuenta de usuario creada !!');
-                    beforeRecord(tabla)
+                    beforeRecord(tabla);
+                    $('#modal_generar_usuario').modal('hide');
                     return false;
                 }
 

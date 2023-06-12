@@ -1,4 +1,4 @@
-import { spanish, LibreriaFunciones, generar_dv } from './librerias/librerias.js';
+import { LibreriaFunciones, generar_dv, spanish } from './librerias/librerias.js';
 let datos = 'getRetraso'; 
 
 // ==================== FUNCIONES INTERNAS ===============================//

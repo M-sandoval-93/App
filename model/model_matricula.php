@@ -385,7 +385,8 @@
                 INNER JOIN estudiante ON estudiante.id_estudiante = matricula.id_estudiante
                 INNER JOIN curso ON curso.id_curso = matricula.id_curso
                 WHERE matricula.fecha_matricula >= ?
-                AND matricula.fecha_matricula <= ?;";
+                AND matricula.fecha_matricula <= ?
+                ORDER BY matricula.fecha_matricula DESC;";
 
             $sentencia = $this->preConsult($query);
             $sentencia->execute([$f_inicio, $f_termino]);
@@ -471,7 +472,8 @@
                 INNER JOIN curso AS cursoActual ON cursoActual.id_curso = log_cambio_curso.id_curso_actual
                 INNER JOIN curso AS cursoNuevo ON cursoNuevo.id_curso = log_cambio_curso.id_curso_nuevo
                 WHERE log_cambio_curso.fecha_cambio >= ? 
-                AND log_cambio_curso.fecha_cambio <= ?;";
+                AND log_cambio_curso.fecha_cambio <= ?
+                ORDER BY log_cambio_curso.fecha_cambio DESC;";
 
             $sentencia = $this->preConsult($query);
             $sentencia->execute([$f_inicio, $f_termino]);
@@ -558,7 +560,8 @@
                 INNER JOIN apoderado AS old_ap ON old_ap.id_apoderado = log_cambio_apoderado.id_old_apoderado
                 INNER JOIN apoderado AS new_ap ON new_ap.id_apoderado = log_cambio_apoderado.id_new_apoderado
                 WHERE log_cambio_apoderado.fecha_cambio >= ?
-                AND log_cambio_apoderado.fecha_cambio <= ?;";
+                AND log_cambio_apoderado.fecha_cambio <= ?
+                ORDER BY log_cambio_apoderado.fecha_cambio DESC;";
 
             $sentencia = $this->preConsult($query);
             $sentencia->execute([$f_inicio, $f_termino]);
@@ -643,7 +646,8 @@
                 INNER JOIN estudiante ON estudiante.id_estudiante = matricula.id_matricula
                 INNER JOIN curso ON curso.id_curso = matricula.id_curso
                 WHERE matricula.id_estado = 4 AND estudiante.fecha_retiro >= ?
-                AND estudiante.fecha_retiro <= ?;";
+                AND estudiante.fecha_retiro <= ?
+                ORDER BY estudiante.fecha_retiro DESC;";
 
             $sentencia = $this->preConsult($query);
             $sentencia->execute([$f_inicio, $f_termino]);

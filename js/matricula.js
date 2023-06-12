@@ -1,4 +1,4 @@
-import {LibreriaFunciones, generar_dv, spanish } from './librerias/librerias.js';
+import { LibreriaFunciones, generar_dv, spanish } from './librerias/librerias.js';
 let datos = 'getMatricula';
 let infoRetiro;
 let infoSuspension;

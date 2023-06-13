@@ -12,7 +12,7 @@ if ($_GET['ruta'] == 'home' ||
     $_GET['ruta'] == 'inasistenciaFuncionario' ||
     $_GET['ruta'] == 'login' ||
     $_GET['ruta'] == 'mantenimiento') {
-        include_once "views/".$_GET['ruta'].".php";
+    include_once "views/".$_GET['ruta'].".php";
 } else {
     require_once "views/404.php";
 }

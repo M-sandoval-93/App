@@ -26,7 +26,7 @@
 <body>
     <div class="container">
         <div class="img">
-            <img src="./assets/students.svg" alt="">
+            <img src="./assets/students.svg" alt="Imagen general del sitio">
         </div>
 
         <div class="login-container">
@@ -70,7 +70,6 @@
     <script src="./Pluggins/jQuery/jquery-3.6.0.min.js"></script>
     <script src="./Pluggins/SweetAlert2/sweetalert2.all.min.js"></script>
     <script src="./js/login.js?v=<?php  echo $_SESSION['version']; ?>"></script>
-    <!-- <script src="./js/login.js></script>  -->
     
 </body>
 </html>

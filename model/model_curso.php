@@ -83,6 +83,21 @@
             return json_encode($this->json);
         }
 
+        // Método para obtener el número de lista correlativo por letra del curso
+        public function getNumeroLista($id_curso) {
+            $query = "SELECT numero_lista + 1 AS numero_lista
+                FROM curso
+                WHERE anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
+                AND id_curso = ?";
+
+            $sentencia = $this->preConsult($query);
+            $sentencia->execute([$id_curso]);
+            $numero_lista = $sentencia->fetch();
+
+            $this->closeConnection();
+            return json_encode($numero_lista['numero_lista']);
+        }
+
 
 
         // public function cargarLetrasGrado($grado) {

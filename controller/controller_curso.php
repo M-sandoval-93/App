@@ -21,6 +21,10 @@
             print $datosCurso->loadLetra($_POST['grado']);
             break;
 
+        case "getNumeroLista":
+            print $datosCurso->getNumeroLista($_POST['id_curso']);
+            break;
+
     
     }
 

@@ -70,22 +70,22 @@
         }
 
         // Método para obtener el número de lista correlativo por letra del curso
-        public function getNumeroLista($id_curso) {
-            $query = "SELECT (MAX(matricula.numero_lista) + 1) AS numero_lista
-                FROM matricula
-                INNER JOIN curso ON curso.id_curso = matricula.id_curso
-                WHERE curso.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
-                AND matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
-                AND curso.id_curso = ?
-                GROUP BY curso.curso;";
+        // public function getNumeroLista($id_curso) {
+        //     $query = "SELECT (MAX(matricula.numero_lista) + 1) AS numero_lista
+        //         FROM matricula
+        //         INNER JOIN curso ON curso.id_curso = matricula.id_curso
+        //         WHERE curso.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
+        //         AND matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
+        //         AND curso.id_curso = ?
+        //         GROUP BY curso.curso;";
 
-            $sentencia = $this->preConsult($query);
-            $sentencia->execute([$id_curso]);
-            $numero_lista = $sentencia->fetch();
+        //     $sentencia = $this->preConsult($query);
+        //     $sentencia->execute([$id_curso]);
+        //     $numero_lista = $sentencia->fetch();
 
-            $this->closeConnection();
-            return json_encode($numero_lista['numero_lista']);
-        }
+        //     $this->closeConnection();
+        //     return json_encode($numero_lista['numero_lista']);
+        // }
 
         // Método para obtener cantidad
         public function getCantidadMatricula() {

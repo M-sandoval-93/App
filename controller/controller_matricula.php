@@ -23,9 +23,9 @@
             print $datosMatricula->getNumeroMatricula($_POST['inicial'], $_POST['final']);
             break;
 
-        case "getNumeroLista":
-            print $datosMatricula->getNumeroLista($_POST['id_curso']);
-            break;
+        // case "getNumeroLista":
+        //     print $datosMatricula->getNumeroLista($_POST['id_curso']);
+        //     break;
 
         case "getApoderadoTS":
             print $datosMatricula->getApoderadoTS($_POST['id_matricula']);

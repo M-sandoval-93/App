@@ -98,15 +98,22 @@ function getCantidadMatricula() {
 }
 
 // Función para obtener el siguiente numero de matrícula a ser asignado
-function getNumeroMatricula(inicial, final) {
-    datos = 'getNumeroMatricula';
+function getNumeroMatricula(curso) {
+    let datos = 'getNumeroMatricula';
+    let grado = {};
+
+    if (curso === "7" || curso === "8") {
+        grado = { inicial: 7, final: 8 }
+    } else if (curso >= "1" && curso <= "4") {
+        grado = { inicial: 1, final: 4 }
+    }
 
     $.ajax({
         url: "./controller/controller_matricula.php",
         type: "post",
         dataType: "json",
         cache: false,
-        data: {datos: datos, inicial: inicial, final: final},
+        data: {datos: datos, inicial: grado.inicial, final: grado.final},
         success: function(data) {
             $('#numero_matricula').val(data);
             $('#numero_matricula').prop('disabled', false);
@@ -225,8 +232,7 @@ function getApoderado(rut, campo_nombre, texto) {
 function loadLetra() {
     $('#grado_curso').change(function() {
         let grado = $(this).val();
-        if (grado >= 7 && grado <=8) { getNumeroMatricula(7, 8); }
-        if (grado >= 1 && grado <=4) { getNumeroMatricula(1, 4); }
+        getNumeroMatricula(grado);
         
         datos = 'loadLetra';
         
@@ -243,6 +249,7 @@ function loadLetra() {
                 data: {datos: datos, grado: grado},
                 success: function(data) {
                     $('#letra_curso').html(data);
+                    getNumeroLista($('#letra_curso').val());
                 }
             }).fail(() => {
                 $('#letra_curso').html('sin datos !!');
@@ -373,7 +380,7 @@ function getNumeroLista(id_curso) {
     let datos = 'getNumeroLista';
 
     $.ajax({
-        url: "./controller/controller_matricula.php",
+        url: "./controller/controller_curso.php",
         type: "post",
         dataType: "json",
         cache: false,

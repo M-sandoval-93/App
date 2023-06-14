@@ -1,1 +1,6 @@
-trabajando avance del proyecto en trello
+-> actualizacion de la obtención del numero de lista
+-> trabajar en registrar nuevo número de lista 
+    -> registrar nuevo numero de lista al hacer un cambio de curso
+
+-> trabajar en generar nómina de cursos que integren los estudiantes que han tenido cambios de curso
+    -> ver la consulta SQL para diho fin 

@@ -85,10 +85,10 @@
 
         // Método para obtener el número de lista correlativo por letra del curso
         public function getNumeroLista($id_curso) {
-            $query = "SELECT numero_lista + 1 AS numero_lista
+            $query = "SELECT COALESCE(numero_lista, 0) + 1 AS numero_lista
                 FROM curso
                 WHERE anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
-                AND id_curso = ?";
+                AND id_curso = ?;";
 
             $sentencia = $this->preConsult($query);
             $sentencia->execute([$id_curso]);

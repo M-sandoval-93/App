@@ -69,23 +69,6 @@
             return json_encode($matricula['matricula']);
         }
 
-        // Método para obtener el número de lista correlativo por letra del curso
-        // public function getNumeroLista($id_curso) {
-        //     $query = "SELECT (MAX(matricula.numero_lista) + 1) AS numero_lista
-        //         FROM matricula
-        //         INNER JOIN curso ON curso.id_curso = matricula.id_curso
-        //         WHERE curso.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
-        //         AND matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
-        //         AND curso.id_curso = ?
-        //         GROUP BY curso.curso;";
-
-        //     $sentencia = $this->preConsult($query);
-        //     $sentencia->execute([$id_curso]);
-        //     $numero_lista = $sentencia->fetch();
-
-        //     $this->closeConnection();
-        //     return json_encode($numero_lista['numero_lista']);
-        // }
 
         // Método para obtener cantidad
         public function getCantidadMatricula() {
@@ -174,6 +157,13 @@
             $sentencia = $this->preConsult($query);
             if ($sentencia->execute([$matricula, $estudiante['id_estudiante'], $titular, $suplente, 
                 intval($m->id_curso), intval(date('Y')), $m->fecha_matricula, $n_lista])) {
+
+                // actualización del número de matrícula en tabla curso --------------
+                $query = "UPDATE curso SET numero_lista = ? WHERE id_curso = ?;";
+                $sentencia = $this->preConsult($query);
+                $sentencia->execute([$n_lista, intval($m->id_curso)]);
+                // -------------------------------------------------------------------
+
                 $this->res = true;
             }
 
@@ -237,14 +227,15 @@
             $titular = ($m->id_titular == '0') ? null : intval($m->id_titular);
             $suplente = ($m->id_suplente == '0') ? null : intval($m->id_suplente);
 
-
-            // Consulta para log cambio de curso y apoderado
+            // -> Consulta para log cambio de curso y apoderado y numeros de lista
             $query_curso = "SELECT id_estudiante, id_curso, id_ap_titular, id_ap_suplente, numero_lista
                 FROM matricula WHERE id_matricula = ?;";
 
             $sentencia = $this->preConsult($query_curso);
             $sentencia->execute([intval($m->id_matricula)]);
             $matricula = $sentencia->fetch(PDO::FETCH_ASSOC);
+            // ------------------------------------------------------------------------------------------------------
+
 
             // -> Condición para registrar el histórico de los cambios de curso
             if ($matricula['id_curso'] != intval($m->id_curso)) {
@@ -254,7 +245,15 @@
                 $sentencia = $this->preConsult($query_log_cambio_curso);
                 $sentencia->execute([$m->fecha_cambio_curso, intval($matricula['id_estudiante']), intval($matricula['id_curso']), intval($m->id_curso), intval($m->id_usuario),
                                     intval($matricula['numero_lista']), $n_lista]);
+                
+                // actualización del número de matrícula en tabla curso --------------
+                $query = "UPDATE curso SET numero_lista = ? WHERE id_curso = ?;";
+                $sentencia = $this->preConsult($query);
+                $sentencia->execute([$n_lista, intval($m->id_curso)]);
+                // -------------------------------------------------------------------
             }
+            // ------------------------------------------------------------------------------------------------------
+
 
             // -> Condición para registrar cambio de apoderado titula
             if ($matricula['id_ap_titular'] != $titular) {
@@ -264,6 +263,8 @@
                 $sentencia = $this->preConsult($query_log_cambio_apoderado_titular);
                 $sentencia->execute([intval($matricula['id_estudiante']), ($matricula['id_ap_titular'] == 0) ? null : intval($matricula['id_ap_titular']), $titular, $m->id_usuario]);
             }
+            // ------------------------------------------------------------------------------------------------------
+
 
             // -> Condición para registrar cambio de apoderado suplente
             if ($matricula['id_ap_suplente'] != $suplente) {
@@ -273,6 +274,8 @@
                 $sentencia = $this->preConsult($query_log_cambio_apoderado_suplente);
                 $sentencia->execute([intval($matricula['id_estudiante']), ($matricula['id_ap_suplente'] == 0) ? null : intval($matricula['id_ap_suplente']), $suplente, $m->id_usuario]);
             }
+            // ------------------------------------------------------------------------------------------------------
+
 
             // Actualización de la matrícula
             $query = "UPDATE matricula

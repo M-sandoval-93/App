@@ -3,6 +3,6 @@
 // Archivo de versión para manejar la cache del navegador de los clientes 
 
 // Versión del sistema
-const VERSION = 2.0;
+const VERSION = 2.1;
 
 ?>

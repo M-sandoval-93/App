@@ -27,7 +27,6 @@ async function newPassword(id_usuario) {
 
     const { value: newPassword } = await Swal.fire({
         title: 'Crea tu password personal !!',
-        // customClass: 'titulo_cambio_clave',
         customClass: {
             title: 'titulo_cambio_clave',
         },
@@ -48,9 +47,6 @@ async function newPassword(id_usuario) {
 
             return { password1, password2 };
         }
-        // didOpen: () => {
-        //   document.getElementById('password_1').focus();
-        // },
     });
     newPassword.id_usuario = id_usuario;
       
@@ -127,7 +123,6 @@ function verifyUsser() {
                 }
                 
                 if (response.status !== 1) {
-                    console.log(response);
                     Swal.fire({
                         icon: 'warning',
                         title: 'Cuenta de usuario; SUSPENDIDA !!'

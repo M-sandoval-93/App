@@ -15,9 +15,6 @@
             try {
                 $this->conexion_db = new PDO($dns, DB_USSER, DB_PASSWORD);
                 $this->conexion_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
- 
-                // // Agregar el conjunto de caracteres UTF-8
-                // $this->conexion_db->exec("SET NAMES 'utf8';");
 
                 return $this->conexion_db;
 

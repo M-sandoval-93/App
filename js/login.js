@@ -48,6 +48,7 @@ async function newPassword(id_usuario) {
             return { password1, password2 };
         }
     });
+    
     newPassword.id_usuario = id_usuario;
       
     $.ajax({
@@ -156,8 +157,6 @@ function verifyUsser() {
         $('#id_form_login').trigger('reset');
         $('.input-div').removeClass('focus');
     });
-
-
 }
 /* ------------------------- Funcionaes Internas ---------------------- */
 

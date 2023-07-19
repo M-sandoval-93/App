@@ -71,7 +71,6 @@ form h2 {
     font-size: 2rem;
     text-transform: uppercase;
     margin: 15px 0;
-    /* color: #333; */
     color: #4474e3;
 }
 
@@ -268,6 +267,9 @@ form h2 {
     -o-transition: .5s;
 }
 
+
+
+
 /* revisar estilo al presionar boton */
 /* .btn:target {
     background-position: right;
@@ -284,8 +286,6 @@ form h2 {
 }
 
 
-
-
 /* Alerta popup cambio de clave */
 #swal2-html-container {
     display: grid !important;
@@ -294,11 +294,6 @@ form h2 {
 .swal2-popup.swal2-modal.swal2-show {
     width: auto !important;
 }
-
-
-/* .titulo_cambio_clave::before {
-    color: white !important;
-} */
 
 
 .titulo_cambio_clave {

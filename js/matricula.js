@@ -177,7 +177,7 @@ function comprobarEstudianteMatricula(rut) {
 function getEstudiante(rut) {
     datos = 'getEstudiante';
 
-    if (rut != '' && rut.length > 7 && rut.length < 9) {
+    if (rut != '' && rut.length >= 7 && rut.length <= 9) {
         $.ajax({
             url: "./controller/controller_estudiante.php",
             type: "post",

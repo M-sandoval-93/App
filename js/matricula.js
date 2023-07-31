@@ -155,7 +155,7 @@ function preValidarRutApoderadoMatricula(campo_rut, campo_dv_rut, campo_nombre, 
 function comprobarEstudianteMatricula(rut) {
     datos = 'getEstudiante';
 
-    if (rut != '' && rut.length > 7 && rut.length < 9) {
+    if (rut != '' && rut.length >= 7 && rut.length <= 9) {
         $.ajax({
             url: "./controller/controller_estudiante.php",
             type: "post",

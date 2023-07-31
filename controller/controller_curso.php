@@ -2,7 +2,6 @@
 
     // Incluimos el modelo que utilizara el controlador
     require_once '../model/model_curso.php';
-    // require_once "../model/model_session.php";
 
 
     $type = $_POST['datos']; // Recibimos la acción a realizar por el controlador

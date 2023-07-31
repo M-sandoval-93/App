@@ -6,6 +6,7 @@
     // Uso de la librería PHPSpreadsheet
     require_once "../Pluggins/PhpOffice/vendor/autoload.php";
     use PhpOffice\PhpSpreadsheet\{Spreadsheet, IOFactory};
+    use PhpOffice\PhpSpreadsheet\Style\{Color, Font};
     
     class RetrasoEstudiante extends Conexion {
 
@@ -25,7 +26,7 @@
                 INNER JOIN matricula ON matricula.id_estudiante = estudiante.id_estudiante
                 INNER JOIN curso ON curso.id_curso = matricula.id_curso
                 WHERE EXTRACT(YEAR FROM retraso.fecha_retraso) = EXTRACT(YEAR FROM CURRENT_DATE)
-                AND retraso.estado_retraso = 'sin justificar'
+                AND retraso.estado_retraso = 'sin justificar' AND matricula.id_estado != 4
                 ORDER BY retraso.fecha_retraso DESC, retraso.hora_retraso DESC;";
 
             $sentencia = $this->preConsult($query);
@@ -153,7 +154,9 @@
                 curso.curso, to_char(retraso.fecha_retraso, 'DD/MM/YYYY') AS fecha_retraso, 
                 to_char(retraso.hora_retraso, 'HH:MI:SS') AS hora_retraso, 
                 (funcionario.nombres_funcionario || ' ' || funcionario.ap_funcionario || ' ' || funcionario.am_funcionario) AS usuario_registra,
-                retraso.estado_retraso, to_char(retraso.fecha_hora_justificacion, 'DD/MM/YYYY - HH:MM:SS') AS fecha_hora_justificacion,
+                -- retraso.estado_retraso,
+                (CASE WHEN matricula.id_estado != 1 THEN 'Retirado' ELSE retraso.estado_retraso END) AS estado_retraso,
+                to_char(retraso.fecha_hora_justificacion, 'DD/MM/YYYY - HH:MM:SS') AS fecha_hora_justificacion,
                 (apoderado.nombres_apoderado || ' ' || apoderado.ap_apoderado || ' ' || apoderado.am_apoderado) as apoderado_justifica,
                 (fj.nombres_funcionario || ' ' || fj.ap_funcionario || ' ' || fj.am_funcionario) AS usuario_justifica
                 FROM retraso
@@ -228,7 +231,14 @@
                 $sheetActive->setCellValue('F'.$fila, $atraso['fecha_retraso']);
                 $sheetActive->setCellValue('G'.$fila, $atraso['hora_retraso']);
                 $sheetActive->setCellValue('H'.$fila, $atraso['usuario_registra']);
+
+                if ($atraso['estado_retraso'] == 'Retirado') {
+                    $sheetActive->getStyle('A'.$fila.':L'.$fila)->getFont()->getColor()->setARGB(Color::COLOR_RED);
+                    $sheetActive->getStyle('A'.$fila.':L'.$fila)->getFont()->setStrikethrough(true);
+                }
                 $sheetActive->setCellValue('I'.$fila, $atraso['estado_retraso']);
+
+
                 $sheetActive->setCellValue('J'.$fila, $atraso['fecha_hora_justificacion']);
                 $sheetActive->setCellValue('K'.$fila, $atraso['apoderado_justifica']);
                 $sheetActive->setCellValue('L'.$fila, $atraso['usuario_justifica']);

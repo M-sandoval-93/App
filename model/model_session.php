@@ -6,6 +6,8 @@
     class Session extends Conexion {
         public function __construct() {
             parent:: __construct();
+            // funcionality in the duration of the session
+            // session_set_cookie_params(60*60) // Para considerar 1 hora de sesión activa
             session_start();
         }
 

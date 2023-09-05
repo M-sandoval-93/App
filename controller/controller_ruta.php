@@ -11,6 +11,7 @@ if ($_GET['ruta'] == 'home' ||
     $_GET['ruta'] == 'usuario' ||
     $_GET['ruta'] == 'inasistenciaFuncionario' ||
     $_GET['ruta'] == 'login' ||
+    $_GET['ruta'] == 'licenciaFuncionario' ||
     $_GET['ruta'] == 'mantenimiento') {
     include_once "views/".$_GET['ruta'].".php";
 } else {

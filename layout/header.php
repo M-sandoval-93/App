@@ -128,6 +128,7 @@ if ($_SESSION['usser']['privilege'] == 1 || $_SESSION['usser']['privilege'] == 2
                 <ul class="sub_grupo">
                     <li><a href="funcionario"><span class="titulo">Funcionario</span></a></li>
                     <li><a href="inasistenciaFuncionario"><span class="titulo">Inasistencia</span></a></li>
+                    <li><a href="licenciaFuncionario"><span class="titulo">Licencia</span></a></li>
                     <!-- <li><a href=""><span class="titulo">Permiso</span></a></li> -->
                 </ul>
             </li>

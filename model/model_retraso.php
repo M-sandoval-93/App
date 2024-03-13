@@ -27,6 +27,7 @@
                 INNER JOIN curso ON curso.id_curso = matricula.id_curso
                 WHERE EXTRACT(YEAR FROM retraso.fecha_retraso) = EXTRACT(YEAR FROM CURRENT_DATE)
                 AND retraso.estado_retraso = 'sin justificar' AND matricula.id_estado != 4
+                AND matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
                 ORDER BY retraso.fecha_retraso DESC, retraso.hora_retraso DESC;";
 
             $sentencia = $this->preConsult($query);

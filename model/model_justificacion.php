@@ -42,6 +42,7 @@
                 LEFT JOIN asignatura ON asignatura.id_asignatura = prueba_pendiente.id_asignatura
                 LEFT JOIN tipo_documento_justificacion ON tipo_documento_justificacion.id_tipo_documento = justificacion.id_tipo_documento
                 WHERE matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
+                AND EXTRACT(YEAR FROM justificacion.fecha_hora_actual) = EXTRACT(YEAR FROM CURRENT_DATE)
                 GROUP BY justificacion.id_justificacion, rut, estudiante.ap_estudiante, estudiante.am_estudiante,
                 nombres_estudiante, estudiante.nombre_social, curso.curso, fecha_inicio, fecha_termino,
                 fecha_justificacion, nombre_apoderado, justificacion.motivo_falta, presenta_documento,
@@ -255,6 +256,7 @@
                 LEFT JOIN funcionario ON funcionario.id_funcionario = usuario.id_funcionario
                 LEFT JOIN tipo_documento_justificacion ON tipo_documento_justificacion.id_tipo_documento = justificacion.id_tipo_documento
                 WHERE matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
+                AND EXTRACT(YEAR FROM justificacion.fecha_hora_actual) = EXTRACT(YEAR FROM CURRENT_DATE)
                 GROUP BY justificacion.id_justificacion, rut, estudiante.ap_estudiante, estudiante.am_estudiante,
                 nombres_estudiante, estudiante.nombre_social, curso.curso, fecha_inicio, fecha_termino,
                 fecha_justificacion, nombre_apoderado, justificacion.motivo_falta, presenta_documento, funcionario_registra,

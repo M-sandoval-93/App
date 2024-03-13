@@ -155,7 +155,6 @@
                 curso.curso, to_char(retraso.fecha_retraso, 'DD/MM/YYYY') AS fecha_retraso, 
                 to_char(retraso.hora_retraso, 'HH:MI:SS') AS hora_retraso, 
                 (funcionario.nombres_funcionario || ' ' || funcionario.ap_funcionario || ' ' || funcionario.am_funcionario) AS usuario_registra,
-                -- retraso.estado_retraso,
                 (CASE WHEN matricula.id_estado != 1 THEN 'Retirado' ELSE retraso.estado_retraso END) AS estado_retraso,
                 to_char(retraso.fecha_hora_justificacion, 'DD/MM/YYYY - HH:MM:SS') AS fecha_hora_justificacion,
                 (apoderado.nombres_apoderado || ' ' || apoderado.ap_apoderado || ' ' || apoderado.am_apoderado) as apoderado_justifica,
@@ -170,6 +169,7 @@
                 LEFT JOIN usuario ON usuario.id_usuario = retraso.id_usuario_registra
                 LEFT JOIN funcionario ON funcionario.id_funcionario = usuario.id_funcionario
                 WHERE EXTRACT(YEAR FROM retraso.fecha_retraso) = EXTRACT(YEAR FROM CURRENT_DATE)
+                AND matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
                 ORDER BY retraso.fecha_retraso DESC, retraso.hora_retraso DESC;";
 
             $sentencia = $this->preConsult($query);

@@ -69,7 +69,6 @@
             return json_encode($matricula['matricula']);
         }
 
-
         // Método para obtener cantidad
         public function getCantidadMatricula() {
             $query = "SELECT COALESCE(SUM(CASE WHEN id_estado != 4 THEN 1 ELSE 0 END), 0) AS cantidad_matricula,
@@ -247,7 +246,7 @@
                                     intval($matricula['numero_lista']), $n_lista]);
                 
                 // actualización del número de matrícula en tabla curso --------------
-                $query = "UPDATE curso SET numero_lista = ? WHERE id_curso = ?;";
+                $query = "UPDATE curso SET numero_lista = ? WHERE id_curso = ? AND anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE);";
                 $sentencia = $this->preConsult($query);
                 $sentencia->execute([$n_lista, intval($m->id_curso)]);
                 // -------------------------------------------------------------------

@@ -162,7 +162,7 @@
                 LEFT JOIN prueba_pendiente ON prueba_pendiente.id_justificacion = justificacion.id_justificacion
                 LEFT JOIN asignatura ON asignatura.id_asignatura = prueba_pendiente.id_asignatura
                 LEFT JOIN tipo_documento_justificacion ON tipo_documento_justificacion.id_tipo_documento = justificacion.id_tipo_documento
-                WHERE justificacion.id_justificacion = ?
+                WHERE justificacion.id_justificacion = ? AND matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
                 GROUP BY estudiante, curso, apoderado, rut_ap, documento, info_verbal, prueba_pendiente,
                 motivo_falta, exigencia, fecha_inicio, fecha_termino, tipo_documento_justificacion.tipo_documento;";
 

@@ -104,7 +104,8 @@
                     INNER JOIN retraso ON retraso.id_estudiante = e.id_estudiante
                     INNER JOIN matricula ON matricula.id_estudiante = e.id_estudiante
                     INNER JOIN curso ON curso.id_curso = matricula.id_curso
-                    WHERE retraso.id_retraso = (SELECT MAX(id_retraso) FROM retraso);";
+                    WHERE retraso.id_retraso = (SELECT MAX(id_retraso) FROM retraso)
+                    AND matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE);";
                 
                 $sentencia = $this->preConsult($query);
                 $sentencia->execute();

@@ -171,6 +171,7 @@
                 LEFT JOIN funcionario ON funcionario.id_funcionario = usuario.id_funcionario
                 WHERE EXTRACT(YEAR FROM retraso.fecha_retraso) = EXTRACT(YEAR FROM CURRENT_DATE)
                 AND matricula.anio_lectivo = EXTRACT(YEAR FROM CURRENT_DATE)
+                AND retraso.fecha_hora_justificacion is null
                 ORDER BY retraso.fecha_retraso DESC, retraso.hora_retraso DESC;";
 
             $sentencia = $this->preConsult($query);
